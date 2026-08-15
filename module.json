@@ -1,0 +1,44 @@
+{
+  "module": "M04",
+  "name": "Skill Graph & MNEMOS Memory",
+  "spec": "plan_in_depth/M04_Skill_Graph_Memory.md",
+  "repo": "https://github.com/MNEMOS-PREP/Memory",
+  "owner": "E3",
+  "phase": "1",
+  "ports": {
+    "backend": 8104,
+    "frontend": 5204,
+    "ops": 8304
+  },
+  "core": {
+    "repo": "https://github.com/MNEMOS-PREP/Platform_Core",
+    "version": "v0.3.0"
+  },
+
+  "_comment_depends_on": [
+    "EMPTY, and that is the point: M04 is the root of the graph. Eighteen",
+    "modules read it and it reads none of them, so there is no upstream whose",
+    "absence can degrade this module - which is what lets it be built, run and",
+    "demoed in Phase 1 before M05 or M13 exist.",
+    "M13 WRITES here, but that is a caller, not a dependency: episodic writes",
+    "arrive through an adapter seam that a fixture can feed (spec §10)."
+  ],
+  "depends_on": [],
+
+  "_comment_feeds": [
+    "These consume M04. Two of the contracts below are already being called by",
+    "code that shipped before this module existed, so they are adopted rather",
+    "than invented: M15 calls GET /v1/skill-graph/theta today.",
+    "Additive changes are safe; renaming or removing a field breaks all of them."
+  ],
+  "feeds": [
+    { "module": "M01", "takes": "concept resolution for resume surface forms" },
+    { "module": "M02", "takes": "concept resolution for JD requirements" },
+    { "module": "M05", "takes": "theta + SE seed per concept, and the re-test queue as a selection input" },
+    { "module": "M06", "takes": "the session-pinned profile summary injected at session start" },
+    { "module": "M13", "takes": "nothing - it WRITES observations here" },
+    { "module": "M15", "takes": "theta per topic, to rank likely questions by the student's own gaps" },
+    { "module": "M16", "takes": "bottlenecks, trajectories and the re-test queue" },
+    { "module": "M19", "takes": "the trajectory endpoint, and evidence refs to project the ledger over" }
+  ]
+}

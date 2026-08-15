@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-interviewer-backend"
+version = "0.1.0"
+description = "AI Interviewer / placement preparation platform — backend"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "sqlmodel>=0.0.22",
+    "uvicorn[standard]>=0.30",
+    # The ontology is a hand-curated YAML file under version control, reviewed
+    # by a faculty member edge by edge (spec §6.1, AC-4.9). It is the one input
+    # to this module that a human reads and edits directly, which is why it is
+    # not JSON.
+    "pyyaml>=6.0",
+    # The nightly distiller (§6.6b) is the ONLY model call in this module, and
+    # it is on no read path. Imported lazily, so a checkout with no API key -
+    # including CI - runs and tests fine whether or not this is installed.
+    "anthropic>=0.60",
+    # Shared platform foundation. PINNED BY TAG on purpose: tracking main is
+    # how you get a surprise breakage on a Tuesday. Bump deliberately, run the
+    # tests, commit the bump.
+    #
+    # v0.3.0 is the version that carries EvidenceRef and the five mastery
+    # states (spec §5.1, §5.3). If you are editing Platform_Core and this
+    # module at the same time, see README "Working on both repos at once" -
+    # do NOT relax this pin to make an iteration loop faster.
+    "ai-core @ git+https://github.com/MNEMOS-PREP/Platform_Core@v0.3.0#subdirectory=python",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "httpx>=0.27",
+    "ruff>=0.6",
+]
+# The internal ops app (§6.10): ontology browser, simulation dashboard,
+# retrieval workbench. Never student-facing, never on a request path, so it is
+# not a dependency of the module - three internal surfaces do not get to make
+# `pip install` slower for everyone.
+ops = ["streamlit>=1.38"]
+
+[tool.setuptools.packages.find]
+# This repo holds ONE module. Shared wiring comes from the `ai-core` package.
+include = ["backend_*"]
+namespaces = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+# `N` (pep8-naming) is deliberately NOT selected: packages are named
+# backend_M04_Skill_Graph_Memory to match plan_in_depth/ and Frontend/, which
+# would trip N999 invalid-module-name.
+[tool.ruff.lint.per-file-ignores]
+# `Depends(...)` / `Query(...)` in argument defaults is the canonical FastAPI
+# idiom, not the mutable-default bug B008 exists to catch.
+"**/router.py" = ["B008"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["backend_M04_Skill_Graph_Memory"]
+markers = [
+    "gate: release-blocking acceptance gate (spec §13)",
+]

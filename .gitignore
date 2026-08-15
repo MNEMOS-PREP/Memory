@@ -1,0 +1,79 @@
+# ── Python ───────────────────────────────────────────────────────────────
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# ── Node ─────────────────────────────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# ── Local data & secrets ─────────────────────────────────────────────────
+*.db
+*.sqlite3
+.env
+.env.*
+!.env.example
+
+# Real credentials. The committed template with dummy values, and the list of
+# what each key buys you, is required_keys.txt - keep the two in step.
+keys.txt
+
+# Launcher bookkeeping: one PID file per running service, plus the session
+# description the control tab reads. Machine-local by definition.
+.run/
+
+# ── Editors / OS ─────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── Large source material that does not belong in git ────────────────────
+*.pdf
+*.zip
+*.docx
+*.png
+*.jpg
+
+# ─────────────────────────────────────────────────────────────────────────
+#  NOT PART OF THIS REPO
+#
+#  This working folder doubles as the platform monorepo, but this repo holds
+#  ONE module. Everything below belongs to other repos — ignored here so a
+#  stray `git add -A` cannot pull the whole platform into M15's history.
+#
+#  Only plan_in_depth/M15_Company_Guider.md is tracked, because this module's
+#  spec is its source of truth.
+# ─────────────────────────────────────────────────────────────────────────
+AI_Interviewer_Master_Plan.md
+generate_pdf.py
+diagrams/
+fonts/
+sys_design/
+Literature Review/
+submission*/
+Re_*/
+*.txt.bak
+
+# The spec is the source of truth for THIS module and ships with it. The other
+# eighteen live in their own repos; a copy here would be a copy that goes stale.
+plan_in_depth/*
+!plan_in_depth/M04_Skill_Graph_Memory.md
+!plan_in_depth/M04_REVIEW.md
+
+# Other modules' packages, if this folder is ever used as a monorepo again.
+Backend/backend_M0*/
+Backend/backend_M1*/
+!Backend/backend_M04_Skill_Graph_Memory/
+Backend/gateway/
+Backend/core/
+Frontend/frontend_M0*/
+Frontend/frontend_M1*/
+!Frontend/frontend_M04_Skill_Graph_Memory/
+Frontend/shell/
+Frontend/core/

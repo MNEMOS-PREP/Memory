@@ -1,0 +1,57 @@
+#==============================================================================
+#  M04 — SKILL GRAPH & MNEMOS MEMORY · CREDENTIALS
+#
+#  COMMITTED, with dummy values. Copy this file to `keys.txt` and fill in the
+#  real ones; `keys.txt` is gitignored and never leaves your machine.
+#
+#      copy required_keys.txt keys.txt
+#
+#  Values already set in the environment WIN over this file, so CI and a
+#  deployment can use real environment variables with no file at all, and you
+#  can override one key for one shell without editing anything.
+#
+#  NOTHING HERE IS REQUIRED. The module runs, tests, seeds and demos with none
+#  of it set. Each key switches on a feature, and its absence removes that
+#  feature — never the module, and never silently.
+#==============================================================================
+
+
+# ── The service secret ───────────────────────────────────────────────────────
+#
+#  Shared secret for `service` endpoints — the ones another module calls with
+#  no student present (POST /observations, GET /skill-graph/theta).
+#
+#  UNSET means those endpoints are OPEN, and the app warns loudly once at
+#  startup. That is a deliberate trade: failing closed on a fresh clone would
+#  mean `start_all.bat` brings M04 up and every sibling module reports it as
+#  broken, which teaches everyone to set a dummy value and stop reading the
+#  warning.
+#
+#  Fine to leave unset on a laptop. NEVER leave it unset in a pilot: this
+#  module holds every belief the platform has about a student, including
+#  failure signatures that AC-4.10 says no third party may ever see.
+#
+M04_SERVICE_SECRET=change-me-before-any-shared-deployment
+
+
+# ── The distiller ────────────────────────────────────────────────────────────
+#
+#  The ONLY model call in this module: the nightly distiller that turns raw
+#  turns into the semantic tier (spec §6.6b). It is on no read path — §11
+#  forbids an LLM on any mastery read — so the whole module and its entire
+#  test suite run without it.
+#
+#  Not built yet (build order M6). With no key the semantic tier simply does
+#  not fill: session-opening lines fall to a lower rung of the §2.1 ladder and
+#  the run records why.
+#
+ANTHROPIC_API_KEY=sk-ant-replace-me
+
+
+# ── The database ─────────────────────────────────────────────────────────────
+#
+#  SQLite by default, zero setup, and everything in this module works on it —
+#  including the recursive bottleneck walk and brute-force vector search.
+#  Point this at Postgres for anything real (master plan §20).
+#
+#  DATABASE_URL=postgresql+psycopg://user:pass@127.0.0.1:5432/ai_interviewer

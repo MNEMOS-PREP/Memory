@@ -1,0 +1,1159 @@
+# =============================================================================
+#  THE CONCEPT ONTOLOGY  —  spec §6.1
+#
+#  120 concepts for Phase 1: DSA + CS core + communication (open decision 1).
+#  450 is the year-end target, and growth is an append to this file, not a
+#  migration. `ml`, `system_design`, `aptitude` and `tooling` are declared
+#  domains with no concepts yet, deliberately: at 180 concepts the granularity
+#  check in §6.1 fails by construction, because M05 cannot seed 3+ calibrated
+#  items per concept that fast, and a thin correct ontology beats a large
+#  wrong one.
+#
+#  HOW THIS WAS BUILT, and how to extend it (Trap 5):
+#    1. University syllabi for DSA, OS, DBMS, CN, OOP — our own institution's.
+#    2. Company topic tags from public LeetCode/GfG company lists (topic names
+#       only, never content).
+#    3. Communication constructs from the M12/M17 feature list.
+#  It was NOT produced by asking a model for 120 concepts. That returns a
+#  plausible list with wrong prerequisites and inconsistent granularity, and
+#  every downstream number inherits the mess.
+#
+#  REVIEW STATUS: `reviewed: false`. AC-4.9 gates Phase-1 exit on a faculty
+#  member walking the prerequisite edges once, edge by edge, in the ontology
+#  browser (§6.10). Until that flag flips this file is a defensible draft, and
+#  `GET /v1/concepts` says so rather than implying an authority it does not
+#  have.
+#
+#  SIZING RULE (§3.2.1): a concept is right-sized if a 60-minute session can
+#  meaningfully test 4–8 of them, and if a student would recognise the name.
+#  "DSA" is too coarse to act on; "Kadane's algorithm" never accumulates
+#  enough observations to estimate anything from.
+#
+#  EDGE DIRECTION, because getting it backwards silently inverts the whole
+#  bottleneck query:
+#    prerequisites: [{id: X}]   under concept C  =>  edge  X --prerequisite_of--> C
+#                                                    "X must come before C"
+#    specialises:   [X]         under concept C  =>  edge  X --specialises--> C
+#                                                    "X is a narrower case of C"
+#
+#  Every `prerequisite_of` edge must keep the graph acyclic; `ontology_lint`
+#  fails CI otherwise. Aliases are normalised (casefold, strip accents, drop
+#  punctuation, collapse whitespace) and must not collide across concepts —
+#  also linted, because a collision silently sends a student's topic to the
+#  wrong belief.
+# =============================================================================
+
+version: "1.0"
+reviewed: false
+reviewed_by: null
+reviewed_at: null
+
+concepts:
+  # ─── DSA · foundations ───────────────────────────────────────────────────
+  - id: concept:variables_and_types
+    name: Variables and Types
+    domain: dsa
+    level: foundational
+    aliases: [variables, data types, primitive types, type casting]
+    foundational_floor: true
+    typical_question_time_s: 120
+
+  - id: concept:control_flow
+    name: Control Flow
+    domain: dsa
+    level: foundational
+    aliases: [loops, conditionals, if else, iteration, for loop, while loop]
+    foundational_floor: true
+    typical_question_time_s: 120
+
+  - id: concept:functions_and_scope
+    name: Functions and Scope
+    domain: dsa
+    level: foundational
+    aliases: [functions, methods, parameters, scope, call stack]
+    foundational_floor: true
+    typical_question_time_s: 180
+    prerequisites:
+      - {id: concept:control_flow, strength: 0.7}
+
+  - id: concept:pointers_and_references
+    name: Pointers and References
+    domain: dsa
+    level: foundational
+    aliases: [pointers, references, dereferencing, null pointer, aliasing]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:variables_and_types, strength: 0.8}
+
+  - id: concept:time_complexity
+    name: Time Complexity
+    domain: dsa
+    level: foundational
+    aliases: [big o, big-o, asymptotic analysis, complexity analysis, order of growth]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:control_flow, strength: 0.7}
+
+  - id: concept:space_complexity
+    name: Space Complexity
+    domain: dsa
+    level: foundational
+    aliases: [auxiliary space, memory complexity, in place]
+    typical_question_time_s: 180
+    prerequisites:
+      - {id: concept:time_complexity, strength: 0.7}
+
+  - id: concept:amortized_analysis
+    name: Amortized Analysis
+    domain: dsa
+    level: advanced
+    aliases: [amortised analysis, amortized cost, dynamic array resizing]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:time_complexity, strength: 0.85}
+
+  - id: concept:recurrence_relations
+    name: Recurrence Relations
+    domain: dsa
+    level: intermediate
+    aliases: [master theorem, recurrence, recursion tree method]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:recursion, strength: 0.8}
+      - {id: concept:time_complexity, strength: 0.7}
+
+  # ─── DSA · linear structures ─────────────────────────────────────────────
+  - id: concept:arrays
+    name: Arrays
+    domain: dsa
+    level: foundational
+    aliases: [array, lists, arrays and lists, 1d array, dynamic array]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:control_flow, strength: 0.8}
+
+  - id: concept:strings
+    name: Strings
+    domain: dsa
+    level: foundational
+    aliases: [string, string manipulation, character arrays, substrings]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:arrays, strength: 0.6}
+
+  - id: concept:matrix_operations
+    name: Matrices
+    domain: dsa
+    level: intermediate
+    aliases: [matrix, 2d arrays, grid, matrix manipulation, spiral traversal]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:arrays, strength: 0.85}
+
+  - id: concept:hashing
+    name: Hashing
+    domain: dsa
+    level: intermediate
+    aliases: [hash map, hashmap, hash table, dictionary, hash set, unordered map]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:arrays, strength: 0.6}
+
+  - id: concept:prefix_sums
+    name: Prefix Sums
+    domain: dsa
+    level: intermediate
+    aliases: [prefix sum, cumulative sum, running sum, difference array]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:arrays, strength: 0.85}
+
+  - id: concept:two_pointers
+    name: Two Pointers
+    domain: dsa
+    level: intermediate
+    aliases: [two pointer, opposite pointers, fast and slow pointers]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:arrays, strength: 0.8}
+
+  - id: concept:sliding_window
+    name: Sliding Window
+    domain: dsa
+    level: intermediate
+    aliases: [window technique, variable window, fixed window]
+    typical_question_time_s: 540
+    prerequisites:
+      - {id: concept:two_pointers, strength: 0.8}
+      - {id: concept:hashing, strength: 0.4}
+
+  - id: concept:linked_lists
+    name: Linked Lists
+    domain: dsa
+    level: intermediate
+    aliases: [linked list, singly linked list, doubly linked list, ll]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:pointers_and_references, strength: 0.85}
+
+  - id: concept:stacks
+    name: Stacks
+    domain: dsa
+    level: intermediate
+    aliases: [stack, lifo, stack data structure]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:arrays, strength: 0.6}
+
+  - id: concept:queues
+    name: Queues
+    domain: dsa
+    level: intermediate
+    aliases: [queue, fifo, deque, circular queue]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:arrays, strength: 0.6}
+
+  - id: concept:monotonic_stack
+    name: Monotonic Stack
+    domain: dsa
+    level: advanced
+    aliases: [monotone stack, next greater element, largest rectangle histogram]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:stacks, strength: 0.9}
+
+  - id: concept:heaps
+    name: Heaps
+    domain: dsa
+    level: intermediate
+    aliases: [heap, priority queue, min heap, max heap, heapify]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:arrays, strength: 0.7}
+      - {id: concept:sorting, strength: 0.4}
+
+  # ─── DSA · searching and sorting ─────────────────────────────────────────
+  - id: concept:sorting
+    name: Sorting
+    domain: dsa
+    level: intermediate
+    aliases: [sort, merge sort, quick sort, comparison sort, insertion sort, bubble sort]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:arrays, strength: 0.8}
+      - {id: concept:time_complexity, strength: 0.5}
+
+  - id: concept:non_comparison_sorting
+    name: Non-comparison Sorting
+    domain: dsa
+    level: advanced
+    aliases: [counting sort, radix sort, bucket sort]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:sorting, strength: 0.85}
+
+  - id: concept:binary_search
+    name: Binary Search
+    domain: dsa
+    level: intermediate
+    aliases: [binary search algorithm, bisect, log n search]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:arrays, strength: 0.8}
+      - {id: concept:time_complexity, strength: 0.5}
+
+  - id: concept:binary_search_on_answer
+    name: Binary Search on the Answer
+    domain: dsa
+    level: advanced
+    aliases: [parametric search, binary search the answer, minimise the maximum]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:binary_search, strength: 0.9}
+
+  - id: concept:string_matching
+    name: String Matching
+    domain: dsa
+    level: advanced
+    aliases: [kmp, pattern matching, rabin karp, z algorithm, substring search]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:strings, strength: 0.85}
+
+  # ─── DSA · recursion family ──────────────────────────────────────────────
+  - id: concept:recursion
+    name: Recursion
+    domain: dsa
+    level: intermediate
+    aliases: [recursive, base case, recursive function, tail recursion]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:functions_and_scope, strength: 0.9}
+
+  - id: concept:divide_and_conquer
+    name: Divide and Conquer
+    domain: dsa
+    level: advanced
+    aliases: [divide conquer, split and merge]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:recursion, strength: 0.9}
+      - {id: concept:recurrence_relations, strength: 0.5}
+
+  - id: concept:backtracking
+    name: Backtracking
+    domain: dsa
+    level: advanced
+    aliases: [backtrack, n queens, permutations generation, subsets generation]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:recursion, strength: 0.9}
+
+  - id: concept:dynamic_programming
+    name: Dynamic Programming
+    domain: dsa
+    level: advanced
+    aliases: [dp, memoization, memoisation, tabulation, dynamic programing, overlapping subproblems]
+    typical_question_time_s: 900
+    prerequisites:
+      - {id: concept:recursion, strength: 0.9}
+      - {id: concept:arrays, strength: 0.4}
+    specialises: [concept:knapsack, concept:longest_increasing_subsequence,
+                  concept:edit_distance, concept:dp_on_grids, concept:dp_on_trees]
+
+  - id: concept:dp_on_grids
+    name: Grid DP
+    domain: dsa
+    level: advanced
+    aliases: [grid dp, path counting, unique paths, matrix dp]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:dynamic_programming, strength: 0.9}
+      - {id: concept:matrix_operations, strength: 0.5}
+
+  - id: concept:knapsack
+    name: Knapsack
+    domain: dsa
+    level: advanced
+    aliases: [0/1 knapsack, subset sum, bounded knapsack, unbounded knapsack]
+    typical_question_time_s: 900
+    prerequisites:
+      - {id: concept:dynamic_programming, strength: 0.9}
+
+  - id: concept:longest_increasing_subsequence
+    name: Longest Increasing Subsequence
+    domain: dsa
+    level: advanced
+    aliases: [lis, longest increasing subsequence, patience sorting]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:dynamic_programming, strength: 0.85}
+      - {id: concept:binary_search, strength: 0.4}
+
+  - id: concept:edit_distance
+    name: Edit Distance
+    domain: dsa
+    level: advanced
+    aliases: [levenshtein, edit distance, longest common subsequence, lcs]
+    typical_question_time_s: 900
+    prerequisites:
+      - {id: concept:dynamic_programming, strength: 0.9}
+      - {id: concept:strings, strength: 0.6}
+
+  - id: concept:dp_on_trees
+    name: Tree DP
+    domain: dsa
+    level: advanced
+    aliases: [tree dp, dp on trees, rerooting]
+    typical_question_time_s: 900
+    prerequisites:
+      - {id: concept:dynamic_programming, strength: 0.9}
+      - {id: concept:trees, strength: 0.85}
+
+  - id: concept:greedy
+    name: Greedy Algorithms
+    domain: dsa
+    level: advanced
+    aliases: [greedy, exchange argument, greedy choice]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:sorting, strength: 0.6}
+      - {id: concept:time_complexity, strength: 0.4}
+
+  - id: concept:interval_scheduling
+    name: Interval Problems
+    domain: dsa
+    level: advanced
+    aliases: [intervals, merge intervals, meeting rooms, interval scheduling]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:greedy, strength: 0.85}
+      - {id: concept:sorting, strength: 0.7}
+
+  # ─── DSA · trees ─────────────────────────────────────────────────────────
+  - id: concept:trees
+    name: Trees
+    domain: dsa
+    level: intermediate
+    aliases: [tree, binary tree, n-ary tree, tree data structure]
+    typical_question_time_s: 540
+    prerequisites:
+      - {id: concept:recursion, strength: 0.8}
+      - {id: concept:pointers_and_references, strength: 0.6}
+
+  - id: concept:tree_traversals
+    name: Tree Traversals
+    domain: dsa
+    level: intermediate
+    aliases: [inorder, preorder, postorder, level order, dfs on tree]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:trees, strength: 0.9}
+      - {id: concept:recursion, strength: 0.8}
+
+  - id: concept:binary_search_trees
+    name: Binary Search Trees
+    domain: dsa
+    level: advanced
+    aliases: [bst, binary search tree, ordered tree]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:trees, strength: 0.9}
+      - {id: concept:binary_search, strength: 0.6}
+
+  - id: concept:balanced_trees
+    name: Balanced Trees
+    domain: dsa
+    level: advanced
+    aliases: [avl tree, red black tree, self balancing tree, rotations]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:binary_search_trees, strength: 0.9}
+
+  - id: concept:tries
+    name: Tries
+    domain: dsa
+    level: advanced
+    aliases: [trie, prefix tree, radix tree]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:trees, strength: 0.8}
+      - {id: concept:strings, strength: 0.7}
+
+  - id: concept:segment_trees
+    name: Segment Trees
+    domain: dsa
+    level: advanced
+    aliases: [segment tree, range query tree, lazy propagation]
+    typical_question_time_s: 900
+    prerequisites:
+      - {id: concept:trees, strength: 0.8}
+      - {id: concept:recursion, strength: 0.7}
+
+  - id: concept:fenwick_trees
+    name: Fenwick Trees
+    domain: dsa
+    level: advanced
+    aliases: [fenwick tree, binary indexed tree, bit tree]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:prefix_sums, strength: 0.8}
+      - {id: concept:bit_manipulation, strength: 0.6}
+
+  # ─── DSA · graphs ────────────────────────────────────────────────────────
+  - id: concept:graphs_representation
+    name: Graph Representation
+    domain: dsa
+    level: intermediate
+    aliases: [graphs, adjacency list, adjacency matrix, graph basics, edge list]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:arrays, strength: 0.6}
+      - {id: concept:hashing, strength: 0.4}
+
+  - id: concept:graph_traversal_bfs
+    name: Breadth-First Search
+    domain: dsa
+    level: intermediate
+    aliases: [bfs, breadth first search, level order graph, shortest path unweighted]
+    typical_question_time_s: 540
+    prerequisites:
+      - {id: concept:graphs_representation, strength: 0.9}
+      - {id: concept:queues, strength: 0.7}
+
+  - id: concept:graph_traversal_dfs
+    name: Depth-First Search
+    domain: dsa
+    level: intermediate
+    aliases: [dfs, depth first search, connected components]
+    typical_question_time_s: 540
+    prerequisites:
+      - {id: concept:graphs_representation, strength: 0.9}
+      - {id: concept:recursion, strength: 0.8}
+
+  - id: concept:topological_sort
+    name: Topological Sort
+    domain: dsa
+    level: advanced
+    aliases: [topological sorting, toposort, kahn algorithm, course schedule]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:graph_traversal_dfs, strength: 0.9}
+
+  - id: concept:shortest_paths
+    name: Shortest Paths
+    domain: dsa
+    level: advanced
+    aliases: [dijkstra, bellman ford, floyd warshall, weighted shortest path]
+    typical_question_time_s: 900
+    prerequisites:
+      - {id: concept:graph_traversal_bfs, strength: 0.8}
+      - {id: concept:heaps, strength: 0.7}
+
+  - id: concept:minimum_spanning_tree
+    name: Minimum Spanning Tree
+    domain: dsa
+    level: advanced
+    aliases: [mst, kruskal, prim, spanning tree]
+    typical_question_time_s: 720
+    prerequisites:
+      - {id: concept:graphs_representation, strength: 0.8}
+      - {id: concept:union_find, strength: 0.6}
+      - {id: concept:heaps, strength: 0.5}
+
+  - id: concept:union_find
+    name: Union-Find
+    domain: dsa
+    level: advanced
+    aliases: [dsu, disjoint set union, union by rank, path compression]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:arrays, strength: 0.6}
+
+  - id: concept:strongly_connected_components
+    name: Strongly Connected Components
+    domain: dsa
+    level: advanced
+    aliases: [scc, tarjan, kosaraju, bridges and articulation points]
+    typical_question_time_s: 900
+    prerequisites:
+      - {id: concept:graph_traversal_dfs, strength: 0.9}
+
+  # ─── DSA · maths ─────────────────────────────────────────────────────────
+  - id: concept:bit_manipulation
+    name: Bit Manipulation
+    domain: dsa
+    level: intermediate
+    aliases: [bitwise, bit tricks, xor tricks, bitmask]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:variables_and_types, strength: 0.7}
+
+  - id: concept:number_theory
+    name: Number Theory
+    domain: dsa
+    level: intermediate
+    aliases: [primes, sieve of eratosthenes, gcd, lcm, factorisation]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:control_flow, strength: 0.5}
+
+  - id: concept:modular_arithmetic
+    name: Modular Arithmetic
+    domain: dsa
+    level: advanced
+    aliases: [modulo, mod arithmetic, modular exponentiation, fermat little theorem]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:number_theory, strength: 0.8}
+
+  - id: concept:combinatorics
+    name: Combinatorics
+    domain: dsa
+    level: advanced
+    aliases: [permutations and combinations, ncr, pigeonhole, counting problems]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:number_theory, strength: 0.5}
+
+  # ─── CS core · operating systems ─────────────────────────────────────────
+  - id: concept:process_vs_thread
+    name: Processes and Threads
+    domain: cs_core
+    level: foundational
+    aliases: [process, thread, multithreading, process vs thread]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:memory_management, strength: 0.4}
+
+  - id: concept:process_scheduling
+    name: CPU Scheduling
+    domain: cs_core
+    level: intermediate
+    aliases: [scheduling algorithms, round robin, sjf, fcfs, preemptive scheduling]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:process_vs_thread, strength: 0.85}
+
+  - id: concept:context_switching
+    name: Context Switching
+    domain: cs_core
+    level: intermediate
+    aliases: [context switch, process control block, pcb]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:process_vs_thread, strength: 0.85}
+
+  - id: concept:concurrency_synchronisation
+    name: Synchronisation
+    domain: cs_core
+    level: advanced
+    aliases: [mutex, semaphore, race condition, critical section, locks, synchronization]
+    typical_question_time_s: 600
+    prerequisites:
+      - {id: concept:process_vs_thread, strength: 0.9}
+
+  - id: concept:deadlocks
+    name: Deadlocks
+    domain: cs_core
+    level: advanced
+    aliases: [deadlock, bankers algorithm, coffman conditions, livelock]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:concurrency_synchronisation, strength: 0.9}
+
+  - id: concept:inter_process_communication
+    name: Inter-process Communication
+    domain: cs_core
+    level: advanced
+    aliases: [ipc, pipes, shared memory, message passing]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:process_vs_thread, strength: 0.8}
+
+  - id: concept:system_calls
+    name: System Calls
+    domain: cs_core
+    level: intermediate
+    aliases: [syscall, kernel mode, user mode, trap]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:process_vs_thread, strength: 0.6}
+
+  - id: concept:memory_management
+    name: Memory Management
+    domain: cs_core
+    level: intermediate
+    aliases: [stack vs heap, memory allocation, fragmentation, malloc]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:pointers_and_references, strength: 0.6}
+
+  - id: concept:virtual_memory
+    name: Virtual Memory
+    domain: cs_core
+    level: advanced
+    aliases: [virtual address space, mmu, address translation]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:memory_management, strength: 0.9}
+
+  - id: concept:paging_and_segmentation
+    name: Paging and Segmentation
+    domain: cs_core
+    level: advanced
+    aliases: [paging, segmentation, page table, tlb]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:virtual_memory, strength: 0.9}
+
+  - id: concept:page_replacement
+    name: Page Replacement
+    domain: cs_core
+    level: advanced
+    aliases: [lru page replacement, fifo page replacement, optimal page replacement, thrashing]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:paging_and_segmentation, strength: 0.9}
+
+  - id: concept:file_systems
+    name: File Systems
+    domain: cs_core
+    level: intermediate
+    aliases: [file system, inode, directory structure, journaling]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:memory_management, strength: 0.4}
+
+  # ─── CS core · databases ─────────────────────────────────────────────────
+  - id: concept:relational_model
+    name: The Relational Model
+    domain: cs_core
+    level: foundational
+    aliases: [relational database, tables and keys, primary key, foreign key, schema design]
+    typical_question_time_s: 300
+
+  - id: concept:sql_queries
+    name: SQL Queries
+    domain: cs_core
+    level: intermediate
+    aliases: [sql, select query, where clause, subquery, dbms queries]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:relational_model, strength: 0.9}
+
+  - id: concept:joins
+    name: Joins
+    domain: cs_core
+    level: intermediate
+    aliases: [inner join, left join, outer join, self join, cross join]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:sql_queries, strength: 0.9}
+
+  - id: concept:aggregation_and_grouping
+    name: Aggregation and Grouping
+    domain: cs_core
+    level: intermediate
+    aliases: [group by, having clause, aggregate functions, window functions]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:sql_queries, strength: 0.85}
+
+  - id: concept:functional_dependencies
+    name: Functional Dependencies
+    domain: cs_core
+    level: intermediate
+    aliases: [functional dependency, closure of attributes, candidate keys]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:relational_model, strength: 0.85}
+
+  - id: concept:normalisation
+    name: Normalisation
+    domain: cs_core
+    level: advanced
+    aliases: [normalization, 1nf, 2nf, 3nf, bcnf, denormalisation]
+    typical_question_time_s: 540
+    prerequisites:
+      - {id: concept:functional_dependencies, strength: 0.9}
+
+  - id: concept:indexing
+    name: Database Indexing
+    domain: cs_core
+    level: advanced
+    aliases: [index, b tree index, clustered index, composite index, covering index]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:relational_model, strength: 0.7}
+      - {id: concept:trees, strength: 0.5}
+
+  - id: concept:query_optimisation
+    name: Query Optimisation
+    domain: cs_core
+    level: advanced
+    aliases: [query optimization, execution plan, query planner, explain analyze]
+    typical_question_time_s: 540
+    prerequisites:
+      - {id: concept:indexing, strength: 0.85}
+      - {id: concept:joins, strength: 0.7}
+
+  - id: concept:transactions_acid
+    name: Transactions and ACID
+    domain: cs_core
+    level: intermediate
+    aliases: [acid, transaction, atomicity, durability, commit and rollback]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:relational_model, strength: 0.7}
+
+  - id: concept:concurrency_control
+    name: Concurrency Control
+    domain: cs_core
+    level: advanced
+    aliases: [two phase locking, mvcc, database locks, serialisability]
+    typical_question_time_s: 540
+    prerequisites:
+      - {id: concept:transactions_acid, strength: 0.9}
+      - {id: concept:concurrency_synchronisation, strength: 0.5}
+
+  - id: concept:isolation_levels
+    name: Isolation Levels
+    domain: cs_core
+    level: advanced
+    aliases: [read committed, repeatable read, dirty read, phantom read, snapshot isolation]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:concurrency_control, strength: 0.9}
+
+  - id: concept:nosql_vs_relational
+    name: NoSQL and When to Use It
+    domain: cs_core
+    level: advanced
+    aliases: [nosql, document database, key value store, cap theorem]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:relational_model, strength: 0.7}
+
+  # ─── CS core · networks ──────────────────────────────────────────────────
+  - id: concept:osi_and_tcp_ip_model
+    name: Network Layer Models
+    domain: cs_core
+    level: foundational
+    aliases: [osi model, tcp ip model, network layers, seven layers]
+    typical_question_time_s: 300
+
+  - id: concept:ip_addressing
+    name: IP Addressing
+    domain: cs_core
+    level: intermediate
+    aliases: [ipv4, ipv6, ip address, cidr, private ip]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:osi_and_tcp_ip_model, strength: 0.7}
+
+  - id: concept:subnetting
+    name: Subnetting
+    domain: cs_core
+    level: advanced
+    aliases: [subnet mask, subnet, vlsm, network address]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:ip_addressing, strength: 0.9}
+
+  - id: concept:tcp_vs_udp
+    name: TCP and UDP
+    domain: cs_core
+    level: intermediate
+    aliases: [tcp, udp, transport layer, connection oriented]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:osi_and_tcp_ip_model, strength: 0.8}
+
+  - id: concept:tcp_reliability
+    name: TCP Reliability
+    domain: cs_core
+    level: advanced
+    aliases: [three way handshake, retransmission, sliding window protocol, sequence numbers]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:tcp_vs_udp, strength: 0.9}
+
+  - id: concept:congestion_control
+    name: Congestion Control
+    domain: cs_core
+    level: advanced
+    aliases: [slow start, congestion avoidance, flow control, aimd]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:tcp_reliability, strength: 0.9}
+
+  - id: concept:routing
+    name: Routing
+    domain: cs_core
+    level: advanced
+    aliases: [routing table, distance vector, link state, bgp, ospf]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:ip_addressing, strength: 0.8}
+
+  - id: concept:dns
+    name: DNS
+    domain: cs_core
+    level: intermediate
+    aliases: [domain name system, dns resolution, name server, dns record]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:osi_and_tcp_ip_model, strength: 0.6}
+
+  - id: concept:http_and_rest
+    name: HTTP and REST
+    domain: cs_core
+    level: intermediate
+    aliases: [http, rest api, http methods, status codes, restful]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:tcp_vs_udp, strength: 0.6}
+
+  - id: concept:https_and_tls
+    name: HTTPS and TLS
+    domain: cs_core
+    level: advanced
+    aliases: [https, tls, ssl, certificate, tls handshake]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.8}
+
+  - id: concept:sockets
+    name: Sockets
+    domain: cs_core
+    level: advanced
+    aliases: [socket programming, socket api, port binding]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:tcp_vs_udp, strength: 0.8}
+
+  - id: concept:network_security_basics
+    name: Network Security Basics
+    domain: cs_core
+    level: advanced
+    aliases: [firewall, symmetric encryption, public key cryptography, hashing for security]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:osi_and_tcp_ip_model, strength: 0.5}
+
+  # ─── CS core · OOP and language ──────────────────────────────────────────
+  - id: concept:classes_and_objects
+    name: Classes and Objects
+    domain: cs_core
+    level: foundational
+    aliases: [class, object, instance, constructor, oop basics]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:functions_and_scope, strength: 0.8}
+
+  - id: concept:encapsulation
+    name: Encapsulation
+    domain: cs_core
+    level: intermediate
+    aliases: [data hiding, access modifiers, getters and setters]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:classes_and_objects, strength: 0.9}
+
+  - id: concept:inheritance
+    name: Inheritance
+    domain: cs_core
+    level: intermediate
+    aliases: [subclass, superclass, extends, multiple inheritance, diamond problem]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:classes_and_objects, strength: 0.9}
+
+  - id: concept:polymorphism
+    name: Polymorphism
+    domain: cs_core
+    level: intermediate
+    aliases: [method overriding, method overloading, dynamic dispatch, virtual functions]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:inheritance, strength: 0.85}
+
+  - id: concept:abstraction_and_interfaces
+    name: Abstraction and Interfaces
+    domain: cs_core
+    level: intermediate
+    aliases: [abstract class, interface, abstraction, contract based design]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:polymorphism, strength: 0.7}
+
+  - id: concept:solid_principles
+    name: SOLID Principles
+    domain: cs_core
+    level: advanced
+    aliases: [solid, single responsibility, dependency inversion, open closed principle]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:abstraction_and_interfaces, strength: 0.8}
+      - {id: concept:inheritance, strength: 0.6}
+
+  - id: concept:design_patterns
+    name: Design Patterns
+    domain: cs_core
+    level: advanced
+    aliases: [singleton, factory pattern, observer pattern, strategy pattern, gof patterns]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:solid_principles, strength: 0.8}
+
+  - id: concept:exception_handling
+    name: Exception Handling
+    domain: cs_core
+    level: intermediate
+    aliases: [try catch, exceptions, error handling, finally block, checked exceptions]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:functions_and_scope, strength: 0.7}
+
+  - id: concept:memory_model_gc
+    name: Garbage Collection
+    domain: cs_core
+    level: advanced
+    aliases: [gc, garbage collector, reference counting, memory leak]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:memory_management, strength: 0.8}
+      - {id: concept:classes_and_objects, strength: 0.4}
+
+  # ─── CS core · systems and practice ──────────────────────────────────────
+  - id: concept:computer_architecture_basics
+    name: Computer Architecture Basics
+    domain: cs_core
+    level: foundational
+    aliases: [cpu architecture, registers, instruction cycle, pipelining]
+    typical_question_time_s: 300
+
+  - id: concept:caching_and_locality
+    name: Caching and Locality
+    domain: cs_core
+    level: advanced
+    aliases: [cache, cache hit, locality of reference, cache invalidation, write through]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:computer_architecture_basics, strength: 0.7}
+      - {id: concept:memory_management, strength: 0.5}
+
+  - id: concept:compilation_and_interpretation
+    name: Compilation and Interpretation
+    domain: cs_core
+    level: intermediate
+    aliases: [compiler, interpreter, jit, bytecode, linking]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:computer_architecture_basics, strength: 0.5}
+
+  - id: concept:testing_and_debugging
+    name: Testing and Debugging
+    domain: cs_core
+    level: intermediate
+    aliases: [unit test, test cases, debugging, edge cases, test driven development]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:functions_and_scope, strength: 0.6}
+
+  - id: concept:hashing_internals
+    name: Hash Function Design
+    domain: cs_core
+    level: advanced
+    aliases: [collision resolution, open addressing, chaining, load factor, rehashing]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:hashing, strength: 0.85}
+
+  # ─── Communication ───────────────────────────────────────────────────────
+  #  Behavioural DESCRIPTIONS of observable delivery, never traits. M12
+  #  FR-12.15 forbids inferring personality anywhere on this platform, and
+  #  these names are written to survive that grep on merit.
+  - id: concept:answer_structuring
+    name: Structuring an Answer
+    domain: communication
+    level: foundational
+    aliases: [star method, structured answer, situation task action result, answer structure]
+    typical_question_time_s: 240
+
+  - id: concept:clarifying_questions
+    name: Asking Clarifying Questions
+    domain: communication
+    level: foundational
+    aliases: [clarifying question, requirement gathering, asking questions before solving]
+    typical_question_time_s: 180
+
+  - id: concept:thinking_aloud
+    name: Thinking Aloud
+    domain: communication
+    level: intermediate
+    aliases: [think aloud, narrating your approach, verbalising reasoning]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:answer_structuring, strength: 0.5}
+
+  - id: concept:explaining_tradeoffs
+    name: Explaining Trade-offs
+    domain: communication
+    level: advanced
+    aliases: [tradeoffs, justifying a choice, comparing approaches, pros and cons]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:thinking_aloud, strength: 0.6}
+
+  - id: concept:summarising_concisely
+    name: Being Concise
+    domain: communication
+    level: intermediate
+    aliases: [conciseness, rambling, answer length, getting to the point]
+    typical_question_time_s: 180
+    prerequisites:
+      - {id: concept:answer_structuring, strength: 0.7}
+
+  - id: concept:saying_i_dont_know
+    name: Handling What You Don't Know
+    domain: communication
+    level: intermediate
+    aliases: [i dont know, admitting uncertainty, calibrated confidence, guessing]
+    typical_question_time_s: 180
+
+  - id: concept:pace_and_pausing
+    name: Pace and Pausing
+    domain: communication
+    level: foundational
+    aliases: [speaking pace, speaking too fast, pauses, wpm]
+    typical_question_time_s: 120
+
+  - id: concept:filler_reduction
+    name: Filler Words
+    domain: communication
+    level: foundational
+    aliases: [filler words, um and uh, verbal fillers, disfluency]
+    typical_question_time_s: 120
+
+  - id: concept:active_listening
+    name: Listening to the Question
+    domain: communication
+    level: foundational
+    aliases: [active listening, answering what was asked, misreading the question]
+    typical_question_time_s: 180
+
+  - id: concept:handling_interruptions
+    name: Handling Interruptions
+    domain: communication
+    level: intermediate
+    aliases: [being interrupted, talking over, turn taking, recovering after interruption]
+    typical_question_time_s: 180
+    prerequisites:
+      - {id: concept:active_listening, strength: 0.6}
+
+  - id: concept:quantifying_impact
+    name: Quantifying Impact
+    domain: communication
+    level: advanced
+    aliases: [numbers in answers, measurable impact, metrics in a story]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:answer_structuring, strength: 0.7}
+
+  - id: concept:project_storytelling
+    name: Talking About Your Projects
+    domain: communication
+    level: advanced
+    aliases: [project explanation, walk me through your project, resume deep dive]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:answer_structuring, strength: 0.8}
+      - {id: concept:quantifying_impact, strength: 0.5}
+
+  - id: concept:receiving_feedback
+    name: Taking a Hint
+    domain: communication
+    level: intermediate
+    aliases: [using a hint, responding to feedback, course correcting mid answer]
+    typical_question_time_s: 180
+    prerequisites:
+      - {id: concept:active_listening, strength: 0.7}
+
+  - id: concept:disagreeing_respectfully
+    name: Disagreeing With the Interviewer
+    domain: communication
+    level: advanced
+    aliases: [pushing back, defending your answer, respectful disagreement]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:explaining_tradeoffs, strength: 0.6}
+
+  - id: concept:closing_questions
+    name: Questions You Ask Them
+    domain: communication
+    level: intermediate
+    aliases: [questions to ask the interviewer, closing the interview, do you have any questions]
+    typical_question_time_s: 180

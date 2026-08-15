@@ -1,0 +1,101 @@
+===============================================================================
+  M04 — SKILL GRAPH & MNEMOS MEMORY · DEPENDENCIES
+  Repo: https://github.com/MNEMOS-PREP/Memory
+  Spec: plan_in_depth/M04_Skill_Graph_Memory.md
+  Last updated: 2026-08-15
+===============================================================================
+
+This repo holds ONE module. It clones, installs and runs on its own — you do
+not need the other 18 to work on it.
+
+The machine-readable version of this file is `module.json`. The backend reads
+it at startup; if you edit one, edit both.
+
+
+WHAT THIS MODULE NEEDS (upstream)
+-------------------------------------------------------------------------------
+
+  NOTHING. And that is a design decision, not an accident.
+
+M04 is the ROOT of the platform's dependency graph: eighteen modules read it
+and it reads none of them. That is what lets it be built, run and demoed in
+Phase 1 before M05 or M13 exist — and it is why `GET /v1/deps` returns an
+empty list rather than an empty page.
+
+M13 (Evaluation) WRITES here, but a caller is not a dependency. Episodic
+writes arrive through an adapter seam that a fixture can feed, which is what
+`Backend/seed.py` does (spec §10, last row).
+
+
+WHAT THIS MODULE FEEDS (downstream)
+-------------------------------------------------------------------------------
+These consume M04. If you change a response shape, these are who you break.
+
+  MODULE  WHAT THEY TAKE FROM US
+  ------  ----------------------------------------------------------------
+  M01     concept resolution for resume surface forms
+  M02     concept resolution for JD requirements
+  M05     theta + SE seed per concept; the re-test queue as a selection input
+  M06     the session-pinned profile summary injected at session start
+  M13     nothing — it WRITES observations here
+  M15     theta per topic, to rank likely questions by the student's own gaps
+  M16     bottlenecks, trajectories and the re-test queue
+  M19     the trajectory endpoint, and evidence refs to project a ledger over
+
+Contracts. Two of these are already called by code that shipped before this
+module existed, so they are ADOPTED rather than invented:
+
+  GET  /v1/skill-graph/theta            M15 calls this today
+  POST /v1/concepts/resolve             M01, M02 and M15 all need it
+
+Additive changes are safe; removing or renaming a field is a breaking change
+for eight modules.
+
+TWO RULES FOR ANYONE CONSUMING US
+-------------------------------------------------------------------------------
+
+  1. A topic we cannot resolve comes back in `unresolved`, NEVER as
+     theta = 0.0. Degrade that term to zero weight and say so. A silent zero
+     is a confident claim of ignorance.
+
+  2. `mastery_p` is null when there is nothing to claim. Render "not tested",
+     never an empty bar at zero. `@ai/core`'s `MasteryBar` already refuses to
+     draw a number for a state that has none — use it rather than reinventing
+     the bar, and this stays true by construction.
+
+
+SHARED PLATFORM CODE  —  a versioned dependency, not a copy
+-------------------------------------------------------------------------------
+    https://github.com/MNEMOS-PREP/Platform_Core   (public)   pinned at v0.3.0
+
+  Backend    ai-core @ git+https://github.com/MNEMOS-PREP/Platform_Core@v0.3.0#subdirectory=python
+
+v0.3.0 is the version that carries the two contracts this module is not
+allowed to own:
+
+  ai_core.evidence   EvidenceRef and its resolution. "Every number traces to
+                     evidence" is only true if every repo means the same thing
+                     by a reference.
+  ai_core.mastery    The five states, mastery_p, decay, hysteresis. Five
+                     surfaces render these; a sixth interpretation is how the
+                     promise quietly breaks.
+
+If you are editing Platform_Core and this module at the same time, see
+README.md "Working on both repos at once". Do not relax the pin.
+
+
+CREDENTIALS
+-------------------------------------------------------------------------------
+None are required to run, test or demo this module.
+
+  M04_SERVICE_SECRET   Shared secret for `service` endpoints. UNSET means
+                       those endpoints are OPEN, and the app says so loudly at
+                       startup. Fine on a laptop. Never in a pilot — this
+                       module holds every belief the platform has about a
+                       student.
+
+  ANTHROPIC_API_KEY    Only for the nightly distiller (§6.6b), which is not
+                       built yet and is on no read path. Absent, the semantic
+                       tier simply does not fill.
+
+Copy required_keys.txt to keys.txt and fill it in. keys.txt is gitignored.
