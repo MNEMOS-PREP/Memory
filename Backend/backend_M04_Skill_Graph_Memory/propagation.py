@@ -94,7 +94,8 @@ def plan(
 
     if outcome >= SUCCESS_THRESHOLD:
         for neighbour in ontology.walk_up(concept_id, max_hops):
-            delta = (damping**neighbour.hops) * neighbour.strength * SUCCESS_TRANSFER * (outcome - 0.5)
+            damped = (damping**neighbour.hops) * neighbour.strength
+            delta = damped * SUCCESS_TRANSFER * (outcome - 0.5)
             steps.append(
                 PropagationStep(
                     concept_id=neighbour.concept_id,
@@ -114,7 +115,8 @@ def plan(
                     hops=neighbour.hops,
                     strength=neighbour.strength,
                     d_theta=0.0,
-                    se_factor=1.0 + (damping**neighbour.hops) * neighbour.strength * FAILURE_SE_TRANSFER,
+                    se_factor=1.0
+                    + (damping**neighbour.hops) * neighbour.strength * FAILURE_SE_TRANSFER,
                     weight=(damping**neighbour.hops) * neighbour.strength,
                     direction="down",
                 )

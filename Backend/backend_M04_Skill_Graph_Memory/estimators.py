@@ -213,9 +213,8 @@ def update(
         return Posterior(theta=prior_theta, se=prior_se)
 
     mean = _trapezoid([d * t for d, t in zip(densities, THETA_GRID, strict=True)]) / total
-    variance = (
-        _trapezoid([d * (t - mean) ** 2 for d, t in zip(densities, THETA_GRID, strict=True)]) / total
-    )
+    spread = [d * (t - mean) ** 2 for d, t in zip(densities, THETA_GRID, strict=True)]
+    variance = _trapezoid(spread) / total
     se = math.sqrt(max(variance, 0.0))
 
     capped = False

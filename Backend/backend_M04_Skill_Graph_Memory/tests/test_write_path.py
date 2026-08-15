@@ -31,7 +31,9 @@ RECURSION = "concept:recursion"
 
 def test_a_scored_answer_moves_the_posterior(session, candidate_id, consent, graph):
     artifact = make_artifact(session, candidate_id)
-    result = record(session, scored(candidate_id, DP, consent, [evidence_for(artifact)]), ontology=graph)
+    result = record(
+        session, scored(candidate_id, DP, consent, [evidence_for(artifact)]), ontology=graph
+    )
 
     assert result.applied is True
     assert result.theta_eligible is True
@@ -119,7 +121,9 @@ def test_the_observation_id_is_stable_across_processes(candidate_id, consent):
     """A caller that derives a different id produces a "new" observation on
     every replay, which is exactly the corruption the hash prevents."""
     turn = uuid.uuid4()
-    ref = EvidenceRef(kind="artifact", session_id=uuid.uuid4(), artifact_id=uuid.uuid4(), checksum="x")
+    ref = EvidenceRef(
+        kind="artifact", session_id=uuid.uuid4(), artifact_id=uuid.uuid4(), checksum="x"
+    )
     one = scored(candidate_id, DP, consent, [ref], turn_id=turn, session_id=uuid.UUID(int=1))
     two = scored(candidate_id, DP, consent, [ref], turn_id=turn, session_id=uuid.UUID(int=1))
     assert store.observation_id(one) == store.observation_id(two)
@@ -175,7 +179,9 @@ def test_success_transfers_up_to_prerequisites(session, candidate_id, consent, g
     indirect, evidence about recursion."""
     artifact = make_artifact(session, candidate_id)
     result = record(
-        session, scored(candidate_id, DP, consent, [evidence_for(artifact)], correct=True), ontology=graph
+        session,
+        scored(candidate_id, DP, consent, [evidence_for(artifact)], correct=True),
+        ontology=graph,
     )
 
     assert RECURSION in result.propagated_to
@@ -332,12 +338,26 @@ def test_retraction_recomputes_rather_than_compensating(session, candidate_id, c
     artifact = make_artifact(session, candidate_id)
     first = record(
         session,
-        scored(candidate_id, DP, consent, [evidence_for(artifact)], correct=True, turn_id=uuid.UUID(int=7)),
+        scored(
+            candidate_id,
+            DP,
+            consent,
+            [evidence_for(artifact)],
+            correct=True,
+            turn_id=uuid.UUID(int=7),
+        ),
         ontology=graph,
     )
     record(
         session,
-        scored(candidate_id, DP, consent, [evidence_for(artifact)], correct=True, turn_id=uuid.UUID(int=8)),
+        scored(
+            candidate_id,
+            DP,
+            consent,
+            [evidence_for(artifact)],
+            correct=True,
+            turn_id=uuid.UUID(int=8),
+        ),
         ontology=graph,
     )
     before = session.get(Mastery, (candidate_id, DP)).theta

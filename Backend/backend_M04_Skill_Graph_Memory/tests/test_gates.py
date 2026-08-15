@@ -20,8 +20,8 @@ import uuid
 from pathlib import Path
 
 import pytest
-from ai_core.evidence import EvidenceState, resolve
 from ai_core.evidence import EvidenceRef as Ref
+from ai_core.evidence import EvidenceState, resolve
 from sqlalchemy import update as sql_update
 from sqlmodel import select
 

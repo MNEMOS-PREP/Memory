@@ -185,7 +185,8 @@ def observation_id(obs: ObservationIn) -> uuid.UUID:
     genuinely a different observation about the same answer, and must not
     collide with the old one.
     """
-    key = f"{obs.turn_id or obs.session_id}|{obs.concept_id}|{obs.kind}|{obs.versions.rubric_version}"
+    anchor = obs.turn_id or obs.session_id
+    key = f"{anchor}|{obs.concept_id}|{obs.kind}|{obs.versions.rubric_version}"
     if obs.source_concept_id:
         # Derived rows are one per (source, target) pair, or two prerequisites
         # of the same concept would collide onto one id and the second would
@@ -255,7 +256,9 @@ def consent_active(session: Session, candidate_id: uuid.UUID, consent_id: uuid.U
 # ─────────────────────────────────────────────────────────────
 
 
-def record(session: Session, obs: ObservationIn, *, ontology: Ontology | None = None) -> RecordResult:
+def record(
+    session: Session, obs: ObservationIn, *, ontology: Ontology | None = None
+) -> RecordResult:
     """Record one observation. The only function that moves a belief."""
     return record_batch(session, [obs], ontology=ontology)[0]
 

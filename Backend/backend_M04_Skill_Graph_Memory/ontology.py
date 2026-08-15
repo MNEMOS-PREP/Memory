@@ -219,7 +219,8 @@ class Ontology:
                     LintIssue(
                         "error",
                         "version-crossing-edge",
-                        f"edge {edge.src}->{edge.dst} is v{edge.ontology_version}, file is v{self.version}",
+                        f"edge {edge.src}->{edge.dst} is v{edge.ontology_version}, "
+                        f"file is v{self.version}",
                     )
                 )
             if edge.src == edge.dst:

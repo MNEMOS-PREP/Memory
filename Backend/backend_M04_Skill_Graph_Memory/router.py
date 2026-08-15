@@ -18,12 +18,11 @@ from __future__ import annotations
 
 import uuid
 
+from ai_core.db import get_session
 from ai_core.modules_meta import module_status
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlmodel import Session
-
-from ai_core.db import get_session
 
 from . import service, store
 from .keys import secret_matches, service_secret
