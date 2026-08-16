@@ -342,7 +342,7 @@ def _apply(session: Session, obs: ObservationIn, graph: Ontology) -> RecordResul
         direct=obs.counts_toward_n_direct,
     )
 
-    propagated_to = _propagate(session, obs, graph)
+    propagated_to = _propagate(session, obs, graph, theta_eligible=theta_eligible)
 
     session.add(
         OutboxEvent(
@@ -556,14 +556,30 @@ def _swap_mastery(
     )
 
 
-def _propagate(session: Session, obs: ObservationIn, graph: Ontology) -> list[str]:
+def _propagate(
+    session: Session,
+    obs: ObservationIn,
+    graph: Ontology,
+    *,
+    theta_eligible: bool,
+) -> list[str]:
     """Write the derived observations §6.4 requires, and move their targets.
 
     Propagation of a propagated observation is not a thing: two hops is the
     limit, and the limit is enforced by not re-entering rather than by a
     counter somebody can get wrong.
+
+    **Propagation is ability estimation, so it obeys the same admissibility
+    rule the estimator does.** An observation that cannot move its OWN
+    concept's theta — a self-report, a drill, a free-form probe, or one of
+    M05's grounded items (§3.2.5: "never enter the IRT bank... not for ability
+    estimation") — must not move a neighbour's either. Without this gate the
+    module is inconsistent with itself in the direction that flatters the
+    student: evidence too weak to score recursion directly was strong enough
+    to raise it through DP, and where the neighbour already had direct
+    evidence that contribution reached the DISPLAYED value.
     """
-    if obs.kind == ObservationKind.propagated:
+    if obs.kind == ObservationKind.propagated or not theta_eligible:
         return []
 
     steps = propagation.plan(obs.concept_id, obs.outcome, graph)

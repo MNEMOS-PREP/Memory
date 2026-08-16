@@ -535,6 +535,8 @@ Two further corrections: parameters are a **single global set**, not fitted per 
 
 ```python
 def propagate(obs, damping=0.3, max_hops=2):
+    if not obs.theta_eligible:
+        return                                 # §6.3's admissibility rule, applied here too
     if obs.outcome >= 0.7:
         # SUCCESS: weakly raise prerequisites' θ (you can't do DP without recursion)
         for prereq, strength, hop in walk_up(obs.concept_id, max_hops):   # sorted ids
@@ -551,6 +553,8 @@ def propagate(obs, damping=0.3, max_hops=2):
 ```
 
 **The asymmetry is deliberate and it is the most important rule in this module.** Evidence of competence is transferable; evidence of failure is not. Failing DP does not prove you can't do recursion — it proves we should *check*. Widening SE makes the CAT selector go and check, which is exactly right.
+
+**Propagation is ability estimation, so it obeys §6.3's admissibility rule.** An observation that cannot move its *own* concept's θ — no item, therefore no likelihood: a self-report, a drill, a free-form probe, or one of M5's grounded items (M05 §3.2.5, "never enter the IRT bank… not for ability estimation") — must not move a neighbour's either. Without the guard the module is inconsistent with itself in the direction that flatters the student: evidence ruled inadmissible for scoring recursion directly still raised recursion through DP, and wherever the neighbour already had direct evidence that contribution reached the **displayed** value.
 
 Three constraints make it honest:
 

@@ -14,7 +14,7 @@ from ai_core.evidence import EvidenceRef, EvidenceSpan, UnresolvableEvidence, sh
 from ai_core.mastery import SE_PRIOR, MasteryState, evaluate
 from sqlmodel import select
 
-from backend_M04_Skill_Graph_Memory import store
+from backend_M04_Skill_Graph_Memory import service, store
 from backend_M04_Skill_Graph_Memory.models import Mastery, Observation, OutboxEvent, RetestQueueItem
 from backend_M04_Skill_Graph_Memory.ontology import UnknownConcept
 from backend_M04_Skill_Graph_Memory.propagation import LIFETIME_CAP
@@ -281,6 +281,82 @@ def test_propagation_writes_real_observations(session, candidate_id, consent, gr
         assert row.source_concept_id == DP
         assert row.counts_toward_n_direct is False
         assert row.theta_eligible is False
+
+
+def test_decay_eventually_queues_a_real_re_test(session, candidate_id, consent, graph):
+    """§6.5's hand-off to §6.9's queue, which had never run.
+
+    `sweep_decay` had no caller anywhere — no route, no job, no test — so a
+    concept could decay indefinitely and never reach the queue meant to act on
+    it. Read-path decay was always live; this pins the hand-off.
+    """
+    artifact = make_artifact(session, candidate_id)
+    # Ten answers, alternating, on items matched to the ability: that is what
+    # actually buys certainty. Ten CORRECT answers on an easy item would not —
+    # theta runs away from b, the items stop being informative and SE plateaus
+    # around 0.6, still inside the re-test band.
+    for i in range(10):
+        record(
+            session,
+            scored(
+                candidate_id,
+                DP,
+                consent,
+                [evidence_for(artifact)],
+                correct=i % 2 == 1,
+                a=1.6,
+                observed_at=NOW + timedelta(days=i),
+            ),
+            ontology=graph,
+        )
+    measured_until = NOW + timedelta(days=9)
+
+    # Well measured, so nothing to ask about today. This half matters: a sweep
+    # that queues everything is the same as a sweep that queues nothing.
+    assert service.sweep_decay(session, candidate_id=candidate_id, now=measured_until) == []
+
+    # §12: "decay's re-test trigger fires for a well-measured concept within
+    # 120 days" — the test the previous decay formula would have failed.
+    queued = service.sweep_decay(
+        session, candidate_id=candidate_id, now=measured_until + timedelta(days=120)
+    )
+    assert DP in queued
+
+
+def test_an_unscorable_observation_propagates_nothing(session, candidate_id, consent, graph):
+    """§6.4 obeys §6.3's admissibility rule, not just its own.
+
+    A self-report cannot move its own concept's theta — `theta_eligible` is
+    False for anything without item parameters. It must not move a
+    neighbour's either. The bug this pins was silent and flattering: evidence
+    ruled inadmissible for scoring recursion directly still raised recursion
+    by +0.014 a time through DP, up to the 0.35 lifetime cap, and landed in
+    the DISPLAYED value wherever the neighbour already had direct evidence.
+    """
+    artifact = make_artifact(session, candidate_id)
+    result = record(
+        session,
+        store.ObservationIn(
+            candidate_id=candidate_id,
+            concept_id=DP,
+            session_id=uuid.uuid4(),
+            turn_id=uuid.uuid4(),
+            evidence=[evidence_for(artifact)],
+            kind="self_reported",
+            response_model="none",
+            outcome=0.95,
+            item=None,
+            consent_id=consent.id,
+            observed_at=NOW,
+        ),
+        ontology=graph,
+    )
+
+    assert result.applied is True, "it is still recorded — it just cannot estimate"
+    assert result.theta_eligible is False
+    assert result.propagated_to == []
+    assert session.exec(select(Observation).where(Observation.kind == "propagated")).all() == []
+    assert session.get(Mastery, (candidate_id, RECURSION)) is None
 
 
 def test_a_never_tested_neighbour_is_queued_for_a_real_check(session, candidate_id, consent, graph):

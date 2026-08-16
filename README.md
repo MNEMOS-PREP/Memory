@@ -146,7 +146,10 @@ Backend/backend_M04_Skill_Graph_Memory/
   propagation.py  §6.4 the asymmetry, and its clamps
   service.py      read paths, §6.8 bottleneck, §6.9 re-test queue
   keys.py         credential loading, the service secret
-  tests/          96 tests, 14 of them release gates
+  simulation.py   §12 the mis-specification grid; priors.py the cohort prior
+  jobs/           offline runners — nothing here is on a request path
+                  simulate.py the grid · decay.py the nightly §6.5 sweep
+  tests/          117 tests, 15 of them release gates
 Backend/seed.py   a demo student, through the real write path
 ```
 
@@ -198,8 +201,8 @@ Tuesday.
 
 ```bat
 cd Backend
-.venv\Scripts\python -m pytest -q          :: 96 tests
-.venv\Scripts\python -m pytest -m gate -q  :: 14 release gates
+.venv\Scripts\python -m pytest -q          :: 117 tests
+.venv\Scripts\python -m pytest -m gate -q  :: 15 release gates
 .venv\Scripts\python -m ruff check .
 ```
 
@@ -225,15 +228,11 @@ a P0:
 
 ## What is not built yet
 
-Against the spec's own build order (§14), M0–M2 and most of M5 are done. Still
-open, in order:
+Against the spec's own build order (§14), M0–M4 are done. Still open, in order:
 
-- **M3 — the simulation harness.** 200 synthetic students and the full
-  mis-specification grid (§12). This is the backbone of two papers and it is
-  the next thing to build, not the last.
-- **M5 — the working tier.** `m04_profile_summary`, the session-pinned
-  snapshot (FR-4.23) and `GET /profile-summary`. M06 needs it; nothing else
-  does yet.
+- **M5 — the working tier.** The `m04_profile_summary` table exists; the
+  session-pinned snapshot (FR-4.23), `GET /profile-summary` and gate AC-4.13
+  do not. M06 needs it; nothing else does yet.
 - **M6 — memory tiers.** Distillation behind the four screens (§6.6b), hybrid
   retrieval, the 150-query eval set.
 - **M7 — surfaces.** The mastery map, "what I remember about you", the
