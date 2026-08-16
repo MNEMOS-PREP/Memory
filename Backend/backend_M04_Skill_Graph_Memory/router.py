@@ -17,6 +17,7 @@ no route path contains the word.
 from __future__ import annotations
 
 import uuid
+from datetime import datetime
 
 from ai_core.db import get_session
 from ai_core.modules_meta import module_status
@@ -244,6 +245,97 @@ def dispute(
     session: Session = Depends(get_session),
 ) -> dict:
     return service.open_dispute(session, candidate_id, concept_id, payload.reason)
+
+
+@router.get("/v1/candidates/{candidate_id}/trajectory", tags=["mastery"])
+def trajectory(
+    concept: str | None = Query(default=None, description="one concept id; omit for all"),
+    since: datetime | None = Query(default=None),
+    until: datetime | None = Query(default=None),
+    candidate_id: uuid.UUID = Depends(require_self),
+    session: Session = Depends(get_session),
+) -> dict:
+    """§7 · §8 — the contract M19 needs. M19 owns the chart; M04 owns the data.
+
+    Served from the `theta_after` / `se_after` stored on each observation, so
+    history stays drawn on the scale it was scored on rather than being
+    recomputed under whatever estimator is current.
+    """
+    return service.trajectory(
+        session, candidate_id, concept_id=concept, since=since, until=until
+    )
+
+
+# ─────────────────────────────────────────────────────────────
+#  THE WORKING TIER  (service) — what an agent gets at session start
+# ─────────────────────────────────────────────────────────────
+
+
+@router.get(
+    "/v1/candidates/{candidate_id}/profile-summary",
+    tags=["memory"],
+    dependencies=[Depends(require_service)],
+)
+def profile_summary(
+    candidate_id: uuid.UUID,
+    session_id: uuid.UUID = Query(description="the session this context is pinned to"),
+    session: Session = Depends(get_session),
+) -> dict:
+    """FR-4.23 — pinned, byte-identical for the life of a session (AC-4.13).
+
+    `session_id` is required rather than optional. An unpinned summary is a
+    different object with a different guarantee, and letting one endpoint
+    return either depending on a query parameter is how a caller ends up
+    believing it has a stable context when it does not.
+    """
+    try:
+        return service.pinned_profile_summary(session, candidate_id, session_id)
+    except service.SessionCandidateMismatch as exc:
+        raise HTTPException(
+            status_code=409, detail="session belongs to another candidate"
+        ) from exc
+
+
+# ─────────────────────────────────────────────────────────────
+#  THE STUDENT'S RIGHTS  (FR-4.18a/b/c)
+# ─────────────────────────────────────────────────────────────
+
+
+@router.get("/v1/candidates/{candidate_id}/export", tags=["rights"])
+def export_memory(
+    candidate_id: uuid.UUID = Depends(require_self),
+    session: Session = Depends(get_session),
+) -> dict:
+    """FR-4.18a — every row, not a summary of them."""
+    return service.export_memory(session, candidate_id)
+
+
+@router.delete("/v1/candidates/{candidate_id}/memory", tags=["rights"])
+def delete_memory(
+    purpose: str | None = Query(
+        default=None,
+        description="omit for a full hard delete (FR-4.18b); "
+        "'research' or 'institutional_reporting' to revoke one purpose (FR-4.18c)",
+    ),
+    candidate_id: uuid.UUID = Depends(require_self),
+    session: Session = Depends(get_session),
+) -> dict:
+    """Two operations behind one path, and the difference is stated, not implied.
+
+    Without `purpose` this is a hard delete: rows go, and the numbers cannot
+    come back, because the episodic tier they were re-derivable from is gone
+    too. With `purpose` it is a revocation of that purpose alone — a student
+    withdrawing from the study keeps their practice history.
+    """
+    if purpose is None:
+        return service.delete_memory(session, candidate_id)
+    try:
+        return service.revoke_purpose(session, candidate_id, purpose)
+    except service.CannotRevokePractice as exc:
+        raise HTTPException(
+            status_code=400,
+            detail="revoking 'practice' is a full delete — call this without ?purpose",
+        ) from exc
 
 
 # ─────────────────────────────────────────────────────────────

@@ -224,3 +224,83 @@ def test_a_student_cannot_read_another_students_record(client, candidate_id, mon
         headers={"X-Candidate-Id": str(uuid.uuid4())},
     )
     assert response.status_code == 403
+
+
+# ── the working tier, trajectory and rights (§7) ──────────────────────────
+
+
+def test_profile_summary_requires_a_session_to_pin_to(client, candidate_id):
+    """An unpinned summary is a different object with a different guarantee.
+    Letting one endpoint return either, depending on a query parameter, is how
+    M06 ends up believing it has a stable context when it does not."""
+    response = client.get(f"/v1/candidates/{candidate_id}/profile-summary")
+    assert response.status_code == 422
+
+
+def test_profile_summary_is_a_service_endpoint(client, candidate_id, monkeypatch):
+    """It is injected into an agent's context, not rendered to a student."""
+    monkeypatch.setenv("M04_SERVICE_SECRET", "s3cret")
+    params = {"session_id": str(uuid.uuid4())}
+
+    assert (
+        client.get(f"/v1/candidates/{candidate_id}/profile-summary", params=params).status_code
+        == 401
+    )
+    ok = client.get(
+        f"/v1/candidates/{candidate_id}/profile-summary",
+        params=params,
+        headers={"X-Service-Secret": "s3cret"},
+    )
+    assert ok.status_code == 200
+    assert ok.json()["pinned"] is True
+
+
+def test_a_pinned_summary_reuses_the_session_it_was_built_for(client, candidate_id):
+    session_id = str(uuid.uuid4())
+    first = client.get(
+        f"/v1/candidates/{candidate_id}/profile-summary", params={"session_id": session_id}
+    ).json()
+    second = client.get(
+        f"/v1/candidates/{candidate_id}/profile-summary", params={"session_id": session_id}
+    ).json()
+    assert first == second
+
+    stranger = client.get(
+        f"/v1/candidates/{uuid.uuid4()}/profile-summary", params={"session_id": session_id}
+    )
+    assert stranger.status_code == 409
+
+
+def test_trajectory_returns_a_named_reason_when_it_is_empty(client, candidate_id):
+    """M19 renders "no data" and "never scored" differently, so it is told
+    which one this is rather than left to infer it from an empty list."""
+    body = client.get(f"/v1/candidates/{candidate_id}/trajectory").json()
+    assert body["series"] == []
+    assert body["reason"]
+
+
+def test_export_and_delete_are_the_students_own(client, candidate_id, monkeypatch):
+    """FR-4.18a/b — reachable by the student, and by nobody else."""
+    monkeypatch.setenv("M04_SERVICE_SECRET", "s3cret")
+    stranger = {"X-Candidate-Id": str(uuid.uuid4())}
+
+    assert client.get(f"/v1/candidates/{candidate_id}/export", headers=stranger).status_code == 403
+    assert (
+        client.delete(f"/v1/candidates/{candidate_id}/memory", headers=stranger).status_code == 403
+    )
+
+    body = client.get(
+        f"/v1/candidates/{candidate_id}/export",
+        headers={"X-Candidate-Id": str(candidate_id)},
+    ).json()
+    assert "observations" in body and "consent" in body
+
+
+def test_revoking_practice_is_refused_with_a_reason(client, candidate_id):
+    """400 with the sentence that says what to call instead — a student who
+    meant "delete everything" must not be told "done" for something narrower."""
+    response = client.delete(
+        f"/v1/candidates/{candidate_id}/memory", params={"purpose": "practice"}
+    )
+    assert response.status_code == 400
+    assert "without ?purpose" in response.json()["detail"]

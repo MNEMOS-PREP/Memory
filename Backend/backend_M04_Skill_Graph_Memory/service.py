@@ -29,16 +29,23 @@ from sqlmodel import Session, select
 
 from .estimators import BktEvent, bkt_p_known
 from .models import (
+    Artifact,
     ConceptAliasRow,
     ConceptEdgeRow,
     ConceptRow,
+    ConsentRecord,
     Dispute,
     Mastery,
     MasteryOut,
+    MemoryFact,
     Observation,
     ObservationKind,
+    PendingObservation,
+    ProfileSummary,
+    Purpose,
     RetestQueueItem,
     RetestReason,
+    SessionProfileSnapshot,
 )
 from .ontology import Ontology, load
 from .store import enqueue_retest
@@ -647,3 +654,426 @@ def _queued_concepts(session: Session, candidate_id: uuid.UUID) -> set[str]:
 def normalise(label: str) -> str:
     """Re-exported so callers do not import `ai_core` just to build a key."""
     return normalise_alias(label)
+
+
+# ─────────────────────────────────────────────────────────────
+#  THE WORKING TIER  (§6.6, FR-4.23) — what an agent gets at session start
+# ─────────────────────────────────────────────────────────────
+
+#: §11's budget. The summary is injected into every turn of an interview, so
+#: this is a per-turn cost multiplied by the length of a session.
+SUMMARY_TOKEN_BUDGET = 1200
+SUMMARY_VERSION = "1.0"
+#: Rough, and deliberately so: a real tokeniser here would mean importing one
+#: on a read path to enforce a budget that only has to be approximately right.
+CHARS_PER_TOKEN = 4
+
+
+def build_profile_summary(
+    session: Session,
+    candidate_id: uuid.UUID,
+    *,
+    ontology: Ontology | None = None,
+    now: datetime | None = None,
+) -> ProfileSummary:
+    """Assemble the working tier and cache it. §6.6.
+
+    Mastery top and bottom 10, the open bottlenecks, and the outstanding
+    re-tests — everything an interviewer needs to open a session knowing who
+    it is talking to.
+
+    Two slots are present and empty until M6 lands: `recent_sessions` and
+    `facts`. They are in the payload on purpose rather than omitted, because a
+    consumer that codes against a shape which later grows a key has to change,
+    and M06 is being written against this contract now. An empty list is a
+    promise; a missing key is a migration.
+    """
+    graph = ontology or load()
+    now = now or utcnow()
+
+    rows = mastery_for(session, candidate_id, ontology=graph, now=now)
+    displayable = [r for r in rows if r.mastery_p is not None]
+    ranked = sorted(displayable, key=lambda r: r.mastery_p or 0.0)
+
+    def brief(row: MasteryOut) -> dict:
+        return {
+            "concept_id": row.concept_id,
+            "name": row.name,
+            "state": row.state,
+            "mastery_p": row.mastery_p,
+            "n_direct": row.n_direct,
+            "stale": row.stale,
+        }
+
+    weakest = [brief(r) for r in ranked[:10]]
+    strongest = [brief(r) for r in reversed(ranked[-10:])]
+
+    facts = session.exec(
+        select(MemoryFact)
+        .where(
+            MemoryFact.candidate_id == candidate_id,
+            MemoryFact.superseded_by == None,  # noqa: E711
+        )
+        .order_by(MemoryFact.importance.desc())
+        .limit(5)
+    ).all()
+
+    payload = {
+        "candidate_id": str(candidate_id),
+        "ontology_version": graph.version,
+        "measured_concepts": len(rows),
+        "weakest": weakest,
+        "strongest": strongest,
+        "bottlenecks": bottlenecks(session, candidate_id, ontology=graph),
+        "retests": retests(session, candidate_id)[:5],
+        # M6 fills these. Present-and-empty, not absent — see the docstring.
+        "recent_sessions": [],
+        "facts": [
+            {"kind": f.kind, "sentence": f.display_sentence, "importance": f.importance}
+            for f in facts
+            if _fact_is_visible(f, now)
+        ],
+    }
+
+    text_lines = [f"{b['name']}: {b['state']}" for b in weakest[:5]]
+    summary_text = " · ".join(text_lines)
+
+    row = session.get(ProfileSummary, candidate_id)
+    if row is None:
+        row = ProfileSummary(candidate_id=candidate_id)
+        session.add(row)
+    row.summary_text = summary_text
+    row.payload = _json_safe(payload)
+    row.token_estimate = (len(summary_text) + len(str(payload))) // CHARS_PER_TOKEN
+    row.stale = False
+    row.built_at = now
+    row.summary_version = SUMMARY_VERSION
+    session.commit()
+    session.refresh(row)
+    return row
+
+
+def _json_safe(value):
+    """Coerce to something the JSON column can hold, recursively.
+
+    Not cosmetic: `payload` is compared for byte-identity by AC-4.13, and a
+    value that round-trips through the column differently from how it went in
+    would fail that gate for a reason that has nothing to do with pinning.
+    """
+    if isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, dict):
+        return {k: _json_safe(v) for k, v in value.items()}
+    if isinstance(value, list | tuple):
+        return [_json_safe(v) for v in value]
+    if isinstance(value, uuid.UUID):
+        return str(value)
+    return value
+
+
+def _fact_is_visible(fact: MemoryFact, now: datetime) -> bool:
+    """A deleted fact stays deleted. §15.9: suppression is a promise, and the
+    button was a lie if the distiller can quietly re-surface what it hid."""
+    return fact.suppressed_until is None or fact.suppressed_until <= now
+
+
+def pinned_profile_summary(
+    session: Session,
+    candidate_id: uuid.UUID,
+    session_id: uuid.UUID,
+    *,
+    ontology: Ontology | None = None,
+    now: datetime | None = None,
+) -> dict:
+    """FR-4.23, AC-4.13 — byte-identical for the life of a session.
+
+    Written once when the session opens and served unchanged thereafter, no
+    matter how many observations land in between. `record()` marks the NEXT
+    session's summary stale, never this one's: mutating an interviewer's own
+    context between its turns is a bug, and it invalidates M06's prompt cache
+    on every observation, which is a real bill rather than a purity argument.
+
+    In-session movement is not lost — it reaches the interviewer through the
+    channel that is supposed to carry it, M05's selector reading live mastery.
+    """
+    snapshot = session.get(SessionProfileSnapshot, session_id)
+    if snapshot is not None:
+        if snapshot.candidate_id != candidate_id:
+            # The same session id cannot belong to two candidates. Returning
+            # the stored one would hand a third party someone else's profile.
+            raise SessionCandidateMismatch(session_id)
+        return _snapshot_out(snapshot, pinned=True)
+
+    summary = session.get(ProfileSummary, candidate_id)
+    if summary is None or summary.stale:
+        summary = build_profile_summary(session, candidate_id, ontology=ontology, now=now)
+
+    snapshot = SessionProfileSnapshot(
+        session_id=session_id,
+        candidate_id=candidate_id,
+        summary_text=summary.summary_text,
+        payload=summary.payload,
+        summary_version=summary.summary_version,
+        ontology_version=str(summary.payload.get("ontology_version", "")),
+        built_at=now or utcnow(),
+    )
+    session.add(snapshot)
+    session.commit()
+    session.refresh(snapshot)
+    return _snapshot_out(snapshot, pinned=True)
+
+
+def _snapshot_out(snapshot: SessionProfileSnapshot, *, pinned: bool) -> dict:
+    return {
+        "session_id": str(snapshot.session_id),
+        "candidate_id": str(snapshot.candidate_id),
+        "summary_text": snapshot.summary_text,
+        "payload": snapshot.payload,
+        "summary_version": snapshot.summary_version,
+        "ontology_version": snapshot.ontology_version,
+        "built_at": snapshot.built_at.isoformat(),
+        "pinned": pinned,
+    }
+
+
+class SessionCandidateMismatch(Exception):
+    """A pinned snapshot exists for this session under a different candidate."""
+
+    def __init__(self, session_id: uuid.UUID) -> None:
+        super().__init__(f"session {session_id} belongs to another candidate")
+        self.session_id = session_id
+
+
+# ─────────────────────────────────────────────────────────────
+#  TRAJECTORY  (§7) — the contract M19 needs; M19 owns the chart
+# ─────────────────────────────────────────────────────────────
+
+
+def trajectory(
+    session: Session,
+    candidate_id: uuid.UUID,
+    *,
+    concept_id: str | None = None,
+    since: datetime | None = None,
+    until: datetime | None = None,
+    ontology: Ontology | None = None,
+) -> dict:
+    """Mastery over time, straight from the observations of record.
+
+    Served from `theta_after` / `se_after` — stored on every observation
+    exactly so this is a read rather than a re-run of the estimator. That
+    matters beyond speed: a chart recomputed under today's estimator would
+    silently redraw history under a scale the student was never scored on.
+
+    Only theta-eligible observations carry a point. The rest are real evidence
+    and appear in the drawer, but they moved no estimate, and inventing a
+    plateau for them would be drawing a line through data that does not exist.
+    """
+    graph = ontology or load()
+    statement = select(Observation).where(
+        Observation.candidate_id == candidate_id,
+        Observation.theta_eligible == True,  # noqa: E712
+    )
+    if concept_id is not None:
+        statement = statement.where(Observation.concept_id == concept_id)
+    if since is not None:
+        statement = statement.where(Observation.observed_at >= since)
+    if until is not None:
+        statement = statement.where(Observation.observed_at <= until)
+
+    rows = session.exec(statement.order_by(Observation.observed_at)).all()
+
+    series: dict[str, list[dict]] = {}
+    for row in rows:
+        series.setdefault(row.concept_id, []).append(
+            {
+                "observed_at": row.observed_at.isoformat(),
+                "theta": row.theta_after,
+                "se": row.se_after,
+                "kind": row.kind,
+                "estimator_version": row.estimator_version,
+                "ontology_version": row.ontology_version,
+            }
+        )
+
+    return {
+        "candidate_id": str(candidate_id),
+        "ontology_version": graph.version,
+        "series": [
+            {
+                "concept_id": cid,
+                "name": graph.get(cid).name if cid in graph else cid,
+                "points": points,
+            }
+            for cid, points in sorted(series.items())
+        ],
+        # Said rather than implied: an empty series and "this student has never
+        # been scored" are the same JSON otherwise, and M19 renders them
+        # differently.
+        "reason": None if series else "no scored observations in this window",
+    }
+
+
+# ─────────────────────────────────────────────────────────────
+#  THE STUDENT'S RIGHTS  (FR-4.18a/b/c, §4) — export, delete, revoke
+# ─────────────────────────────────────────────────────────────
+
+
+def _pending_for(session: Session, candidate_id: uuid.UUID) -> list[PendingObservation]:
+    """The fallback queue holds whole payloads, not foreign keys — it exists
+    precisely for the case where the write failed, so it cannot depend on the
+    row having been written. The candidate is therefore inside the payload."""
+    return [
+        row
+        for row in session.exec(select(PendingObservation)).all()
+        if str(row.payload.get("candidate_id", "")) == str(candidate_id)
+    ]
+
+
+def export_memory(session: Session, candidate_id: uuid.UUID) -> dict:
+    """FR-4.18a — everything this module holds about one person.
+
+    Every table, not a summary of them. An export a student cannot check
+    against what we actually store is a gesture rather than a right.
+    """
+
+    def dump(rows) -> list[dict]:
+        return [r.model_dump(mode="json") for r in rows]
+
+    def by_candidate(model):
+        return session.exec(select(model).where(model.candidate_id == candidate_id)).all()
+
+    return {
+        "candidate_id": str(candidate_id),
+        "exported_at": utcnow().isoformat(),
+        "consent": dump(by_candidate(ConsentRecord)),
+        "mastery": dump(by_candidate(Mastery)),
+        "observations": dump(by_candidate(Observation)),
+        # Keyed by observation id, not candidate — the queue predates the row
+        # it is trying to write, so the candidate is only in the payload.
+        "observations_pending": [
+            row.model_dump(mode="json") for row in _pending_for(session, candidate_id)
+        ],
+        "artifacts": dump(by_candidate(Artifact)),
+        "facts": dump(by_candidate(MemoryFact)),
+        "retests": dump(by_candidate(RetestQueueItem)),
+        "disputes": dump(by_candidate(Dispute)),
+        "profile_summary": dump(
+            session.exec(
+                select(ProfileSummary).where(ProfileSummary.candidate_id == candidate_id)
+            ).all()
+        ),
+    }
+
+
+def delete_memory(session: Session, candidate_id: uuid.UUID) -> dict:
+    """FR-4.18b — hard delete, and it has to be hard.
+
+    Not a `deleted` flag. The episodic tier is the substrate every number is
+    re-derivable from, so leaving it in place while hiding it would mean the
+    numbers could come back — and the promise in §8 is that they cannot.
+
+    Consent rows survive deliberately, with their `revoked_at` set: "when did
+    this person withdraw" is a question the ethics annexe has to answer, and
+    it cannot be answered from a table we just emptied.
+    """
+    deleted: dict[str, int] = {}
+    pending = _pending_for(session, candidate_id)
+    for row in pending:
+        session.delete(row)
+    deleted[PendingObservation.__tablename__] = len(pending)
+
+    for model in (
+        Observation,
+        Mastery,
+        MemoryFact,
+        RetestQueueItem,
+        Dispute,
+        Artifact,
+        ProfileSummary,
+    ):
+        rows = session.exec(select(model).where(model.candidate_id == candidate_id)).all()
+        for row in rows:
+            session.delete(row)
+        deleted[model.__tablename__] = len(rows)
+
+    snapshots = session.exec(
+        select(SessionProfileSnapshot).where(
+            SessionProfileSnapshot.candidate_id == candidate_id
+        )
+    ).all()
+    for snapshot in snapshots:
+        session.delete(snapshot)
+    deleted[SessionProfileSnapshot.__tablename__] = len(snapshots)
+
+    now = utcnow()
+    for consent in session.exec(
+        select(ConsentRecord).where(ConsentRecord.candidate_id == candidate_id)
+    ).all():
+        if consent.revoked_at is None:
+            consent.revoked_at = now
+        consent.purge_due_at = None
+        session.add(consent)
+
+    session.commit()
+    return {"candidate_id": str(candidate_id), "deleted": deleted, "at": now.isoformat()}
+
+
+def revoke_purpose(
+    session: Session,
+    candidate_id: uuid.UUID,
+    purpose: str,
+    *,
+    now: datetime | None = None,
+    grace_days: int = 30,
+) -> dict:
+    """FR-4.18c — withdraw one purpose without touching the others.
+
+    A student leaving the study keeps their practice history. The revocation
+    is recorded immediately and `purge_due_at` records what is still owed, so
+    a sweep can find outstanding work rather than a cron being trusted to have
+    run — the failure mode of the alternative is silent and unauditable.
+    """
+    from datetime import timedelta
+
+    now = now or utcnow()
+    if purpose == Purpose.practice:
+        # Practice is the purpose the platform exists for; revoking it is a
+        # deletion, and calling it a revocation would leave the student
+        # believing something narrower happened.
+        raise CannotRevokePractice()
+
+    revoked = 0
+    for consent in session.exec(
+        select(ConsentRecord).where(
+            ConsentRecord.candidate_id == candidate_id,
+            ConsentRecord.purpose == purpose,
+            ConsentRecord.revoked_at == None,  # noqa: E711
+        )
+    ).all():
+        consent.revoked_at = now
+        consent.purge_due_at = now + timedelta(days=grace_days)
+        session.add(consent)
+        revoked += 1
+
+    facts = session.exec(
+        select(MemoryFact).where(
+            MemoryFact.candidate_id == candidate_id,
+            MemoryFact.purpose == purpose,
+        )
+    ).all()
+    for fact in facts:
+        session.delete(fact)
+
+    session.commit()
+    return {
+        "candidate_id": str(candidate_id),
+        "purpose": purpose,
+        "consent_rows_revoked": revoked,
+        "facts_removed": len(facts),
+        "purge_due_at": (now + timedelta(days=grace_days)).isoformat(),
+    }
+
+
+class CannotRevokePractice(Exception):
+    """Revoking `practice` is a deletion; say so rather than half-doing it."""

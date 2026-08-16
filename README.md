@@ -110,6 +110,43 @@ curl .../bottlenecks
 
 ---
 
+## What the other eighteen read
+
+M04 is the root of the dependency graph, so this table is the contract. Seven
+modules declare a dependency on it today.
+
+| You are building | You call | Auth |
+|---|---|---|
+| **M01** resume, **M02** JD, **M03** GitHub | `GET /v1/concepts`, `POST /v1/concepts/resolve` | public |
+| **M02** gap analysis, **M15** preparation | `GET /v1/candidates/{id}/mastery` · `GET /v1/skill-graph/theta?candidate=&concepts=` | self · service |
+| **M05** CAT bootstrap | `GET /v1/skill-graph/theta` at session start, then hold your own provisional θ | service |
+| **M06** interviewer context | `GET /v1/candidates/{id}/profile-summary?session_id=` | service |
+| **M13** evaluation results | `POST /v1/candidates/{id}/observations` — a **list**, one transaction | service |
+| **M16** counselor | `GET /bottlenecks` · `GET /retests` · `GET /trajectory` | self |
+| **M19** reports | `GET /trajectory` · `GET /export` | self |
+
+Four rules that will save you a bug each:
+
+1. **Resolve labels, never hardcode concept ids.** `POST /v1/concepts/resolve`
+   handles aliases and tells you what it could not resolve.
+2. **Consume `mastery_p`, not `theta`.** `theta` is a logit on [-4, 4] where
+   `0.0` means *exactly average*; `mastery_p` is the 0–1 scalar published for
+   consumers. M15 shipped `1 - theta` and it was wrong over most of the range.
+3. **A missing key means "not measured".** Never default it to `0`. That is
+   Rule 2, and it is the one bug that makes every downstream module quietly
+   wrong at once.
+4. **Set `M04_SERVICE_SECRET` on both sides from day one.** Service endpoints
+   are **open** when no secret is configured and 401 when one is — build
+   without the header and it works locally, then degrades silently in any
+   deployment that is actually locked down.
+
+`profile-summary` ships two slots empty on purpose — `recent_sessions` and
+`facts` fill in when M6 lands. They are present rather than absent because a
+consumer written against a shape that later *grows* a key has to change: an
+empty list is a promise, a missing key is a migration.
+
+---
+
 ## The rules this module keeps
 
 1. **Every number traces to something the student said or did.** One write
@@ -144,7 +181,8 @@ Backend/backend_M04_Skill_Graph_Memory/
   store.py        §6.2 THE write path. Everything else reads.
   estimators.py   §6.3 IRT (2PL + GRM + 3PL) and BKT. Pure arithmetic.
   propagation.py  §6.4 the asymmetry, and its clamps
-  service.py      read paths, §6.8 bottleneck, §6.9 re-test queue
+  service.py      read paths, §6.8 bottleneck, §6.9 re-test queue,
+                  §6.6 working tier + FR-4.23 pinning, FR-4.18 export/delete
   keys.py         credential loading, the service secret
   simulation.py   §12 the mis-specification grid; priors.py the cohort prior
   jobs/           offline runners — nothing here is on a request path
@@ -201,8 +239,8 @@ Tuesday.
 
 ```bat
 cd Backend
-.venv\Scripts\python -m pytest -q          :: 117 tests
-.venv\Scripts\python -m pytest -m gate -q  :: 15 release gates
+.venv\Scripts\python -m pytest -q          :: 137 tests
+.venv\Scripts\python -m pytest -m gate -q  :: 16 release gates
 .venv\Scripts\python -m ruff check .
 ```
 
@@ -221,6 +259,7 @@ a P0:
 | AC-4.3 | Mastery written outside `record()` — **0**, by local grep **and** runtime guard |
 | AC-4.10 | `FailureSignature` reachable from any endpoint — **0**; every candidate route identifies its caller |
 | AC-4.11 | Observations written without an active consent record — **0** |
+| AC-4.13 | `profile-summary` byte-identical across 10 calls with `record()` interleaved |
 | §6.1 | The shipped ontology lints clean: no cycles, no alias collisions |
 | §6.8 | The bottleneck query returns what the card renders — and nothing for a student with no measurements |
 
@@ -228,15 +267,17 @@ a P0:
 
 ## What is not built yet
 
-Against the spec's own build order (§14), M0–M4 are done. Still open, in order:
-
-- **M5 — the working tier.** The `m04_profile_summary` table exists; the
-  session-pinned snapshot (FR-4.23), `GET /profile-summary` and gate AC-4.13
-  do not. M06 needs it; nothing else does yet.
+Against the spec's own build order (§14), M0–M5 are done. Still open, in order:
 - **M6 — memory tiers.** Distillation behind the four screens (§6.6b), hybrid
-  retrieval, the 150-query eval set.
+  retrieval, the 150-query eval set. This is what fills the `facts` and
+  `recent_sessions` slots that `profile-summary` already ships empty, and it
+  is what `GET /memory/search` and `GET /facts` need before they can exist.
+  The eval set is a hand-labelling task, not a coding one — AC-4.8 wants
+  nDCG@5 ≥ 0.75 *and* better than vector-only, which is a measurement you can
+  miss.
 - **M7 — surfaces.** The mastery map, "what I remember about you", the
-  Streamlit ops app (§6.10).
+  Streamlit ops app (§6.10). This repo has no `Frontend/` yet. **No other
+  module is blocked by it** — every consumer reads the API.
 
 Two calendar items are on the critical path and are **not** code: the faculty
 walk of the prerequisite edges (AC-4.9, gates Phase-1 exit) and the ethics
