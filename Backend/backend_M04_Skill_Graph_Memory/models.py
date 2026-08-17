@@ -103,22 +103,6 @@ class RetestReason(StrEnum):
 # ─────────────────────────────────────────────────────────────
 
 
-class VersionStamp(BaseModel):
-    """Five versions can invalidate a theta, not one (§6.7).
-
-    Stamping only the rubric would leave "you improved 30%" quietly false the
-    first time the estimator or the item bank moved — Trap 4 with a different
-    subject.
-    """
-
-    rubric_version: str = "1.0"
-    prompt_version: str = "1.0"
-    model_id: str = "none"
-    calibration_version: str = "1.0"
-    item_bank_version: str = "1.0"
-    code_sha: str = "dev"
-
-
 class ItemParams(BaseModel):
     """The item AS ADMINISTERED.
 

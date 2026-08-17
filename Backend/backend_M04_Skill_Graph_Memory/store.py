@@ -45,6 +45,7 @@ from ai_core.evidence import (
 )
 from ai_core.mastery import SE_PRIOR, STATE_THRESHOLDS_VERSION, evaluate
 from ai_core.timeutil import utcnow
+from ai_core.versions import VersionStamp
 from pydantic import BaseModel, Field
 from sqlalchemy import update as sql_update
 from sqlmodel import Session, select
@@ -63,7 +64,6 @@ from .models import (
     ResponseModel,
     RetestQueueItem,
     RetestReason,
-    VersionStamp,
 )
 from .ontology import Ontology, UnknownConcept, load
 
