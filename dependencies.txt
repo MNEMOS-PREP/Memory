@@ -66,9 +66,9 @@ TWO RULES FOR ANYONE CONSUMING US
 
 SHARED PLATFORM CODE  —  a versioned dependency, not a copy
 -------------------------------------------------------------------------------
-    https://github.com/MNEMOS-PREP/Platform_Core   (public)   pinned at v0.4.0
+    https://github.com/MNEMOS-PREP/Platform_Core   (public)   pinned at v0.5.0
 
-  Backend    ai-core @ git+https://github.com/MNEMOS-PREP/Platform_Core@v0.4.0#subdirectory=python
+  Backend    ai-core @ git+https://github.com/MNEMOS-PREP/Platform_Core@v0.5.0#subdirectory=python
 
 v0.3.0 is the version that carries the two contracts this module is not
 allowed to own:
