@@ -65,6 +65,9 @@ Re_*/
 plan_in_depth/*
 !plan_in_depth/M04_Skill_Graph_Memory.md
 !plan_in_depth/M04_REVIEW.md
+# The running task list ships with the module for the same reason the spec
+# does: it is only true next to the code it describes.
+!plan_in_depth/M04_Skill_Graph_Memory_TODO.md
 
 # Other modules' packages, if this folder is ever used as a monorepo again.
 Backend/backend_M0*/
