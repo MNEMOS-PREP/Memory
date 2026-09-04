@@ -1,5 +1,10 @@
 # M04 — TODO · Candidate Skill Graph & Memory Core
 
+
+> **Completion: 95%** — 25 of 28 functional requirements met, 3 partially. Three requirements are declared and unfed: the semantic tier's fields, its versioning and its failure signatures all exist and are read, and nothing writes a `MemoryFact` because the nightly distiller is not built. **No UI at all** — the spec's six moments sit outside the FR table, so this figure does not count them.
+>
+> _Method: `(met + ½ × partial) ÷ total`, audited against shipped code, 2026-08-28. One measure applied the same way to all nineteen modules so they compare; it counts requirements, not screens or gates._
+
 Running list for **M04 Candidate Skill Graph & Memory Core**.
 Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 
