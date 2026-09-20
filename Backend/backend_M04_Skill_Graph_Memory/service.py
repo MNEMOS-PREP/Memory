@@ -16,6 +16,7 @@ downstream module quietly wrong at once.
 
 from __future__ import annotations
 
+import hashlib
 import logging
 import math
 import uuid
@@ -930,6 +931,134 @@ def _pending_for(session: Session, candidate_id: uuid.UUID) -> list[PendingObser
     ]
 
 
+# ─────────────────────────────────────────────────────────────
+#  THE EPISODIC TIER  (§5.1 — what evidence resolves against)
+# ─────────────────────────────────────────────────────────────
+
+#: For artifacts with no turn behind them. A turn-scoped one does not use it —
+#: see below.
+ARTIFACT_NAMESPACE = uuid.UUID("6f0f3d40-8f38-5a1a-9f2f-2a4c0e6a1b44")
+
+
+def artifact_id_for(session_id: uuid.UUID, turn_id: uuid.UUID | None, artifact_type: str):
+    """**A turn's artifact IS the turn.**
+
+    Not a derivation over it: M13 cites `artifact_id=turn.turn_id` on every
+    span it quotes (`service.py`, where it builds the evaluator's view), so
+    any other rule here would resolve to `absent` no matter how principled it
+    was. Making the two the same by construction means there is no namespace
+    for two modules to agree on and then drift apart on.
+
+    Everything else — a session-level submission, a canvas with no turn — is
+    keyed by `uuid5` over the session and the type, because those have no
+    natural id and a producer should not have to keep one.
+    """
+    if turn_id is not None:
+        return turn_id
+    return uuid.uuid5(ARTIFACT_NAMESPACE, f"{session_id}|{artifact_type}")
+
+
+def register_artifact(
+    session: Session,
+    *,
+    candidate_id: uuid.UUID,
+    session_id: uuid.UUID,
+    turn_id: uuid.UUID | None,
+    content: str,
+    artifact_type: str = "transcript",
+) -> tuple[Artifact, bool]:
+    """Store the thing a quote will be quoted from. `(artifact, created)`.
+
+    The table has been here since day one and nothing could write to it, so
+    every evidence ref from another module resolved to `absent` and the
+    observation behind it was refused — which is how a scored interview
+    reached M04 and moved nothing. AC-4.1 is only testable because this tier
+    exists; it is only *true* because something fills it.
+
+    Immutable on purpose: a second call with different content for the same
+    turn returns the row that is already there. Evidence quotes character
+    offsets into this text, so replacing it silently would move every span
+    that points at it.
+    """
+    artifact = session.get(Artifact, artifact_id_for(session_id, turn_id, artifact_type))
+    if artifact is not None:
+        return artifact, False
+    artifact = Artifact(
+        id=artifact_id_for(session_id, turn_id, artifact_type),
+        candidate_id=candidate_id,
+        session_id=session_id,
+        turn_id=turn_id,
+        artifact_type=artifact_type,
+        content=content,
+        checksum=hashlib.sha256(content.encode("utf-8")).hexdigest(),
+    )
+    session.add(artifact)
+    session.commit()
+    session.refresh(artifact)
+    return artifact, True
+
+
+# ─────────────────────────────────────────────────────────────
+#  CONSENT  (FR-4.20 — the thing every write is checked against)
+# ─────────────────────────────────────────────────────────────
+
+
+def active_consent(
+    session: Session, candidate_id: uuid.UUID, purpose: str
+) -> ConsentRecord | None:
+    """The consent a write may cite, or None. Newest first, so a re-grant
+    after a revocation is the one that counts."""
+    rows = session.exec(
+        select(ConsentRecord)
+        .where(ConsentRecord.candidate_id == candidate_id)
+        .where(ConsentRecord.purpose == purpose)
+        .where(ConsentRecord.revoked_at.is_(None))
+        .order_by(ConsentRecord.granted_at.desc())
+    ).all()
+    return rows[0] if rows else None
+
+
+def grant_consent(
+    session: Session,
+    candidate_id: uuid.UUID,
+    purpose: str,
+    *,
+    policy_version: str = "1.0",
+) -> tuple[ConsentRecord, bool]:
+    """Record consent for one purpose. `(record, created)`.
+
+    Idempotent by design: a student opening a second interview is not a second
+    consent, and a module that retries a session start must not accumulate
+    rows nobody can tell apart. A grant at a NEW policy version is a real
+    second consent, because it is a different thing being agreed to.
+    """
+    if purpose not in set(Purpose):
+        raise UnknownPurpose(purpose)
+    existing = active_consent(session, candidate_id, purpose)
+    if existing is not None and existing.policy_version == policy_version:
+        return existing, False
+    record = ConsentRecord(
+        candidate_id=candidate_id, purpose=purpose, policy_version=policy_version
+    )
+    session.add(record)
+    session.commit()
+    session.refresh(record)
+    return record, True
+
+
+def consents_for(session: Session, candidate_id: uuid.UUID) -> list[ConsentRecord]:
+    """Every consent on record, revoked ones included — FR-4.18a says a
+    student may read their own history, and "when did I withdraw" is part of
+    it."""
+    return list(
+        session.exec(
+            select(ConsentRecord)
+            .where(ConsentRecord.candidate_id == candidate_id)
+            .order_by(ConsentRecord.granted_at.desc())
+        ).all()
+    )
+
+
 def export_memory(session: Session, candidate_id: uuid.UUID) -> dict:
     """FR-4.18a — everything this module holds about one person.
 
@@ -1077,3 +1206,8 @@ def revoke_purpose(
 
 class CannotRevokePractice(Exception):
     """Revoking `practice` is a deletion; say so rather than half-doing it."""
+
+
+class UnknownPurpose(Exception):
+    """Consent is per purpose and revocation is per purpose, so a purpose
+    nobody can revoke is consent nobody can withdraw."""

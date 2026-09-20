@@ -21,7 +21,7 @@ from datetime import datetime
 
 from ai_core.db import get_session
 from ai_core.modules_meta import module_status
-from fastapi import APIRouter, Depends, Header, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from sqlmodel import Session
 
@@ -301,6 +301,89 @@ def profile_summary(
 # ─────────────────────────────────────────────────────────────
 
 
+class ConsentOut(BaseModel):
+    """What a module cites on every observation it writes."""
+
+    consent_id: uuid.UUID
+    candidate_id: uuid.UUID
+    purpose: str
+    policy_version: str
+    granted_at: datetime
+    revoked_at: datetime | None = None
+    active: bool
+
+
+class GrantConsent(BaseModel):
+    purpose: str = Field(
+        default="practice",
+        description="practice · institutional_reporting · research (FR-4.18c)",
+    )
+    policy_version: str = Field(default="1.0")
+
+
+def _consent_out(record) -> ConsentOut:
+    return ConsentOut(
+        consent_id=record.id,
+        candidate_id=record.candidate_id,
+        purpose=record.purpose,
+        policy_version=record.policy_version,
+        granted_at=record.granted_at,
+        revoked_at=record.revoked_at,
+        active=record.active,
+    )
+
+
+@router.get("/v1/candidates/{candidate_id}/consent", tags=["rights"])
+def read_consent(
+    purpose: str | None = Query(
+        default=None, description="omit to list every consent on record"
+    ),
+    candidate_id: uuid.UUID = Depends(require_self),
+    session: Session = Depends(get_session),
+) -> list[ConsentOut]:
+    """What this student has agreed to — FR-4.20, from the other side.
+
+    The table has existed since day one and every write is checked against it
+    (`store.consent_active`), but nothing could read it: M06 resolves consent
+    at session start and had no route to ask, so it reported "not recorded" on
+    every session and M13 emitted no observations at all. A rule nobody can
+    query is a rule that silently answers no.
+    """
+    if purpose is not None:
+        found = service.active_consent(session, candidate_id, purpose)
+        return [_consent_out(found)] if found is not None else []
+    return [_consent_out(r) for r in service.consents_for(session, candidate_id)]
+
+
+@router.post("/v1/candidates/{candidate_id}/consent", tags=["rights"], status_code=201)
+def grant_consent(
+    body: GrantConsent,
+    response: Response,
+    candidate_id: uuid.UUID = Depends(require_self),
+    session: Session = Depends(get_session),
+) -> ConsentOut:
+    """Record consent for one purpose. 201 when it is new, 200 when it stood.
+
+    Idempotent: a student starting a second interview has not consented twice.
+    A grant at a new `policy_version` is a genuine second consent, because the
+    thing being agreed to changed — the old row stays, unrevoked, as the
+    record of what was true then.
+    """
+    try:
+        record, created = service.grant_consent(
+            session, candidate_id, body.purpose, policy_version=body.policy_version
+        )
+    except service.UnknownPurpose as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=f"unknown purpose '{body.purpose}' — "
+            "practice, institutional_reporting or research",
+        ) from exc
+    if not created:
+        response.status_code = 200
+    return _consent_out(record)
+
+
 @router.get("/v1/candidates/{candidate_id}/export", tags=["rights"])
 def export_memory(
     candidate_id: uuid.UUID = Depends(require_self),
@@ -341,6 +424,64 @@ def delete_memory(
 # ─────────────────────────────────────────────────────────────
 #  THE WRITE PATH  (service)
 # ─────────────────────────────────────────────────────────────
+
+
+class ArtifactIn(BaseModel):
+    """The text a quote will be quoted from — §5.1's episodic tier."""
+
+    candidate_id: uuid.UUID
+    session_id: uuid.UUID
+    turn_id: uuid.UUID | None = None
+    artifact_type: str = Field(default="transcript")
+    content: str = Field(min_length=1)
+
+
+class ArtifactOut(BaseModel):
+    artifact_id: uuid.UUID
+    checksum: str
+    created: bool
+
+
+@router.post(
+    "/v1/candidates/{candidate_id}/artifacts",
+    tags=["write"],
+    dependencies=[Depends(require_service)],
+    status_code=201,
+)
+def post_artifact(
+    candidate_id: uuid.UUID,
+    payload: ArtifactIn,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> ArtifactOut:
+    """Register an answer, a submission or a canvas before anything cites it.
+
+    `m04_artifacts` has been the resolver's whole world since day one and
+    nothing could write to it, so every evidence ref another module sent
+    resolved to `absent` and the observation behind it was refused with
+    "evidence does not resolve". A scored interview reached M04 and moved
+    nothing — the failure was at this seam, not in the scoring.
+
+    The id is derived from `(turn_id or session_id, artifact_type)`, so the
+    producer never has to remember one and a retry is a no-op: 201 the first
+    time, 200 afterwards. The content is immutable, because evidence quotes
+    character offsets into it.
+    """
+    if payload.candidate_id != candidate_id:
+        raise HTTPException(
+            status_code=400, detail="artifact candidate_id does not match the path"
+        )
+    artifact, created = service.register_artifact(
+        session,
+        candidate_id=candidate_id,
+        session_id=payload.session_id,
+        turn_id=payload.turn_id,
+        content=payload.content,
+        artifact_type=payload.artifact_type,
+    )
+    if not created:
+        response.status_code = 200
+    return ArtifactOut(artifact_id=artifact.id, checksum=artifact.checksum, created=created)
 
 
 class ObservationBatch(BaseModel):

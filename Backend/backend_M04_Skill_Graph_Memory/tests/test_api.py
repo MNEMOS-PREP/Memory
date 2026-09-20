@@ -7,6 +7,7 @@ the ones that must not quietly become numbers.
 
 from __future__ import annotations
 
+import hashlib
 import uuid
 
 from backend_M04_Skill_Graph_Memory.store import record
@@ -294,6 +295,124 @@ def test_export_and_delete_are_the_students_own(client, candidate_id, monkeypatc
         headers={"X-Candidate-Id": str(candidate_id)},
     ).json()
     assert "observations" in body and "consent" in body
+
+
+def test_an_artifact_can_be_registered_and_then_cited(client, candidate_id, monkeypatch):
+    """The seam that made a scored interview move nothing.
+
+    `m04_artifacts` is what every evidence ref resolves against, and nothing
+    could write to it — so M13's observations came back "evidence does not
+    resolve" and were rejected, one per concept, on every turn.
+    """
+    monkeypatch.delenv("M04_SERVICE_SECRET", raising=False)
+    session_id, turn_id = uuid.uuid4(), uuid.uuid4()
+    body = {
+        "candidate_id": str(candidate_id),
+        "session_id": str(session_id),
+        "turn_id": str(turn_id),
+        "content": "Keys are hashed to a bucket index, so you jump straight to the bucket.",
+    }
+    created = client.post(f"/v1/candidates/{candidate_id}/artifacts", json=body)
+    assert created.status_code == 201
+    out = created.json()
+
+    # The id a citer already uses. M13 puts `artifact_id=turn_id` on every span
+    # it quotes, so anything else here resolves to absent however principled.
+    assert out["artifact_id"] == str(turn_id)
+    assert out["checksum"] == hashlib.sha256(body["content"].encode()).hexdigest()
+
+    # Immutable, and idempotent: a retry is not a second transcript, and the
+    # character offsets already quoted into it do not move.
+    again = client.post(
+        f"/v1/candidates/{candidate_id}/artifacts", json={**body, "content": "something else"}
+    )
+    assert again.status_code == 200
+    assert again.json()["checksum"] == out["checksum"]
+
+
+def test_registering_an_artifact_for_somebody_else_is_refused(client, candidate_id, monkeypatch):
+    monkeypatch.delenv("M04_SERVICE_SECRET", raising=False)
+    refused = client.post(
+        f"/v1/candidates/{candidate_id}/artifacts",
+        json={
+            "candidate_id": str(uuid.uuid4()),
+            "session_id": str(uuid.uuid4()),
+            "content": "x",
+        },
+    )
+    assert refused.status_code == 400
+
+
+def test_consent_can_be_granted_and_read_back(client, candidate_id):
+    """FR-4.20 from the other side. The table has been enforced since day one
+    and nothing could query it, so M06 reported "consent isn't recorded" on
+    every session and M13 emitted no observations at all."""
+    me = {"X-Candidate-Id": str(candidate_id)}
+    assert client.get(f"/v1/candidates/{candidate_id}/consent", headers=me).json() == []
+
+    created = client.post(
+        f"/v1/candidates/{candidate_id}/consent", json={"purpose": "practice"}, headers=me
+    )
+    assert created.status_code == 201
+    granted = created.json()
+    assert granted["active"] is True and granted["purpose"] == "practice"
+
+    # The id an observation cites, found by the purpose it was granted for.
+    found = client.get(
+        f"/v1/candidates/{candidate_id}/consent?purpose=practice", headers=me
+    ).json()
+    assert [row["consent_id"] for row in found] == [granted["consent_id"]]
+
+
+def test_granting_the_same_consent_twice_is_one_consent(client, candidate_id):
+    """A student opening a second interview has not agreed to anything new,
+    and a module retrying a session start must not leave two rows nobody can
+    tell apart."""
+    me = {"X-Candidate-Id": str(candidate_id)}
+    first = client.post(f"/v1/candidates/{candidate_id}/consent", json={}, headers=me)
+    again = client.post(f"/v1/candidates/{candidate_id}/consent", json={}, headers=me)
+
+    assert (first.status_code, again.status_code) == (201, 200)
+    assert again.json()["consent_id"] == first.json()["consent_id"]
+    assert len(client.get(f"/v1/candidates/{candidate_id}/consent", headers=me).json()) == 1
+
+
+def test_a_revoked_consent_is_not_offered_to_a_writer(client, candidate_id):
+    """Revocation already worked; what is new is that a reader now sees it.
+    The row stays — "when did they withdraw" is an ethics question — but it is
+    no longer the consent a write may cite."""
+    me = {"X-Candidate-Id": str(candidate_id)}
+    client.post(
+        f"/v1/candidates/{candidate_id}/consent", json={"purpose": "research"}, headers=me
+    )
+    client.delete(f"/v1/candidates/{candidate_id}/memory?purpose=research", headers=me)
+
+    assert (
+        client.get(f"/v1/candidates/{candidate_id}/consent?purpose=research", headers=me).json()
+        == []
+    )
+    history = client.get(f"/v1/candidates/{candidate_id}/consent", headers=me).json()
+    assert [row["active"] for row in history] == [False]
+    assert history[0]["revoked_at"] is not None
+
+
+def test_consent_is_the_students_own_and_a_purpose_must_exist(client, candidate_id):
+    me = {"X-Candidate-Id": str(candidate_id)}
+    stranger = {"X-Candidate-Id": str(uuid.uuid4())}
+    assert (
+        client.get(f"/v1/candidates/{candidate_id}/consent", headers=stranger).status_code == 403
+    )
+    assert (
+        client.post(
+            f"/v1/candidates/{candidate_id}/consent", json={}, headers=stranger
+        ).status_code
+        == 403
+    )
+    refused = client.post(
+        f"/v1/candidates/{candidate_id}/consent", json={"purpose": "marketing"}, headers=me
+    )
+    assert refused.status_code == 400
+    assert "marketing" in refused.json()["detail"]
 
 
 def test_revoking_practice_is_refused_with_a_reason(client, candidate_id):
