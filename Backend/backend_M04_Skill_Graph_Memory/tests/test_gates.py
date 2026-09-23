@@ -204,24 +204,31 @@ def test_ac_4_10_no_endpoint_exposes_a_failure_signature(client):
             assert "FailureSignature" not in str(spec.get("responses", {}))
 
 
-def test_ac_4_10_candidate_routes_all_identify_the_caller(client):
-    """Every route under /v1/candidates/{id}/ resolves WHO is asking before it
-    touches a row — as the student themselves (`require_self`) or as another
-    module holding the shared secret (`require_service`).
+def test_ac_4_10_candidate_routes_all_identify_the_caller(session):
+    """Every route that names a candidate refuses a stranger — nobody, and
+    another student — before it touches a row.
 
-    §7's prose says "self only" and its own table then marks
-    `POST .../observations` as `service`; the table wins, because M13 posts
-    with no student present. The gate is therefore that no candidate route
-    bypasses identification, not that they all take the same path.
+    The old version of this gate checked that each route DECLARED a guard,
+    and passed while the guard itself let an anonymous caller through whenever
+    no service secret was configured, which is every dev machine. This one
+    asks the routes. It reads them from the OpenAPI document rather than
+    taking a list, so a route added next month is checked by this test
+    (`ai_core.testing`, Platform_Core v0.10.0).
     """
-    from backend_M04_Skill_Graph_Memory.router import require_self, require_service, router
+    from ai_core.db import get_session
+    from ai_core.testing import assert_refuses_strangers
+    from fastapi.testclient import TestClient
 
-    guards = {require_self, require_service}
-    for route in router.routes:
-        if "/v1/candidates/" not in getattr(route, "path", ""):
-            continue
-        dependants = {d.call for d in route.dependant.dependencies}
-        assert dependants & guards, f"{route.path} does not identify the caller"
+    from backend_M04_Skill_Graph_Memory.app import app
+
+    app.dependency_overrides[get_session] = lambda: session
+    try:
+        with TestClient(app) as client:
+            checked = assert_refuses_strangers(client, app)
+    finally:
+        app.dependency_overrides.clear()
+    assert ("POST", "/v1/candidates/{candidate_id}/observations") in checked
+    assert ("GET", "/v1/candidates/{candidate_id}/export") in checked
 
 
 # ── AC-4.11 ───────────────────────────────────────────────────────────────

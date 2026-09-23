@@ -1,12 +1,25 @@
 """M04 — API surface.
 
-Spec: §7. Two access levels, and the difference is enforced rather than
-documented:
+Spec: §7. Access is enforced rather than documented, in two independent
+checks:
+
+    who      every route whose path names a candidate asks `ai_core.identity`
+             whether the caller may see that student — `candidate_guard`, on
+             the ROUTER, so a route added later is covered without a line.
+             Anonymous is refused, including on a dev machine.
+    which    `service` routes also require the shared secret: they are called
+             by another module, and the secret is how M04 knows it is one.
+
+A module calling on a student's behalf sends both — the secret, and the
+student it is acting for (`ai_core.guard.identity_headers`). Until 2026-09-23
+the secret alone let a module read ANY student's record, and with no secret
+configured (the dev default) an anonymous caller could too: `require_self`
+failed open. The platform's rule is that there is no service role — a module
+carries a student's request, it does not make its own — so the secret now
+says *which caller*, and never *whose data*.
 
     public   the ontology. It is the same for everybody and four modules need
-             it on their own hot paths.
-    service  another module calling with no student present. Shared secret.
-    self     a student's own beliefs, evidence and memory.
+             it on their own hot paths. Names no candidate, so not gated.
 
 **`FailureSignature` is reachable from no endpoint here.** Not filtered out —
 absent. AC-4.10 is a gate, and the cheapest way to keep a gate is to have
@@ -20,18 +33,19 @@ import uuid
 from datetime import datetime
 
 from ai_core.db import get_session
+from ai_core.guard import candidate_guard
 from ai_core.modules_meta import module_status
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from sqlmodel import Session
 
 from . import service, store
-from .keys import secret_matches, service_secret
+from .keys import secret_matches
 from .models import RecordResult
 from .ontology import UnknownConcept, load
 from .store import ContendedMastery, NoConsent, ObservationIn, UnresolvableEvidence
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(candidate_guard())])
 
 
 # ─────────────────────────────────────────────────────────────
@@ -43,28 +57,6 @@ def require_service(x_service_secret: str | None = Header(default=None)) -> None
     """One dependency, used by every `service` endpoint, and tested."""
     if not secret_matches(x_service_secret):
         raise HTTPException(status_code=401, detail="service credentials required")
-
-
-def require_self(
-    candidate_id: uuid.UUID,
-    x_candidate_id: str | None = Header(default=None),
-    x_service_secret: str | None = Header(default=None),
-) -> uuid.UUID:
-    """A student may read their own record; a service may read on their behalf.
-
-    Phase 1 has no identity provider, so this is the seam where one lands: the
-    header is a placeholder for a verified subject claim, and every route that
-    touches a candidate's data goes through this function rather than reading
-    the path parameter directly. When real auth arrives it replaces the body of
-    this function and nothing else.
-    """
-    if service_secret() is not None and secret_matches(x_service_secret):
-        return candidate_id
-    if x_candidate_id and x_candidate_id != str(candidate_id):
-        raise HTTPException(status_code=403, detail="not your record")
-    if service_secret() is not None and not x_candidate_id:
-        raise HTTPException(status_code=401, detail="identify yourself")
-    return candidate_id
 
 
 # ─────────────────────────────────────────────────────────────
@@ -173,7 +165,7 @@ def skill_graph_theta(
 
 @router.get("/v1/candidates/{candidate_id}/mastery", tags=["mastery"])
 def mastery(
-    candidate_id: uuid.UUID = Depends(require_self),
+    candidate_id: uuid.UUID,
     domain: str | None = Query(default=None),
     state: str | None = Query(default=None),
     session: Session = Depends(get_session),
@@ -200,7 +192,7 @@ def mastery(
 @router.get("/v1/candidates/{candidate_id}/mastery/{concept_id}/evidence", tags=["mastery"])
 def evidence(
     concept_id: str,
-    candidate_id: uuid.UUID = Depends(require_self),
+    candidate_id: uuid.UUID,
     session: Session = Depends(get_session),
 ) -> dict:
     """"Why is this value what it is?" — Rule 3's escape hatch (FR-4.12)."""
@@ -213,7 +205,7 @@ def evidence(
 
 @router.get("/v1/candidates/{candidate_id}/bottlenecks", tags=["mastery"])
 def bottlenecks(
-    candidate_id: uuid.UUID = Depends(require_self),
+    candidate_id: uuid.UUID,
     session: Session = Depends(get_session),
 ) -> dict:
     found = service.bottlenecks(session, candidate_id)
@@ -227,7 +219,7 @@ def bottlenecks(
 
 @router.get("/v1/candidates/{candidate_id}/retests", tags=["mastery"])
 def list_retests(
-    candidate_id: uuid.UUID = Depends(require_self),
+    candidate_id: uuid.UUID,
     session: Session = Depends(get_session),
 ) -> dict:
     return {"retests": service.retests(session, candidate_id)}
@@ -241,7 +233,7 @@ class DisputeRequest(BaseModel):
 def dispute(
     concept_id: str,
     payload: DisputeRequest,
-    candidate_id: uuid.UUID = Depends(require_self),
+    candidate_id: uuid.UUID,
     session: Session = Depends(get_session),
 ) -> dict:
     return service.open_dispute(session, candidate_id, concept_id, payload.reason)
@@ -249,10 +241,10 @@ def dispute(
 
 @router.get("/v1/candidates/{candidate_id}/trajectory", tags=["mastery"])
 def trajectory(
+    candidate_id: uuid.UUID,
     concept: str | None = Query(default=None, description="one concept id; omit for all"),
     since: datetime | None = Query(default=None),
     until: datetime | None = Query(default=None),
-    candidate_id: uuid.UUID = Depends(require_self),
     session: Session = Depends(get_session),
 ) -> dict:
     """§7 · §8 — the contract M19 needs. M19 owns the chart; M04 owns the data.
@@ -335,10 +327,10 @@ def _consent_out(record) -> ConsentOut:
 
 @router.get("/v1/candidates/{candidate_id}/consent", tags=["rights"])
 def read_consent(
+    candidate_id: uuid.UUID,
     purpose: str | None = Query(
         default=None, description="omit to list every consent on record"
     ),
-    candidate_id: uuid.UUID = Depends(require_self),
     session: Session = Depends(get_session),
 ) -> list[ConsentOut]:
     """What this student has agreed to — FR-4.20, from the other side.
@@ -359,7 +351,7 @@ def read_consent(
 def grant_consent(
     body: GrantConsent,
     response: Response,
-    candidate_id: uuid.UUID = Depends(require_self),
+    candidate_id: uuid.UUID,
     session: Session = Depends(get_session),
 ) -> ConsentOut:
     """Record consent for one purpose. 201 when it is new, 200 when it stood.
@@ -386,7 +378,7 @@ def grant_consent(
 
 @router.get("/v1/candidates/{candidate_id}/export", tags=["rights"])
 def export_memory(
-    candidate_id: uuid.UUID = Depends(require_self),
+    candidate_id: uuid.UUID,
     session: Session = Depends(get_session),
 ) -> dict:
     """FR-4.18a — every row, not a summary of them."""
@@ -395,12 +387,12 @@ def export_memory(
 
 @router.delete("/v1/candidates/{candidate_id}/memory", tags=["rights"])
 def delete_memory(
+    candidate_id: uuid.UUID,
     purpose: str | None = Query(
         default=None,
         description="omit for a full hard delete (FR-4.18b); "
         "'research' or 'institutional_reporting' to revoke one purpose (FR-4.18c)",
     ),
-    candidate_id: uuid.UUID = Depends(require_self),
     session: Session = Depends(get_session),
 ) -> dict:
     """Two operations behind one path, and the difference is stated, not implied.

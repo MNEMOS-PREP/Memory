@@ -81,7 +81,12 @@ def client_fixture(session: Session) -> Iterator[TestClient]:
     from backend_M04_Skill_Graph_Memory.app import app
 
     app.dependency_overrides[get_session] = lambda: session
-    with TestClient(app) as client:
+    # As an administrator, on purpose — as M02's suite does. These tests are
+    # about beliefs, evidence and memory; the refusals have their own tests,
+    # which send real student principals, and putting authorisation into every
+    # test is how the first one to get it slightly wrong "fixes" it by
+    # weakening the check.
+    with TestClient(app, headers={"X-Role": "admin", "X-Candidate-Id": "test-admin"}) as client:
         yield client
     app.dependency_overrides.clear()
 

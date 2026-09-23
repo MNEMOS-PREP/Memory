@@ -222,7 +222,7 @@ def test_a_student_cannot_read_another_students_record(client, candidate_id, mon
 
     response = client.get(
         f"/v1/candidates/{candidate_id}/mastery",
-        headers={"X-Candidate-Id": str(uuid.uuid4())},
+        headers={"X-Role": "student", "X-Candidate-Id": str(uuid.uuid4())},
     )
     assert response.status_code == 403
 
@@ -283,7 +283,7 @@ def test_trajectory_returns_a_named_reason_when_it_is_empty(client, candidate_id
 def test_export_and_delete_are_the_students_own(client, candidate_id, monkeypatch):
     """FR-4.18a/b — reachable by the student, and by nobody else."""
     monkeypatch.setenv("M04_SERVICE_SECRET", "s3cret")
-    stranger = {"X-Candidate-Id": str(uuid.uuid4())}
+    stranger = {"X-Role": "student", "X-Candidate-Id": str(uuid.uuid4())}
 
     assert client.get(f"/v1/candidates/{candidate_id}/export", headers=stranger).status_code == 403
     assert (
@@ -292,7 +292,7 @@ def test_export_and_delete_are_the_students_own(client, candidate_id, monkeypatc
 
     body = client.get(
         f"/v1/candidates/{candidate_id}/export",
-        headers={"X-Candidate-Id": str(candidate_id)},
+        headers={"X-Role": "student", "X-Candidate-Id": str(candidate_id)},
     ).json()
     assert "observations" in body and "consent" in body
 
@@ -347,7 +347,7 @@ def test_consent_can_be_granted_and_read_back(client, candidate_id):
     """FR-4.20 from the other side. The table has been enforced since day one
     and nothing could query it, so M06 reported "consent isn't recorded" on
     every session and M13 emitted no observations at all."""
-    me = {"X-Candidate-Id": str(candidate_id)}
+    me = {"X-Role": "student", "X-Candidate-Id": str(candidate_id)}
     assert client.get(f"/v1/candidates/{candidate_id}/consent", headers=me).json() == []
 
     created = client.post(
@@ -368,7 +368,7 @@ def test_granting_the_same_consent_twice_is_one_consent(client, candidate_id):
     """A student opening a second interview has not agreed to anything new,
     and a module retrying a session start must not leave two rows nobody can
     tell apart."""
-    me = {"X-Candidate-Id": str(candidate_id)}
+    me = {"X-Role": "student", "X-Candidate-Id": str(candidate_id)}
     first = client.post(f"/v1/candidates/{candidate_id}/consent", json={}, headers=me)
     again = client.post(f"/v1/candidates/{candidate_id}/consent", json={}, headers=me)
 
@@ -381,7 +381,7 @@ def test_a_revoked_consent_is_not_offered_to_a_writer(client, candidate_id):
     """Revocation already worked; what is new is that a reader now sees it.
     The row stays — "when did they withdraw" is an ethics question — but it is
     no longer the consent a write may cite."""
-    me = {"X-Candidate-Id": str(candidate_id)}
+    me = {"X-Role": "student", "X-Candidate-Id": str(candidate_id)}
     client.post(
         f"/v1/candidates/{candidate_id}/consent", json={"purpose": "research"}, headers=me
     )
@@ -397,8 +397,8 @@ def test_a_revoked_consent_is_not_offered_to_a_writer(client, candidate_id):
 
 
 def test_consent_is_the_students_own_and_a_purpose_must_exist(client, candidate_id):
-    me = {"X-Candidate-Id": str(candidate_id)}
-    stranger = {"X-Candidate-Id": str(uuid.uuid4())}
+    me = {"X-Role": "student", "X-Candidate-Id": str(candidate_id)}
+    stranger = {"X-Role": "student", "X-Candidate-Id": str(uuid.uuid4())}
     assert (
         client.get(f"/v1/candidates/{candidate_id}/consent", headers=stranger).status_code == 403
     )
