@@ -203,12 +203,14 @@ Arithmetic you can only reach through a web request does not get checked.
 ## Shared code is a dependency, not a copy
 
 ```
-ai-core    git+https://github.com/MNEMOS-PREP/Platform_Core@v0.3.0#subdirectory=python
+ai-core    git+https://github.com/MNEMOS-PREP/Platform_Core@v0.11.0#subdirectory=python
 ```
 
-[Platform_Core](https://github.com/MNEMOS-PREP/Platform_Core) v0.3.0 carries
-the two contracts M04 is not allowed to own, because more than one module
-speaks them:
+[Platform_Core](https://github.com/MNEMOS-PREP/Platform_Core) (v0.11.0 today)
+carries the contracts M04 is not allowed to own, because more than one module
+speaks them — the two below since v0.3.0, and the guard on every route
+(`ai_core.guard`) since v0.10.0, which reads a student named in the query as
+well as the path since v0.11.0:
 
 | | |
 |---|---|
@@ -220,7 +222,7 @@ they move on *your* schedule.
 
 ### Working on both repos at once
 
-Until the `v0.3.0` tag is pushed, or whenever you are editing `Platform_Core`
+Until a new tag is pushed, or whenever you are editing `Platform_Core`
 and this module together, install the local checkout over the pin:
 
 ```bat

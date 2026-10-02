@@ -217,6 +217,43 @@ def test_service_endpoints_401_without_the_shared_secret(client, candidate_id, m
     assert authenticated.status_code == 200
 
 
+def test_theta_needs_the_student_as_well_as_the_secret(session, candidate_id, monkeypatch):
+    """Platform_Core v0.11.0: the guard reads the query. Until then the secret
+    alone opened `/skill-graph/theta?candidate=` for ANY student — M15 called it
+    without saying who for — because the router guard read only the path.
+
+    A caller with the secret is a module; the forwarded headers say which
+    student it is acting for, and that student must be the one asked about.
+    """
+    from ai_core.db import get_session
+    from fastapi.testclient import TestClient
+
+    from backend_M04_Skill_Graph_Memory.app import app
+
+    monkeypatch.setenv("M04_SERVICE_SECRET", "s3cret")
+    app.dependency_overrides[get_session] = lambda: session
+    params = {"candidate": str(candidate_id), "concepts": "DP"}
+    secret = {"X-Service-Secret": "s3cret"}
+    try:
+        with TestClient(app) as bare:  # no default identity, unlike `client`
+            alone = bare.get("/v1/skill-graph/theta", params=params, headers=secret)
+            other = bare.get(
+                "/v1/skill-graph/theta",
+                params=params,
+                headers={**secret, "X-Role": "student", "X-Candidate-Id": str(uuid.uuid4())},
+            )
+            theirs = bare.get(
+                "/v1/skill-graph/theta",
+                params=params,
+                headers={**secret, "X-Role": "student", "X-Candidate-Id": str(candidate_id)},
+            )
+    finally:
+        app.dependency_overrides.clear()
+    assert alone.status_code == 403, "the secret alone still opens any student's beliefs"
+    assert other.status_code == 403
+    assert theirs.status_code == 200
+
+
 def test_a_student_cannot_read_another_students_record(client, candidate_id, monkeypatch):
     monkeypatch.setenv("M04_SERVICE_SECRET", "s3cret")
 
