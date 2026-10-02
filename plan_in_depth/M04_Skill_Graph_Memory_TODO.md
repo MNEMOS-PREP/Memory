@@ -18,6 +18,15 @@ Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 
 Legend: ✅ done · 🟡 partly done · ⬜ not started
 
+### 2026-10-02 — an ask from M06
+
+- ⬜ (standing, M06 review Part 5) Source `recent_sessions` from M06.
+  `GET /v1/interviews/by-candidate/{id}/recent` exists for exactly this slot.
+- **Confirmed live** (2026-10-02, the guard on with a shared service secret):
+  M06's artifacts registered (201), M13's observations accepted, and the skill
+  graph moved. An anonymous read and another student's read were refused
+  (403), and theta without the service secret was refused (401).
+
 ---
 
 ## 0. Ideas and scouting
