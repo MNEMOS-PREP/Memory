@@ -135,10 +135,11 @@ Four rules that will save you a bug each:
 3. **A missing key means "not measured".** Never default it to `0`. That is
    Rule 2, and it is the one bug that makes every downstream module quietly
    wrong at once.
-4. **Set `M04_SERVICE_SECRET` on both sides from day one.** Service endpoints
-   are **open** when no secret is configured and 401 when one is — build
-   without the header and it works locally, then degrades silently in any
-   deployment that is actually locked down.
+4. **Send `ai_core.service.headers()` on every service call.** Service
+   endpoints are never open (Platform_Core v0.12.0): with no secret
+   configured, every module on one machine shares a machine secret, so a
+   caller that forgets the header gets a 401 on a laptop too, not first in a
+   deployment. Across machines, set `SERVICE_SECRET` to one value everywhere.
 
 `profile-summary` ships two slots empty on purpose — `recent_sessions` and
 `facts` fill in when M6 lands. They are present rather than absent because a

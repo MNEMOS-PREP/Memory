@@ -21,17 +21,20 @@
 #  Shared secret for `service` endpoints — the ones another module calls with
 #  no student present (POST /observations, GET /skill-graph/theta).
 #
-#  UNSET means those endpoints are OPEN, and the app warns loudly once at
-#  startup. That is a deliberate trade: failing closed on a fresh clone would
-#  mean `start_all.bat` brings M04 up and every sibling module reports it as
-#  broken, which teaches everyone to set a dummy value and stop reading the
-#  warning.
+#  UNSET is right on one machine. Every module on a host then shares a machine
+#  secret that nobody configures (Platform_Core v0.12.0, `ai_core.service`),
+#  so the endpoints are never open and a fresh clone still works. Until
+#  2026-10-02 unset meant OPEN, with a warning.
 #
-#  Fine to leave unset on a laptop. NEVER leave it unset in a pilot: this
-#  module holds every belief the platform has about a student, including
+#  SET it — to the same value in every module, as SERVICE_SECRET or this name —
+#  only when modules run on more than one machine. Setting it in ONE module's
+#  keys.txt is the mistake to avoid: that module then disagrees with the rest,
+#  and every call between them is a 401.
+#
+#  This module holds every belief the platform has about a student, including
 #  failure signatures that AC-4.10 says no third party may ever see.
 #
-M04_SERVICE_SECRET=change-me-before-any-shared-deployment
+# M04_SERVICE_SECRET=
 
 
 # ── The distiller ────────────────────────────────────────────────────────────

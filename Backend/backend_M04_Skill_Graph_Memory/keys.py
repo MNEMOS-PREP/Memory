@@ -15,13 +15,19 @@ can override one key for one shell without editing anything.
 platform has about a student, including failure signatures that AC-4.10 says
 no third party may ever see. `service` endpoints are the ones another module
 calls with no student present, so they are the ones that need a shared secret
-rather than a session — and the check is one dependency, tested, rather than a
-convention eighteen repos are trusted to follow.
+rather than a session.
+
+The check itself left this file on 2026-10-02 for Platform_Core's
+`ai_core.service` (v0.12.0). M04 wrote it first; three callers then each read
+it their own way and M05 had none at all. The rule changed on the way: with no
+secret configured these routes used to be OPEN, with a warning. Now every
+module on one machine shares a machine secret nobody has to configure, so a
+fresh clone still works and the routes are never open. `M04_SERVICE_SECRET` in
+`keys.txt` is still read — it is the platform's second name for the secret.
 """
 
 from __future__ import annotations
 
-import hmac
 import logging
 import os
 from pathlib import Path
@@ -29,9 +35,6 @@ from pathlib import Path
 log = logging.getLogger(__name__)
 
 KEY_FILES = ("keys.txt", ".env")
-
-SERVICE_SECRET_VAR = "M04_SERVICE_SECRET"
-
 
 def _candidate_paths() -> list[Path]:
     here = Path(__file__).resolve()
@@ -61,26 +64,3 @@ def load_keys(*, override: bool = False) -> list[str]:
         # Names only. A log line that prints a key is a key in a log file.
         log.info("loaded %d credentials from %s", len(loaded), ", ".join(KEY_FILES))
     return loaded
-
-
-def service_secret() -> str | None:
-    value = os.getenv(SERVICE_SECRET_VAR, "").strip()
-    return value or None
-
-
-def secret_matches(presented: str | None) -> bool:
-    """Constant-time compare, and a deliberate decision about the empty case.
-
-    With no secret configured the service endpoints are OPEN, and the module
-    logs that at startup. The alternative — failing closed on a fresh clone —
-    would mean `start_all.bat` brings M04 up and every sibling module reports
-    it as broken, which teaches everyone to set a dummy secret and stop reading
-    the warning. Development convenience is not worth silence, so it warns
-    loudly and once.
-    """
-    expected = service_secret()
-    if expected is None:
-        return True
-    if not presented:
-        return False
-    return hmac.compare_digest(presented, expected)

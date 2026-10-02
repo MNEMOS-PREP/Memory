@@ -217,6 +217,30 @@ def test_service_endpoints_401_without_the_shared_secret(client, candidate_id, m
     assert authenticated.status_code == 200
 
 
+def test_every_route_another_module_calls_refuses_a_browser(session):
+    """Platform_Core v0.12.0's shared check, finding the routes from the OpenAPI
+    document — a service route added later is checked by this test too.
+
+    Until 2026-10-02 these were OPEN whenever no secret was configured, which
+    on every laptop was always: the skill graph's write path answered any
+    browser. An unset secret now means the machine secret, never "open".
+    """
+    from ai_core.db import get_session
+    from ai_core.testing import assert_service_only
+    from fastapi.testclient import TestClient
+
+    from backend_M04_Skill_Graph_Memory.app import app
+
+    app.dependency_overrides[get_session] = lambda: session
+    try:
+        with TestClient(app) as bare:
+            checked = assert_service_only(bare, app, expect_at_least=4)
+    finally:
+        app.dependency_overrides.clear()
+    assert ("POST", "/v1/candidates/{candidate_id}/observations") in checked
+    assert ("GET", "/v1/skill-graph/theta") in checked
+
+
 def test_theta_needs_the_student_as_well_as_the_secret(session, candidate_id, monkeypatch):
     """Platform_Core v0.11.0: the guard reads the query. Until then the secret
     alone opened `/skill-graph/theta?candidate=` for ANY student — M15 called it

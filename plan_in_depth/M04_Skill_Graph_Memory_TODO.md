@@ -18,6 +18,18 @@ Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 
 Legend: ✅ done · 🟡 partly done · ⬜ not started
 
+### 2026-10-02 — the service secret moves to Platform_Core (v0.12.0)
+
+- ✅ `require_service` is `ai_core.service`'s now; `keys.py` keeps only
+  `load_keys`. **The rule changed:** an unset secret used to leave the four
+  service routes OPEN, with a warning; now every module on one machine shares a
+  machine secret nobody configures, so the routes are never open and a fresh
+  clone still works. M06, M13 and M15 send it from the same place.
+  `required_keys.txt` no longer ships a placeholder value, since setting it in
+  one module's `keys.txt` only would 401 every call between modules.
+  `test_every_route_another_module_calls_refuses_a_browser` runs the shared
+  check (`assert_service_only`), and ungating one route fails it.
+
 ### 2026-10-02 — an ask from M06
 
 - ⬜ (standing, M06 review Part 5) Source `recent_sessions` from M06.

@@ -35,12 +35,12 @@ from datetime import datetime
 from ai_core.db import get_session
 from ai_core.guard import candidate_guard
 from ai_core.modules_meta import module_status
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
+from ai_core.service import require_service
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from sqlmodel import Session
 
 from . import service, store
-from .keys import secret_matches
 from .models import RecordResult
 from .ontology import UnknownConcept, load
 from .store import ContendedMastery, NoConsent, ObservationIn, UnresolvableEvidence
@@ -53,10 +53,8 @@ router = APIRouter(dependencies=[Depends(candidate_guard())])
 # ─────────────────────────────────────────────────────────────
 
 
-def require_service(x_service_secret: str | None = Header(default=None)) -> None:
-    """One dependency, used by every `service` endpoint, and tested."""
-    if not secret_matches(x_service_secret):
-        raise HTTPException(status_code=401, detail="service credentials required")
+#: Every `service` endpoint takes this one dependency — Platform_Core's since
+#: v0.12.0 (`ai_core.service`), which M06, M13 and M15 send from the same place.
 
 
 # ─────────────────────────────────────────────────────────────

@@ -88,11 +88,12 @@ CREDENTIALS
 -------------------------------------------------------------------------------
 None are required to run, test or demo this module.
 
-  M04_SERVICE_SECRET   Shared secret for `service` endpoints. UNSET means
-                       those endpoints are OPEN, and the app says so loudly at
-                       startup. Fine on a laptop. Never in a pilot — this
-                       module holds every belief the platform has about a
-                       student.
+  M04_SERVICE_SECRET   Shared secret for `service` endpoints (or the
+  / SERVICE_SECRET     platform's name, SERVICE_SECRET). UNSET means the
+                       machine secret every module on this host shares
+                       (Platform_Core v0.12.0, `ai_core.service`) — never
+                       "open". Set it, to the same value on every host, the
+                       moment modules run on more than one machine.
 
   ANTHROPIC_API_KEY    Only for the nightly distiller (§6.6b), which is not
                        built yet and is on no read path. Absent, the semantic

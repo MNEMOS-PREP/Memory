@@ -26,10 +26,15 @@ import pytest
 
 _TMP = Path(tempfile.mkdtemp(prefix="m04-tests-"))
 os.environ["DATABASE_URL"] = f"sqlite:///{(_TMP / 'lifespan.db').as_posix()}"
+# No configured secret: `ai_core.service` falls back to the machine secret,
+# pointed here so no test touches the developer's own (Platform_Core v0.12.0).
 os.environ.pop("M04_SERVICE_SECRET", None)
+os.environ.pop("SERVICE_SECRET", None)
+os.environ["AI_SERVICE_SECRET_FILE"] = (_TMP / "service_secret").as_posix()
 
 from ai_core.db import get_session  # noqa: E402
 from ai_core.evidence import EvidenceRef, EvidenceSpan, sha256_hex  # noqa: E402
+from ai_core.service import headers as service_headers  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy.pool import StaticPool  # noqa: E402
 from sqlmodel import Session, SQLModel, create_engine  # noqa: E402
@@ -85,8 +90,12 @@ def client_fixture(session: Session) -> Iterator[TestClient]:
     # about beliefs, evidence and memory; the refusals have their own tests,
     # which send real student principals, and putting authorisation into every
     # test is how the first one to get it slightly wrong "fixes" it by
-    # weakening the check.
-    with TestClient(app, headers={"X-Role": "admin", "X-Candidate-Id": "test-admin"}) as client:
+    # weakening the check. The same goes for the service secret (Platform_Core
+    # v0.12.0, where an unset secret stopped meaning "open"): the routes another
+    # module calls are tested here as that module, and the refusals in
+    # `test_api.py` set their own secret and send their own header.
+    headers = {"X-Role": "admin", "X-Candidate-Id": "test-admin", **service_headers()}
+    with TestClient(app, headers=headers) as client:
         yield client
     app.dependency_overrides.clear()
 

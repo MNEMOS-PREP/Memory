@@ -28,7 +28,7 @@ dependencies = [
     # states (spec §5.1, §5.3). If you are editing Platform_Core and this
     # module at the same time, see README "Working on both repos at once" -
     # do NOT relax this pin to make an iteration loop faster.
-    "ai-core @ git+https://github.com/MNEMOS-PREP/Platform_Core@v0.11.0#subdirectory=python",
+    "ai-core @ git+https://github.com/MNEMOS-PREP/Platform_Core@v0.12.0#subdirectory=python",
 ]
 
 [project.optional-dependencies]

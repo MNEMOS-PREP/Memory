@@ -21,10 +21,11 @@ from contextlib import asynccontextmanager
 
 from ai_core.db import create_all, engine, get_session
 from ai_core.schema_repair import ensure_schema
+from ai_core.service import secret_source
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .keys import load_keys, service_secret
+from .keys import load_keys
 from .ontology import OntologyError, load
 from .router import router
 from .service import sync_ontology
@@ -65,12 +66,9 @@ async def lifespan(_app: FastAPI):
             "Phase-1 exit on that walk, and every prerequisite edge is load-bearing",
             graph.version,
         )
-    if service_secret() is None:
-        log.warning(
-            "%s is not set: service endpoints are OPEN. Fine on a laptop, never in a "
-            "pilot — this module holds every belief the platform has about a student",
-            "M04_SERVICE_SECRET",
-        )
+    # Where the service secret came from — a variable name or a path, never
+    # the value — so a 401 between two machines is explainable from the log.
+    log.info("service secret: %s", secret_source())
     yield
 
 
