@@ -100,7 +100,7 @@ export function EvidenceDrawer({
           </button>
         </div>
         <div className="mt-3">
-          <MasteryBar value={row} width="w-full" />
+          <MasteryBar value={row} width="w-48" />
         </div>
         <div className="mt-3">
           <Posterior row={row} />
