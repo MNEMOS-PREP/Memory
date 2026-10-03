@@ -1,0 +1,8 @@
+/*
+  One import, on purpose: Tailwind v4 generates utilities from `@theme` only
+  for files inside the entry that imports it, so core's stylesheet is pulled in
+  here rather than beside this file in standalone.tsx. M04 adds no tokens of
+  its own — the mastery ramp is a platform contract, and it is core's.
+  Platform_Shell does not import this file; it owns the page's one token set.
+*/
+@import "@ai/core/styles.css";

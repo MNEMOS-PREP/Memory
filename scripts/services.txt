@@ -17,13 +17,13 @@
 #
 #  Ports come from PORTS.txt: M04 is API 8104, web 5204, ops 8304.
 #
-#  The frontend (M7 of the build order) and the Streamlit ops app (spec §6.10)
-#  are not built yet. Their rows are commented out rather than absent, so
-#  turning them on is deleting a '#' and nobody has to reconstruct the command.
+#  The frontend is built (2026-10-03: the skill graph at /skills). The
+#  Streamlit ops app (spec §6.10) is not; its row is commented out rather
+#  than absent, so turning it on is deleting a '#'.
 #==============================================================================
 
 # id      | label   | cwd      | requires                 | command                                                                                          | url                   | health
 m04-api   | M04 API | Backend  | .venv\Scripts\python.exe | .venv\Scripts\python.exe -m uvicorn backend_M04_Skill_Graph_Memory.app:app --reload --port 8104   | http://127.0.0.1:8104 | /health
 
-# m04-web | M04 Web | Frontend | node_modules             | npm run dev                                                                                      | http://localhost:5204 |
+m04-web   | M04 Web | Frontend | node_modules             | npm run dev                                                                                      | http://localhost:5204 |
 # m04-ops | M04 Ops | Backend  | .venv\Scripts\python.exe | .venv\Scripts\python.exe -m streamlit run backend_M04_Skill_Graph_Memory/ops/app.py --server.port 8304 | http://localhost:8304 |

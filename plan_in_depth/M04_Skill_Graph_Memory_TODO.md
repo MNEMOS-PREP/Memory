@@ -18,6 +18,24 @@ Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 
 Legend: ✅ done · 🟡 partly done · ⬜ not started
 
+### 2026-10-03 — the first screen, and the key file beside the repos
+
+- ✅ **A UI: the skill graph at `/skills`** (`Frontend/frontend_M04_Skill_Graph_Memory`,
+  web `5204`, mounted in Platform_Shell). The student's own beliefs, grouped
+  by domain with core's `MasteryBar`; **what moved since the page opened**
+  first (it polls while open, so an interview scored elsewhere shows up as it
+  lands); "what is blocking you" from `/bottlenecks`; every bar opens its
+  evidence — θ with its error, each observation, the student's own quoted
+  words, and a link to how M13 scored that answer. Untested is a count
+  (`NotYetTested`), never a zero. A placement officer is told it is a
+  student's own view; an admin sees the seeded student. `m04-web` is on in
+  `scripts/services.txt`.
+- ✅ **`keys.py` reads the `keys.txt` beside the repos** (and `AI_KEYS_FILE`),
+  as M02 and M06 already did. On a fresh demo machine that file is the only
+  one. `test_keys_location.py`.
+- ✅ `seed.py` is run by `Platform_Shell/start.bat seed` with every other
+  module's; it was already idempotent.
+
 ### 2026-10-02 — the service secret moves to Platform_Core (v0.12.0)
 
 - ✅ `require_service` is `ai_core.service`'s now; `keys.py` keeps only
@@ -114,7 +132,7 @@ origin channel stamped at capture, and a privacy filter before storage.
 | Backend tests passing | **137** |
 | Release gates (`-m gate`) | **16** |
 | Route decorators | **19** |
-| Frontend | **none on disk** |
+| Frontend | **`/skills`** — the skill graph, mounted in the shell (2026-10-03) |
 
 *Counted 2026-08-25, by running the suite — not by reading this file. This row
 replaced "Not started", which was written before the module was and had become
