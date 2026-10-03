@@ -44,10 +44,12 @@ const LEVEL_LABEL: Record<string, string> = {
   advanced: "Advanced",
 };
 
-const BAND_TONE = {
-  strong: "text-mastery-strong",
-  partly: "text-mastery-ok",
-  not_yet: "text-mastery-weak",
+/** The colour is a dot; the word stays in ink, which passes contrast in both
+ *  themes where orange text on white did not. */
+const BAND_DOT = {
+  strong: "bg-mastery-strong",
+  partly: "bg-mastery-ok",
+  not_yet: "bg-mastery-weak",
 } as const;
 
 function Details({ row }: { row: MasteryRow }) {
@@ -95,7 +97,10 @@ function ObservationItem({ obs }: { obs: Observation }) {
         {band && (
           <>
             {" · "}
-            <span className={`font-medium ${BAND_TONE[band]}`}>{ANSWER_BAND_LABEL[band]}</span>
+            <span className="inline-flex items-center gap-1 font-medium text-ink">
+              <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${BAND_DOT[band]}`} />
+              {ANSWER_BAND_LABEL[band]}
+            </span>
           </>
         )}
         {obs.retracted && <> · withdrawn</>}
