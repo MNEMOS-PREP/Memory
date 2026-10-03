@@ -7,13 +7,19 @@ import { useQuery } from "@tanstack/react-query";
 
 import { api } from "@ai/core";
 
-import type { BottlenecksResponse, EvidenceResponse, MasteryResponse } from "./types";
+import type {
+  BottlenecksResponse,
+  EvidenceResponse,
+  MasteryResponse,
+  TrajectoryResponse,
+} from "./types";
 
 export const m04Keys = {
   mastery: (candidate: string) => ["m04", "mastery", candidate] as const,
   bottlenecks: (candidate: string) => ["m04", "bottlenecks", candidate] as const,
   evidence: (candidate: string, concept: string) =>
     ["m04", "evidence", candidate, concept] as const,
+  trajectory: (candidate: string) => ["m04", "trajectory", candidate] as const,
 };
 
 /**
@@ -46,5 +52,14 @@ export function useEvidence(candidate: string | null, concept: string | null) {
       api.get<EvidenceResponse>(
         `/v1/candidates/${candidate}/mastery/${encodeURIComponent(concept ?? "")}/evidence`,
       ),
+  });
+}
+
+/** Every concept's history — what "growing over time" is drawn from. */
+export function useTrajectory(candidate: string | null) {
+  return useQuery({
+    queryKey: m04Keys.trajectory(candidate ?? ""),
+    enabled: Boolean(candidate),
+    queryFn: () => api.get<TrajectoryResponse>(`/v1/candidates/${candidate}/trajectory`),
   });
 }

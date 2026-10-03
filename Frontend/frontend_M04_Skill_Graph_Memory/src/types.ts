@@ -78,6 +78,19 @@ export interface Observation {
   note?: string | null;
 }
 
+export interface TrajectoryPoint {
+  observed_at: string;
+  theta: number | null;
+  se: number | null;
+  kind: string;
+}
+
+/** `/trajectory`: every concept's history on the scale it was scored on. */
+export interface TrajectoryResponse {
+  candidate_id: string;
+  series: { concept_id: string; name: string; points: TrajectoryPoint[] }[];
+}
+
 export interface EvidenceResponse {
   concept_id: string;
   bkt_p_known: number | null;

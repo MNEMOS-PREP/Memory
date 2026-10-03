@@ -18,7 +18,7 @@
  * individual record by the backend (§15 decision 4 is unresolved), so the
  * screen says so rather than asking. An administrator sees the seeded student.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import {
@@ -62,6 +62,72 @@ function MoveNote({ move }: { move: Move }) {
       {dir === "up" ? "▲ up" : dir === "down" ? "▼ down" : "held"}
       {move.newEvidence > 0 && <> · {move.newEvidence} new answer{move.newEvidence > 1 ? "s" : ""}</>}
     </span>
+  );
+}
+
+/**
+ * The moment a concept moves UP while the page is open — the reward at the end
+ * of the loop, the way a learning product marks progress (Duolingo's lesson-
+ * complete, Brilliant's streak). Only an upward move or a first piece of
+ * evidence earns it; a concept that went down is shown in the list, quietly,
+ * and never celebrated or scolded. Twelve sparks, once, and none at all under
+ * reduced motion.
+ */
+function Celebration({ move, onDone }: { move: Move; onDone: () => void }) {
+  useEffect(() => {
+    const timer = window.setTimeout(onDone, 5200);
+    return () => window.clearTimeout(timer);
+  }, [move, onDone]);
+  const sparks = Array.from({ length: 12 }, (_, i) => {
+    const angle = (i / 12) * Math.PI * 2;
+    return { x: Math.cos(angle) * 46, y: Math.sin(angle) * 46, hue: i % 3 };
+  });
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="fixed right-6 bottom-6 z-40 flex max-w-sm items-center gap-3 rounded-2xl border border-confirmed-line bg-surface p-4 shadow-raised"
+      style={{ animation: "m04-toast-in 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both" }}
+    >
+      <style>{`
+        @keyframes m04-toast-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+        @keyframes m04-spark { from { opacity: 1; transform: translate(0, 0) scale(1); } to { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.4); } }
+        @media (prefers-reduced-motion: reduce) { .m04-spark { display: none; } }
+      `}</style>
+      <span className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full bg-confirmed-soft text-confirmed">
+        {sparks.map((s, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className={`m04-spark absolute h-1.5 w-1.5 rounded-full ${
+              s.hue === 0 ? "bg-confirmed" : s.hue === 1 ? "bg-brand" : "bg-mastery-weak"
+            }`}
+            style={
+              {
+                "--x": `${s.x}px`,
+                "--y": `${s.y}px`,
+                animation: "m04-spark 900ms cubic-bezier(0.22, 0.61, 0.36, 1) 120ms both",
+              } as CSSProperties
+            }
+          />
+        ))}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
+          <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+      <span className="min-w-0">
+        <span className="block text-sm font-semibold text-ink">
+          {move.isNew ? `${move.row.name} is on your graph` : `${move.row.name} moved up`}
+        </span>
+        <span className="block text-xs text-ink-soft">
+          {move.stateFrom
+            ? `${STATE_LABEL[move.stateFrom as MasteryRow["state"]] ?? move.stateFrom} → ${STATE_LABEL[move.row.state]}`
+            : move.isNew
+              ? "First evidence, from an answer you just gave."
+              : `${move.newEvidence > 0 ? `${move.newEvidence} new answer${move.newEvidence > 1 ? "s" : ""}` : "New evidence"} pushed it up.`}
+        </span>
+      </span>
+    </div>
   );
 }
 
@@ -119,6 +185,20 @@ export function SkillGraphPage() {
 
   const rows = mastery.data?.measured ?? [];
   const moves = useMemo(() => movesSince(baseline.current, rows), [rows]);
+
+  // Celebrate each upward move once, as it lands.
+  const [celebrating, setCelebrating] = useState<Move | null>(null);
+  const celebrated = useRef(new Set<string>());
+  // Stable, so a poll re-rendering the page does not restart the toast's timer.
+  const dismiss = useCallback(() => setCelebrating(null), []);
+  useEffect(() => {
+    for (const move of moves) {
+      const key = `${move.row.concept_id}:${move.row.n_direct}:${move.row.state}`;
+      if (celebrated.current.has(key)) continue;
+      celebrated.current.add(key);
+      if (move.isNew || direction(move.thetaDelta) === "up") setCelebrating(move);
+    }
+  }, [moves]);
   const movedById = useMemo(() => new Map(moves.map((m) => [m.row.concept_id, m])), [moves]);
 
   const byDomain = useMemo(() => {
@@ -296,6 +376,8 @@ export function SkillGraphPage() {
           </div>
         )}
       </div>
+
+      {celebrating && <Celebration move={celebrating} onDone={dismiss} />}
 
       {/* ---------- the evidence ---------- */}
       <div className="min-w-0">

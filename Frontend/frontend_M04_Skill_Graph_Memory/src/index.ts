@@ -7,7 +7,7 @@
  */
 export { m04Routes } from "./routes";
 export { SkillGraphPage } from "./components/SkillGraphPage";
-export { m04Keys, useBottlenecks, useEvidence, useMastery } from "./api";
+export { m04Keys, useBottlenecks, useEvidence, useMastery, useTrajectory } from "./api";
 export { movesSince, snapshot } from "./movement";
 export type {
   Bottleneck,
@@ -15,4 +15,5 @@ export type {
   MasteryResponse,
   MasteryRow,
   Observation,
+  TrajectoryResponse,
 } from "./types";
