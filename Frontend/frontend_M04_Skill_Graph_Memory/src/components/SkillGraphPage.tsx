@@ -22,11 +22,14 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import {
+  Icon,
   MasteryBar,
   NotYetTested,
+  PageHeader,
   ROLE_LABEL,
   SEEDED_CANDIDATE_ID,
   STATE_LABEL,
+  SkeletonRows,
   candidateIdOf,
   relativeDays,
   useSession,
@@ -224,8 +227,7 @@ export function SkillGraphPage() {
   if (!candidate) {
     return (
       <div className="mx-auto max-w-2xl py-10">
-        <p className="rule-label">Skill graph</p>
-        <h1 className="mt-2 text-title font-semibold text-ink">This is a student's own view.</h1>
+        <h1 className="text-title font-semibold text-ink">This is a student's own view.</h1>
         <p className="mt-3 leading-relaxed text-ink-soft">
           {session
             ? `Signed in as ${ROLE_LABEL[session.role].toLowerCase()}. Placement staff see cohort figures, not one student's beliefs — whether that changes is the placement cell's policy to set, not a screen's.`
@@ -239,59 +241,70 @@ export function SkillGraphPage() {
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_26rem]">
       <div className="min-w-0">
         {/* ---------- header ---------- */}
-        <header className="border-b border-line pb-7">
-          <p className="rule-label">Skill graph · M04</p>
-          <h1 className="mt-2.5 text-display font-semibold text-ink">What you know</h1>
-          <p className="mt-3 max-w-2xl leading-relaxed text-ink-soft">
-            Every bar is a belief with the answers behind it — open one to see them. Nothing
-            untested is shown as a zero.
-            {!own && " You are viewing the seeded student as an administrator."}
-          </p>
-          <dl className="mt-6 flex flex-wrap items-end gap-x-10 gap-y-4">
+        <PageHeader
+          title="What you know"
+          subtitle={
+            own
+              ? "Open any topic to see the answers behind it, and how to get better at it."
+              : "You are viewing the demo student as an administrator."
+          }
+          actions={
+            <button
+              type="button"
+              onClick={() => setLive(!live)}
+              aria-pressed={live}
+              className="flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-ink-soft hover:border-line-strong"
+            >
+              <span
+                aria-hidden
+                className={`h-2 w-2 rounded-full ${live ? "animate-pulse bg-confirmed" : "bg-line-strong"}`}
+              />
+              {live ? "Updating live" : "Paused"}
+            </button>
+          }
+          how={
+            <>
+              <p>
+                Every bar is a belief with your answers behind it. A topic you haven't been asked
+                about is listed as not tested — never shown as a zero.
+              </p>
+              <p>
+                While this page is open it checks for new marks every few seconds, so an
+                interview you finish elsewhere shows up here as it is marked.
+              </p>
+            </>
+          }
+        >
+          <dl className="flex flex-wrap items-end gap-x-10 gap-y-4">
             <div>
               <dt className="text-2xl font-semibold tracking-tight text-ink" data-numeric>
                 {mastery.data ? mastery.data.totals.measured : "—"}
               </dt>
               <dd className="mt-0.5 text-xs text-ink-faint">
-                concepts measured of {mastery.data?.totals.in_ontology ?? "—"}
+                topics with evidence, of {mastery.data?.totals.in_ontology ?? "—"}
               </dd>
             </div>
             <div>
               <dt className="text-2xl font-semibold tracking-tight text-ink">
                 {latest ? relativeDays(latest) : "—"}
               </dt>
-              <dd className="mt-0.5 text-xs text-ink-faint">last new evidence</dd>
-            </div>
-            <div className="ml-auto">
-              <button
-                type="button"
-                onClick={() => setLive(!live)}
-                className="flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-ink-soft hover:border-line-strong"
-              >
-                <span
-                  aria-hidden
-                  className={`h-2 w-2 rounded-full ${live ? "animate-pulse bg-confirmed" : "bg-line-strong"}`}
-                />
-                {live ? "Updating live" : "Paused"}
-              </button>
+              <dd className="mt-0.5 text-xs text-ink-faint">last new answer</dd>
             </div>
           </dl>
-        </header>
+        </PageHeader>
 
         {mastery.error && (
           <p role="alert" className="mt-6 rounded-lg border border-contested-line bg-contested-soft p-4 text-sm text-contested">
             {(mastery.error as Error).message}
           </p>
         )}
-        {mastery.isLoading && <p className="mt-6 text-sm text-ink-faint">Reading your skill graph…</p>}
+        {mastery.isLoading && <SkeletonRows label="Loading your skill graph" rows={7} className="mt-8" />}
 
         {/* ---------- what moved ---------- */}
         {moves.length > 0 && (
           <section className="mt-7 rounded-panel border border-confirmed-line bg-confirmed-soft/40 p-5">
             <h2 className="text-section font-semibold text-ink">Moved since you opened this page</h2>
-            <p className="mt-1 text-sm text-ink-soft">
-              New evidence arrived — from an interview, scored and sent here while you watched.
-            </p>
+            <p className="mt-1 text-sm text-ink-soft">From an interview marked while you watched.</p>
             <ul className="mt-3 space-y-0.5">
               {moves.map((m) => (
                 <Row
@@ -311,8 +324,7 @@ export function SkillGraphPage() {
           <section className="panel mt-7 p-5">
             <h2 className="text-section font-semibold text-ink">What is blocking you</h2>
             <p className="mt-1 text-sm text-ink-soft">
-              The weak concept underneath the most of your other weak ones. Fix it first and the
-              rest get easier.
+              Fix the first one and the topics above it get easier.
             </p>
             <ol className="mt-4 space-y-2">
               {bottlenecks.data.bottlenecks.slice(0, 3).map((b, i) => (
@@ -331,8 +343,11 @@ export function SkillGraphPage() {
                 </li>
               ))}
             </ol>
-            <Link to="/mock" className="mt-4 inline-block text-sm font-medium text-brand">
-              Practise it in a mock interview →
+            <Link
+              to={`/mock?focus=${encodeURIComponent(bottlenecks.data.bottlenecks[0]!.concept_id)}&label=${encodeURIComponent(bottlenecks.data.bottlenecks[0]!.name)}`}
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand"
+            >
+              <Icon name="mic" size={15} /> Practise {bottlenecks.data.bottlenecks[0]!.name}
             </Link>
           </section>
         )}
@@ -361,8 +376,7 @@ export function SkillGraphPage() {
           <section className="panel mt-8 p-6">
             <h2 className="text-section font-semibold text-ink">Nothing measured yet</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-              The graph starts empty on purpose: a belief needs an answer behind it. Take a mock
-              interview and come back — this page updates while it is open.
+              Your first interview starts it. Leave this page open and you'll see it fill in.
             </p>
             <Link to="/mock" className="mt-4 inline-block text-sm font-medium text-brand">
               Start a mock interview →
@@ -382,11 +396,11 @@ export function SkillGraphPage() {
       {/* ---------- the evidence ---------- */}
       <div className="min-w-0">
         {openRow ? (
-          <EvidenceDrawer candidate={candidate} row={openRow} onClose={() => open(null)} />
+          <EvidenceDrawer candidate={candidate} row={openRow} rows={rows} onClose={() => open(null)} />
         ) : (
           rows.length > 0 && (
             <p className="hidden rounded-panel border border-dashed border-line p-5 text-sm text-ink-faint xl:block">
-              Open any concept to see the answers it rests on.
+              Open any topic to see your answers on it, and how to get better.
             </p>
           )
         )}

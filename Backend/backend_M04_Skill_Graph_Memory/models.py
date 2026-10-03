@@ -208,6 +208,38 @@ class ConsentRecord(SQLModel, table=True):
         return self.revoked_at is None
 
 
+class StudentProfile(SQLModel, table=True):
+    """What the student told us they are preparing for — and nothing inferred.
+
+    Added 2026-10-04 so that the platform can ask once and remember: a name
+    for the greeting, the role and companies they are aiming at, the drives
+    they have dates for, and the habits they chose (a weekly goal, a reminder
+    time). Every field is the student's own answer, typed or picked; nothing
+    here is a belief, so none of it carries an ontology version or evidence.
+
+    It lives in M04 because M04 is the platform's memory of a person and
+    already owns their rights: the export returns this row and the delete
+    removes it, with no second module to remember.
+    """
+
+    __tablename__ = "m04_student_profile"
+
+    candidate_id: uuid.UUID = Field(primary_key=True)
+    display_name: str = ""
+    target_role: str = ""
+    #: Company ids from M15 where the student picked one, or a typed name.
+    companies: list[dict] = Field(default_factory=list, sa_column=Column(JSON))
+    #: `[{"label": "TCS Digital", "date": "2026-10-16", "company_id": ...}]`.
+    drives: list[dict] = Field(default_factory=list, sa_column=Column(JSON))
+    year: str = ""
+    branch: str = ""
+    weekly_goal: int = 3
+    #: "HH:MM", local to the student. Empty means no reminder.
+    reminder_time: str = ""
+    onboarded_at: datetime | None = None
+    updated_at: datetime = Field(default_factory=utcnow)
+
+
 # ─────────────────────────────────────────────────────────────
 #  THE EPISODIC SUBSTRATE  (what evidence refs resolve against)
 # ─────────────────────────────────────────────────────────────

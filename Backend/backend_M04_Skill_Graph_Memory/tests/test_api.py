@@ -52,6 +52,10 @@ def test_one_concept_carries_its_neighbourhood(client):
     assert body["name"] == "Dynamic Programming"
     assert any(p["concept_id"] == "concept:recursion" for p in body["prerequisites"])
     assert any(u["concept_id"] == "concept:knapsack" for u in body["unlocks"])
+    # Named, so the Learn panel never shows an id.
+    assert {"concept_id": "concept:recursion", "name": "Recursion"}.items() <= next(
+        p for p in body["prerequisites"] if p["concept_id"] == "concept:recursion"
+    ).items()
 
 
 def test_an_unknown_concept_is_a_404(client):
@@ -484,3 +488,83 @@ def test_revoking_practice_is_refused_with_a_reason(client, candidate_id):
     )
     assert response.status_code == 400
     assert "without ?purpose" in response.json()["detail"]
+
+
+# ─────────────────────────────────────────────────────────────
+#  THE STUDENT'S PROFILE  (what they said they are preparing for)
+# ─────────────────────────────────────────────────────────────
+
+
+def _as(candidate_id) -> dict:
+    return {"X-Role": "student", "X-Candidate-Id": str(candidate_id)}
+
+
+def test_a_profile_is_empty_before_the_student_says_anything(client, candidate_id):
+    body = client.get(f"/v1/candidates/{candidate_id}/profile", headers=_as(candidate_id)).json()
+    assert body["onboarded_at"] is None
+    assert body["drives"] == [] and body["display_name"] == ""
+    assert body["weekly_goal"] == 3
+
+
+def test_the_welcome_step_saves_the_answers_and_stamps_once(client, candidate_id):
+    me = _as(candidate_id)
+    first = client.put(
+        f"/v1/candidates/{candidate_id}/profile",
+        json={
+            "display_name": "Asha",
+            "target_role": "Software engineer",
+            "companies": [{"name": "TCS"}],
+            "drives": [
+                {"label": "Infosys SP", "date": "2026-11-02"},
+                {
+                    "label": "TCS Digital",
+                    "date": "2026-10-16",
+                    "drive_id": "11111111-1111-4111-8111-111111111111",
+                },
+            ],
+            "onboarded": True,
+        },
+        headers=me,
+    )
+    assert first.status_code == 200, first.text
+    stamped = first.json()["onboarded_at"]
+    assert stamped
+    # Soonest first: the countdown reads the first row.
+    assert [d["label"] for d in first.json()["drives"]] == ["TCS Digital", "Infosys SP"]
+    assert first.json()["drives"][0]["drive_id"] == "11111111-1111-4111-8111-111111111111"
+
+    # Settings saves one field and keeps the rest — and the stamp.
+    again = client.put(
+        f"/v1/candidates/{candidate_id}/profile",
+        json={"weekly_goal": 5, "onboarded": True},
+        headers=me,
+    ).json()
+    assert again["weekly_goal"] == 5
+    assert again["display_name"] == "Asha"
+    assert again["onboarded_at"] == stamped
+
+
+def test_a_bad_reminder_time_or_goal_is_refused(client, candidate_id):
+    me = _as(candidate_id)
+    url = f"/v1/candidates/{candidate_id}/profile"
+    assert client.put(url, json={"reminder_time": "25:00"}, headers=me).status_code == 422
+    assert client.put(url, json={"weekly_goal": 9}, headers=me).status_code == 422
+    assert client.put(url, json={"reminder_time": "19:30"}, headers=me).status_code == 200
+
+
+def test_the_profile_is_the_students_own_and_goes_with_export_and_delete(
+    client, candidate_id, monkeypatch
+):
+    monkeypatch.setenv("M04_SERVICE_SECRET", "s3cret")
+    me = _as(candidate_id)
+    url = f"/v1/candidates/{candidate_id}/profile"
+    stranger = _as(uuid.uuid4())
+    assert client.get(url, headers=stranger).status_code == 403
+    assert client.put(url, json={"display_name": "x"}, headers=stranger).status_code == 403
+
+    client.put(url, json={"display_name": "Asha"}, headers=me)
+    exported = client.get(f"/v1/candidates/{candidate_id}/export", headers=me).json()
+    assert exported["student_profile"][0]["display_name"] == "Asha"
+
+    client.delete(f"/v1/candidates/{candidate_id}/memory", headers=me)
+    assert client.get(url, headers=me).json()["display_name"] == ""

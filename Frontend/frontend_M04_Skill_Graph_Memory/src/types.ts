@@ -96,3 +96,69 @@ export interface EvidenceResponse {
   bkt_p_known: number | null;
   observations: Observation[];
 }
+
+/** `/v1/concepts/{id}`: the ontology's entry, with its neighbours named. */
+export interface ConceptNeighbour {
+  concept_id: string;
+  name: string;
+  strength: number;
+  hops: number;
+}
+
+export interface ConceptDetail {
+  id: string;
+  name: string;
+  domain: string;
+  level: string;
+  aliases: string[];
+  typical_question_time_s: number;
+  prerequisites: ConceptNeighbour[];
+  unlocks: ConceptNeighbour[];
+}
+
+/** FR-4.20: what a student has agreed to, per purpose. */
+export interface ConsentRecord {
+  consent_id: string;
+  candidate_id: string;
+  purpose: string;
+  policy_version: string;
+  granted_at: string;
+  revoked_at: string | null;
+  active: boolean;
+}
+
+export interface ProfileCompany {
+  name: string;
+  company_id?: string | null;
+}
+
+export interface ProfileDrive {
+  label: string;
+  /** `YYYY-MM-DD`. */
+  date: string;
+  company_id?: string | null;
+  /** M15's drive variant, when picked: what a drive-specific mock plans from. */
+  drive_id?: string | null;
+}
+
+/** What the student said they are preparing for (2026-10-04). Their answers,
+ *  nothing inferred. */
+export interface StudentProfile {
+  candidate_id: string;
+  display_name: string;
+  target_role: string;
+  companies: ProfileCompany[];
+  /** Soonest first. */
+  drives: ProfileDrive[];
+  year: string;
+  branch: string;
+  weekly_goal: number;
+  /** `HH:MM`, or empty for no reminder. */
+  reminder_time: string;
+  onboarded_at: string | null;
+  updated_at: string;
+}
+
+export type ProfileUpdate = Partial<
+  Omit<StudentProfile, "candidate_id" | "onboarded_at" | "updated_at">
+> & { onboarded?: boolean };

@@ -7,10 +7,29 @@
  */
 export { m04Routes } from "./routes";
 export { SkillGraphPage } from "./components/SkillGraphPage";
-export { m04Keys, useBottlenecks, useEvidence, useMastery, useTrajectory } from "./api";
+export {
+  downloadMyData,
+  m04Keys,
+  useBottlenecks,
+  useConcept,
+  useDeleteMyData,
+  useEvidence,
+  useGrantConsent,
+  useMastery,
+  usePracticeConsent,
+  useProfile,
+  useSaveProfile,
+  useTrajectory,
+} from "./api";
 export { movesSince, snapshot } from "./movement";
 export type {
   Bottleneck,
+  ConceptDetail,
+  ConsentRecord,
+  ProfileCompany,
+  ProfileDrive,
+  ProfileUpdate,
+  StudentProfile,
   EvidenceResponse,
   MasteryResponse,
   MasteryRow,

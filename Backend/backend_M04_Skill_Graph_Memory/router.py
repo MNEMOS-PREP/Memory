@@ -30,6 +30,7 @@ no route path contains the word.
 from __future__ import annotations
 
 import uuid
+from datetime import date as date_type
 from datetime import datetime
 
 from ai_core.db import get_session
@@ -118,10 +119,15 @@ def get_concept(concept_id: str) -> dict:
         concept = graph.get(concept_id)
     except UnknownConcept as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+    # Named, so a screen can say "it builds on Functions" without a second
+    # lookup per neighbour — or, worse, showing the id.
+    def named(n) -> dict:
+        return {**n.__dict__, "name": graph.get(n.concept_id).name}
+
     return {
         **concept.model_dump(),
-        "prerequisites": [n.__dict__ for n in graph.walk_up(concept_id, max_hops=1)],
-        "unlocks": [n.__dict__ for n in graph.walk_down(concept_id, max_hops=1)],
+        "prerequisites": [named(n) for n in graph.walk_up(concept_id, max_hops=1)],
+        "unlocks": [named(n) for n in graph.walk_down(concept_id, max_hops=1)],
     }
 
 
@@ -372,6 +378,76 @@ def grant_consent(
     if not created:
         response.status_code = 200
     return _consent_out(record)
+
+
+class DriveIn(BaseModel):
+    label: str = Field(min_length=1, max_length=80)
+    #: ISO date. A drive without a date is a company, not a countdown.
+    date: date_type
+    company_id: uuid.UUID | None = None
+    #: M15's drive variant, when the student picked one — what lets "practise
+    #: for this drive" plan from that drive's requirement set.
+    drive_id: uuid.UUID | None = None
+
+
+class CompanyIn(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    company_id: uuid.UUID | None = None
+
+
+class ProfileIn(BaseModel):
+    """Every field optional: settings saves one at a time, the welcome step
+    saves them together. A field left out is kept, not cleared."""
+
+    display_name: str | None = Field(default=None, max_length=60)
+    target_role: str | None = Field(default=None, max_length=80)
+    companies: list[CompanyIn] | None = Field(default=None, max_length=10)
+    drives: list[DriveIn] | None = Field(default=None, max_length=10)
+    year: str | None = Field(default=None, max_length=20)
+    branch: str | None = Field(default=None, max_length=60)
+    weekly_goal: int | None = Field(default=None, ge=1, le=7)
+    reminder_time: str | None = Field(default=None, pattern=r"^$|^([01]\d|2[0-3]):[0-5]\d$")
+    #: True from the welcome step: stamps `onboarded_at` the first time.
+    onboarded: bool = False
+
+
+class ProfileOut(BaseModel):
+    candidate_id: uuid.UUID
+    display_name: str
+    target_role: str
+    companies: list[dict]
+    drives: list[dict]
+    year: str
+    branch: str
+    weekly_goal: int
+    reminder_time: str
+    onboarded_at: datetime | None
+    updated_at: datetime
+
+
+def _profile_out(row) -> ProfileOut:
+    return ProfileOut(**row.model_dump())
+
+
+@router.get("/v1/candidates/{candidate_id}/profile", tags=["rights"], response_model=ProfileOut)
+def read_profile(candidate_id: uuid.UUID, session: Session = Depends(get_session)) -> ProfileOut:
+    """What the student said they are preparing for. Empty, not 404, before
+    they have said anything."""
+    return _profile_out(service.read_profile(session, candidate_id))
+
+
+@router.put("/v1/candidates/{candidate_id}/profile", tags=["rights"], response_model=ProfileOut)
+def write_profile(
+    body: ProfileIn, candidate_id: uuid.UUID, session: Session = Depends(get_session)
+) -> ProfileOut:
+    fields = body.model_dump(exclude_unset=True, exclude={"onboarded"}, mode="json")
+    fields = {k: v for k, v in fields.items() if v is not None}
+    if "drives" in fields:
+        # Soonest first, so "your next drive" is the first row everywhere.
+        fields["drives"] = sorted(fields["drives"], key=lambda d: d["date"])
+    return _profile_out(
+        service.write_profile(session, candidate_id, fields, onboarded=body.onboarded)
+    )
 
 
 @router.get("/v1/candidates/{candidate_id}/export", tags=["rights"])

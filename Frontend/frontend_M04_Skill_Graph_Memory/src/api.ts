@@ -3,14 +3,18 @@
  * Every route here is the student's own record; the backend refuses anybody
  * else (Platform_Core's candidate guard), and these hooks render its sentence.
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api } from "@ai/core";
 
 import type {
   BottlenecksResponse,
+  ConceptDetail,
+  ConsentRecord,
   EvidenceResponse,
   MasteryResponse,
+  ProfileUpdate,
+  StudentProfile,
   TrajectoryResponse,
 } from "./types";
 
@@ -20,6 +24,9 @@ export const m04Keys = {
   evidence: (candidate: string, concept: string) =>
     ["m04", "evidence", candidate, concept] as const,
   trajectory: (candidate: string) => ["m04", "trajectory", candidate] as const,
+  concept: (id: string) => ["m04", "concept", id] as const,
+  consent: (candidate: string) => ["m04", "consent", candidate] as const,
+  profile: (candidate: string) => ["m04", "profile", candidate] as const,
 };
 
 /**
@@ -61,5 +68,81 @@ export function useTrajectory(candidate: string | null) {
     queryKey: m04Keys.trajectory(candidate ?? ""),
     enabled: Boolean(candidate),
     queryFn: () => api.get<TrajectoryResponse>(`/v1/candidates/${candidate}/trajectory`),
+  });
+}
+
+/** One concept from the ontology, with what it builds on and what it unlocks. */
+export function useConcept(id: string | null) {
+  return useQuery({
+    queryKey: m04Keys.concept(id ?? ""),
+    enabled: Boolean(id),
+    queryFn: () => api.get<ConceptDetail>(`/v1/concepts/${encodeURIComponent(id ?? "")}`),
+    staleTime: Infinity,
+  });
+}
+
+/** The practice consent, or null when there is none. Without it no
+ *  interview can move the skill graph (FR-4.20), so the shell asks first. */
+export function usePracticeConsent(candidate: string | null) {
+  return useQuery({
+    queryKey: m04Keys.consent(candidate ?? ""),
+    enabled: Boolean(candidate),
+    queryFn: async () => {
+      const rows = await api.get<ConsentRecord[]>(
+        `/v1/candidates/${candidate}/consent?purpose=practice`,
+      );
+      return rows.find((r) => r.active) ?? null;
+    },
+  });
+}
+
+export function useGrantConsent(candidate: string | null) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      api.post<ConsentRecord>(`/v1/candidates/${candidate}/consent`, {
+        purpose: "practice",
+        policy_version: "1.0",
+      }),
+    onSuccess: (record) => client.setQueryData(m04Keys.consent(candidate ?? ""), record),
+  });
+}
+
+export function useProfile(candidate: string | null) {
+  return useQuery({
+    queryKey: m04Keys.profile(candidate ?? ""),
+    enabled: Boolean(candidate),
+    queryFn: () => api.get<StudentProfile>(`/v1/candidates/${candidate}/profile`),
+  });
+}
+
+export function useSaveProfile(candidate: string | null) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (update: ProfileUpdate) =>
+      api.put<StudentProfile>(`/v1/candidates/${candidate}/profile`, update),
+    onSuccess: (profile) => client.setQueryData(m04Keys.profile(candidate ?? ""), profile),
+  });
+}
+
+/** FR-4.18a: every row M04 holds about the student, as a file they keep. */
+export async function downloadMyData(candidate: string): Promise<void> {
+  const body = await api.get<unknown>(`/v1/candidates/${candidate}/export`);
+  const blob = new Blob([JSON.stringify(body, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `my-skill-graph-${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+/** FR-4.18b: the hard delete. Consent rows stay, revoked, as the record of
+ *  when the student withdrew. */
+export function useDeleteMyData(candidate: string | null) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.del<Record<string, unknown>>(`/v1/candidates/${candidate}/memory`),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["m04"] }),
   });
 }

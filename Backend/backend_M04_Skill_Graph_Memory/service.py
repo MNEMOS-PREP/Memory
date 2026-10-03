@@ -47,6 +47,7 @@ from .models import (
     RetestQueueItem,
     RetestReason,
     SessionProfileSnapshot,
+    StudentProfile,
 )
 from .ontology import Ontology, load
 from .store import enqueue_retest
@@ -1059,6 +1060,29 @@ def consents_for(session: Session, candidate_id: uuid.UUID) -> list[ConsentRecor
     )
 
 
+def read_profile(session: Session, candidate_id: uuid.UUID) -> StudentProfile:
+    """The student's own answers, or an empty profile — never a 404. A
+    student who has not onboarded yet is a normal state, not an error."""
+    return session.get(StudentProfile, candidate_id) or StudentProfile(candidate_id=candidate_id)
+
+
+def write_profile(
+    session: Session, candidate_id: uuid.UUID, fields: dict, *, onboarded: bool
+) -> StudentProfile:
+    """Replace the fields given; keep the rest. `onboarded` stamps the first
+    time the student finished the welcome step, and only the first time."""
+    row = session.get(StudentProfile, candidate_id) or StudentProfile(candidate_id=candidate_id)
+    for name, value in fields.items():
+        setattr(row, name, value)
+    if onboarded and row.onboarded_at is None:
+        row.onboarded_at = utcnow()
+    row.updated_at = utcnow()
+    session.add(row)
+    session.commit()
+    session.refresh(row)
+    return row
+
+
 def export_memory(session: Session, candidate_id: uuid.UUID) -> dict:
     """FR-4.18a — everything this module holds about one person.
 
@@ -1092,6 +1116,7 @@ def export_memory(session: Session, candidate_id: uuid.UUID) -> dict:
                 select(ProfileSummary).where(ProfileSummary.candidate_id == candidate_id)
             ).all()
         ),
+        "student_profile": dump(by_candidate(StudentProfile)),
     }
 
 
@@ -1120,6 +1145,7 @@ def delete_memory(session: Session, candidate_id: uuid.UUID) -> dict:
         Dispute,
         Artifact,
         ProfileSummary,
+        StudentProfile,
     ):
         rows = session.exec(select(model).where(model.candidate_id == candidate_id)).all()
         for row in rows:
