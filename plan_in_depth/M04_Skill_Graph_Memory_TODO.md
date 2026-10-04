@@ -1,9 +1,9 @@
 # M04 — TODO · Candidate Skill Graph & Memory Core
 
 
-> **Completion: 95%** — 25 of 28 functional requirements met, 3 partially. Three requirements are declared and unfed: the semantic tier's fields, its versioning and its failure signatures all exist and are read, and nothing writes a `MemoryFact` because the nightly distiller is not built. **No UI at all** — the spec's six moments sit outside the FR table, so this figure does not count them.
+> **Completion: 95%** — 25 of 28 functional requirements met, 3 partially. Three requirements are declared and unfed: the semantic tier's fields, its versioning and its failure signatures all exist and are read, and nothing writes a `MemoryFact` because the nightly distiller is not built. The skill graph has had a screen since 2026-10-03 (`/skills` in the shell); the spec's six UI moments sit outside the FR table, so this figure does not count them either way.
 >
-> _Method: `(met + ½ × partial) ÷ total`, audited against shipped code, 2026-08-28. One measure applied the same way to all nineteen modules so they compare; it counts requirements, not screens or gates._
+> _Method: `(met + ½ × partial) ÷ total`, audited against shipped code, 2026-08-28; re-checked 2026-10-04: unchanged, the distiller is still not built. One measure applied the same way to all nineteen modules so they compare; it counts requirements, not screens or gates._
 
 Running list for **M04 Candidate Skill Graph & Memory Core**.
 Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
@@ -17,6 +17,23 @@ Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 - **Repo:** `Memory`
 
 Legend: ✅ done · 🟡 partly done · ⬜ not started
+
+### 2026-10-04 — the student's profile, and a skill graph that teaches
+
+- ✅ **A student profile** — `GET/PUT /v1/candidates/{id}/profile`: name, target
+  role, companies, drives with dates, weekly goal, reminder time. Empty rather
+  than 404 before onboarding; it goes with the export and the hard delete like
+  every row about the student. The shell's welcome and settings screens call
+  it — until now M04's consent, export and delete had no caller but curl.
+- ✅ `/v1/concepts/{id}` names its neighbours, so no screen shows an id.
+- ✅ The drawer's **Learn** section: what the topic builds on (with the
+  student's own state on each), what it unlocks, its other names, a focused
+  interview on it, a reading link. The estimator's numbers fold under Details.
+- ✅ A concept moving up while the page is open gets a toast (no sparks under
+  reduced motion); one moving down is shown, never celebrated or scolded.
+- ✅ Answer bands as ink with a coloured dot (orange text measured 3.75:1); the
+  drawer's bar has a fixed-width track.
+- No requirement moves: the profile and the screens sit outside §4.
 
 ### 2026-10-03 — the first screen, and the key file beside the repos
 
@@ -128,36 +145,27 @@ origin channel stamped at capture, and a privacy filter before storage.
 
 | | |
 |---|---|
-| Status | **Built, and not yet audited against the spec.** |
-| Backend tests passing | **137** |
+| Status | **Built.** FR coverage was audited on 2026-08-28 (the header's counts) and re-checked on 2026-10-04. The per-requirement table was never written into this file, and the §13 acceptance gates have not been walked one by one |
+| Backend tests passing | **151** |
 | Release gates (`-m gate`) | **16** |
-| Route decorators | **19** |
 | Frontend | **`/skills`** — the skill graph, mounted in the shell (2026-10-03) |
 
-*Counted 2026-08-25, by running the suite — not by reading this file. This row
-replaced "Not started", which was written before the module was and had become
-the kind of line the header above warns about: the next session trusts it.*
+*Counted 2026-10-04 by running the suite, not by reading this file.*
 
-> **What has NOT been done is the audit.** Nobody has walked M04's functional
-> requirements one at a time and checked each against the code. A green suite
-> says the tests that exist pass; it does not say which requirements have tests.
-> M01 learned that the expensive way — its FR table read 98% complete while the
-> §13 KPI had no numerator, the semantic tier was absent and ten endpoints had
-> no client. Every one of those was invisible from a passing suite.
->
-> The next session on M04 should start there, and write what it finds here.
-| Spec | Written — see the link above |
-
-_Fill this in when work on M04 begins: tests passing, gates, FR coverage,
-and what is actually blocking._
+> **Re-checked 2026-10-04:** the semantic tier is still unfed. `MemoryFact`
+> has readers (`service.py`) and no writer, because the nightly distiller does
+> not exist — so the header's three partial requirements stand.
 
 ---
 
 ## 2. Next
 
-_To fill in._ The spec's §4 functional requirements and §13 acceptance
-gates are the natural first pass — copy them in as a checklist, then mark what
-already exists.
+1. **The nightly distiller** — the one writer `MemoryFact` lacks. It completes
+   the three partial requirements (the semantic tier's fields, its versioning,
+   its failure signatures), which is what stands between M04 and 100% of §4.
+2. **Walk the §13 acceptance gates** one at a time and write what each needs here.
+3. The two scouting items above (RRF for recall, contradiction detection),
+   once the distiller exists to feed them.
 
 ---
 
