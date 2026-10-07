@@ -3,11 +3,15 @@
 #
 #  120 concepts for Phase 1: DSA + CS core + communication (open decision 1).
 #  450 is the year-end target, and growth is an append to this file, not a
-#  migration. `ml`, `system_design`, `aptitude` and `tooling` are declared
-#  domains with no concepts yet, deliberately: at 180 concepts the granularity
-#  check in §6.1 fails by construction, because M05 cannot seed 3+ calibrated
-#  items per concept that fast, and a thin correct ontology beats a large
-#  wrong one.
+#  migration. `system_design`, `aptitude` and `tooling` are declared domains
+#  with no concepts yet, deliberately: at 180 concepts the granularity check
+#  in §6.1 fails by construction, because M05 cannot seed 3+ calibrated items
+#  per concept that fast, and a thin correct ontology beats a large wrong one.
+#
+#  2026-10-07, the user's decision: `ml` gets its concepts now (36, at the
+#  end of this file). Asking for a machine-learning interview gave DSA,
+#  because there was nothing in ML to ask about. Open decision 1 is now
+#  120 + 36; the granularity check stays thin until M05's bank catches up.
 #
 #  HOW THIS WAS BUILT, and how to extend it (Trap 5):
 #    1. University syllabi for DSA, OS, DBMS, CN, OOP — our own institution's.
@@ -1157,3 +1161,350 @@ concepts:
     level: intermediate
     aliases: [questions to ask the interviewer, closing the interview, do you have any questions]
     typical_question_time_s: 180
+
+  # ─── ML · foundations ────────────────────────────────────────────────────
+  #  Added 2026-10-07: the user asked for machine-learning interviews and got
+  #  DSA, because this domain was declared with no concepts. Built the way the
+  #  rest was (Trap 5), from public syllabi, topic names only: Stanford CS229
+  #  (supervised and unsupervised learning, bias-variance, regularisation,
+  #  model selection), Google's Machine Learning Crash Course (framing, loss,
+  #  gradient descent, generalisation, splits, feature engineering,
+  #  classification metrics, embeddings), and CS231n / CS224n for the deep
+  #  learning section. `reviewed: false` covers these edges like every other.
+  - id: concept:ml_problem_framing
+    name: Framing an ML Problem
+    domain: ml
+    level: foundational
+    aliases: [supervised learning, unsupervised learning, supervised vs unsupervised, regression vs classification, ml problem types]
+    typical_question_time_s: 240
+
+  - id: concept:probability_for_ml
+    name: Probability and Statistics for ML
+    domain: ml
+    level: foundational
+    aliases: [bayes theorem, probability distributions, maximum likelihood estimation, mle, conditional probability]
+    typical_question_time_s: 300
+
+  - id: concept:linear_algebra_for_ml
+    name: Linear Algebra for ML
+    domain: ml
+    level: foundational
+    aliases: [linear algebra, matrix multiplication, eigenvalues, eigenvectors, dot product]
+    typical_question_time_s: 300
+
+  - id: concept:loss_functions
+    name: Loss Functions
+    domain: ml
+    level: foundational
+    aliases: [loss function, cost function, cross entropy loss, squared error loss, objective function]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.6}
+
+  - id: concept:gradient_descent
+    name: Gradient Descent
+    domain: ml
+    level: intermediate
+    aliases: [gradient descent, sgd, stochastic gradient descent, mini batch gradient descent, learning rate]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:loss_functions, strength: 0.8}
+      - {id: concept:linear_algebra_for_ml, strength: 0.5}
+
+  - id: concept:train_test_split
+    name: Train, Validation and Test Sets
+    domain: ml
+    level: foundational
+    aliases: [train test split, validation set, holdout set, test set leakage check, data splitting]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.6}
+
+  - id: concept:overfitting
+    name: Overfitting and Underfitting
+    domain: ml
+    level: intermediate
+    aliases: [overfitting, underfitting, generalisation, generalization error]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:train_test_split, strength: 0.8}
+
+  - id: concept:bias_variance_tradeoff
+    name: Bias–Variance Trade-off
+    domain: ml
+    level: intermediate
+    aliases: [bias variance tradeoff, bias variance trade off, high bias, high variance]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:overfitting, strength: 0.9}
+
+  - id: concept:regularisation
+    name: Regularisation
+    domain: ml
+    level: intermediate
+    aliases: [regularization, regularisation, l1 regularization, l2 regularization, lasso, ridge regression, weight decay]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:overfitting, strength: 0.8}
+      - {id: concept:loss_functions, strength: 0.6}
+
+  - id: concept:cross_validation
+    name: Cross-Validation
+    domain: ml
+    level: intermediate
+    aliases: [cross validation, k fold cross validation, kfold, k fold]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:train_test_split, strength: 0.9}
+
+  - id: concept:feature_engineering
+    name: Feature Engineering
+    domain: ml
+    level: intermediate
+    aliases: [feature engineering, feature scaling, one hot encoding, feature selection, standardisation of features]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.5}
+
+  - id: concept:data_leakage
+    name: Data Leakage
+    domain: ml
+    level: advanced
+    aliases: [data leakage, target leakage, train test contamination]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:train_test_split, strength: 0.8}
+      - {id: concept:feature_engineering, strength: 0.5}
+
+  - id: concept:classification_metrics
+    name: Classification Metrics
+    domain: ml
+    level: intermediate
+    aliases: [precision and recall, f1 score, confusion matrix, roc auc, roc curve, precision recall curve]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.6}
+
+  - id: concept:regression_metrics
+    name: Regression Metrics
+    domain: ml
+    level: foundational
+    aliases: [mean squared error, mean absolute error, rmse, r squared, r2 score]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.5}
+
+  - id: concept:class_imbalance
+    name: Class Imbalance
+    domain: ml
+    level: intermediate
+    aliases: [class imbalance, imbalanced data, imbalanced dataset, oversampling, undersampling, smote]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:classification_metrics, strength: 0.7}
+
+  - id: concept:hyperparameter_tuning
+    name: Hyperparameter Tuning
+    domain: ml
+    level: intermediate
+    aliases: [hyperparameter tuning, hyperparameters, grid search, random search]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:cross_validation, strength: 0.8}
+
+  # ─── ML · models ─────────────────────────────────────────────────────────
+  - id: concept:linear_regression
+    name: Linear Regression
+    domain: ml
+    level: foundational
+    aliases: [linear regression, ordinary least squares, ols regression, least squares fit]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:loss_functions, strength: 0.7}
+      - {id: concept:linear_algebra_for_ml, strength: 0.5}
+
+  - id: concept:logistic_regression
+    name: Logistic Regression
+    domain: ml
+    level: intermediate
+    aliases: [logistic regression, sigmoid classifier, log loss classifier]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:linear_regression, strength: 0.8}
+      - {id: concept:gradient_descent, strength: 0.6}
+      - {id: concept:probability_for_ml, strength: 0.5}
+
+  - id: concept:decision_trees
+    name: Decision Trees
+    domain: ml
+    level: intermediate
+    aliases: [decision tree, decision trees, gini impurity, information gain]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.5}
+
+  - id: concept:ensemble_methods
+    name: Ensembles — Bagging and Boosting
+    domain: ml
+    level: advanced
+    aliases: [random forest, bagging, boosting, gradient boosting, xgboost, adaboost, ensemble methods]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:decision_trees, strength: 0.9}
+      - {id: concept:bias_variance_tradeoff, strength: 0.6}
+
+  - id: concept:support_vector_machines
+    name: Support Vector Machines
+    domain: ml
+    level: advanced
+    aliases: [svm, support vector machine, kernel trick, maximum margin classifier]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:linear_algebra_for_ml, strength: 0.6}
+      - {id: concept:logistic_regression, strength: 0.4}
+
+  - id: concept:k_nearest_neighbours
+    name: k-Nearest Neighbours
+    domain: ml
+    level: intermediate
+    aliases: [knn, k nearest neighbours, k nearest neighbors, nearest neighbour classifier]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.5}
+      - {id: concept:feature_engineering, strength: 0.4}
+
+  - id: concept:naive_bayes
+    name: Naive Bayes
+    domain: ml
+    level: intermediate
+    aliases: [naive bayes, naive bayes classifier, multinomial naive bayes]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:probability_for_ml, strength: 0.9}
+
+  - id: concept:clustering
+    name: Clustering
+    domain: ml
+    level: intermediate
+    aliases: [clustering, k means, kmeans, hierarchical clustering, dbscan]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:ml_problem_framing, strength: 0.5}
+      - {id: concept:linear_algebra_for_ml, strength: 0.4}
+
+  - id: concept:dimensionality_reduction
+    name: Dimensionality Reduction
+    domain: ml
+    level: advanced
+    aliases: [pca, principal component analysis, dimensionality reduction, t sne, tsne]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:linear_algebra_for_ml, strength: 0.9}
+
+  # ─── ML · deep learning ──────────────────────────────────────────────────
+  - id: concept:neural_network_basics
+    name: Neural Network Basics
+    domain: ml
+    level: intermediate
+    aliases: [neural network, neural networks, perceptron, multilayer perceptron, mlp, activation function, relu]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:logistic_regression, strength: 0.6}
+      - {id: concept:gradient_descent, strength: 0.7}
+
+  - id: concept:backpropagation
+    name: Backpropagation
+    domain: ml
+    level: advanced
+    aliases: [backpropagation, backprop, computational graph, chain rule in neural networks]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:neural_network_basics, strength: 0.9}
+      - {id: concept:gradient_descent, strength: 0.8}
+
+  - id: concept:optimisers
+    name: Optimisers
+    domain: ml
+    level: advanced
+    aliases: [adam, adam optimizer, momentum, rmsprop, optimizers, optimisers, learning rate schedule]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:gradient_descent, strength: 0.9}
+
+  - id: concept:training_deep_networks
+    name: Training Deep Networks
+    domain: ml
+    level: advanced
+    aliases: [dropout, batch normalization, batch normalisation, vanishing gradient, exploding gradient, weight initialization, early stopping]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:backpropagation, strength: 0.8}
+      - {id: concept:regularisation, strength: 0.6}
+
+  - id: concept:convolutional_networks
+    name: Convolutional Neural Networks
+    domain: ml
+    level: advanced
+    aliases: [cnn, convolutional neural network, convolutional layer, pooling layer]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:neural_network_basics, strength: 0.9}
+
+  - id: concept:sequence_models
+    name: Recurrent and Sequence Models
+    domain: ml
+    level: advanced
+    aliases: [rnn, recurrent neural network, lstm, gru, sequence model]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:neural_network_basics, strength: 0.9}
+      - {id: concept:backpropagation, strength: 0.7}
+
+  - id: concept:embeddings
+    name: Embeddings
+    domain: ml
+    level: intermediate
+    aliases: [embeddings, word embeddings, word2vec, vector embeddings, embedding layer]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:neural_network_basics, strength: 0.6}
+      - {id: concept:linear_algebra_for_ml, strength: 0.5}
+
+  - id: concept:attention_and_transformers
+    name: Attention and Transformers
+    domain: ml
+    level: advanced
+    aliases: [transformer, transformers, attention mechanism, self attention, multi head attention]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:sequence_models, strength: 0.6}
+      - {id: concept:embeddings, strength: 0.8}
+
+  - id: concept:transfer_learning
+    name: Transfer Learning
+    domain: ml
+    level: advanced
+    aliases: [transfer learning, fine tuning, finetuning, pretrained model]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:neural_network_basics, strength: 0.7}
+
+  - id: concept:large_language_models
+    name: Large Language Models
+    domain: ml
+    level: advanced
+    aliases: [llm, large language model, large language models, prompt engineering, retrieval augmented generation, rag pipeline]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:attention_and_transformers, strength: 0.9}
+      - {id: concept:embeddings, strength: 0.6}
+
+  - id: concept:ml_deployment_and_monitoring
+    name: Deploying and Monitoring Models
+    domain: ml
+    level: advanced
+    aliases: [model deployment, model monitoring, data drift, concept drift, mlops, model serving]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:train_test_split, strength: 0.5}
+      - {id: concept:classification_metrics, strength: 0.5}

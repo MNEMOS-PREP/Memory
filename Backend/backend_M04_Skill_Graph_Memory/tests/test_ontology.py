@@ -20,12 +20,15 @@ RECURSION = "concept:recursion"
 
 
 def test_the_shipped_ontology_is_phase_one_sized(graph):
-    """Open decision 1: 120 concepts, DSA + CS core + communication. At 180 the
-    granularity check fails by construction, because M05 cannot seed 3+
-    calibrated items per concept that fast."""
-    assert len(graph) == 120
+    """Open decision 1: 120 concepts, DSA + CS core + communication — and,
+    by the user's decision of 2026-10-07, 36 for machine learning, because an
+    ML interview had nothing in ML to ask about. At 180 the granularity check
+    fails by construction, because M05 cannot seed 3+ calibrated items per
+    concept that fast."""
+    assert len(graph) == 156
     domains = {str(c.domain) for c in graph.concepts.values()}
-    assert domains == {"dsa", "cs_core", "communication"}
+    assert domains == {"dsa", "cs_core", "communication", "ml"}
+    assert sum(1 for c in graph.concepts.values() if str(c.domain) == "ml") == 36
 
 
 def test_it_says_it_has_not_been_reviewed(graph):
@@ -149,7 +152,7 @@ def test_a_broken_reload_keeps_the_last_good_graph(tmp_path: Path, graph):
     still_serving = ontology_module.load(broken, force=True)
 
     assert still_serving.version == graph.version
-    assert len(still_serving) == 120
+    assert len(still_serving) == len(graph)
 
 
 def test_duplicate_ids_are_refused():
