@@ -154,11 +154,14 @@ function Row({
       <button
         type="button"
         onClick={onOpen}
-        className="min-w-[11rem] flex-1 text-left text-sm font-medium text-ink hover:text-brand"
+        className="min-w-[10rem] flex-1 text-left text-sm font-medium text-ink hover:text-brand"
       >
         {row.name}
       </button>
-      <MasteryBar value={row} width="w-36 sm:w-44" onClick={onOpen} />
+      {/* w-40, not w-44: at 1440 a stale row's label ("needs work · not
+          checked since 6 Oct") has to fit beside the name, or the bar drops
+          onto a line of its own and the column stops reading as one. */}
+      <MasteryBar value={row} width="w-36 sm:w-40" labelWidth="sm:w-56" onClick={onOpen} />
       {move && (
         <span className="w-full text-xs sm:w-auto">
           <MoveNote move={move} />
@@ -186,7 +189,19 @@ export function SkillGraphPage() {
     if (mastery.data && baseline.current === null) baseline.current = snapshot(mastery.data.measured);
   }, [mastery.data]);
 
-  const rows = mastery.data?.measured ?? [];
+  const measured = mastery.data?.measured ?? [];
+  // A topic moved only by its neighbours' answers comes back measured but
+  // `not_tested` (Control Flow, under twelve DSA answers). It is listed with
+  // the untested ones, not as a row of its own: a dashed bar under "topics
+  // with evidence" contradicted the count above it (2026-10-13).
+  const rows = useMemo(() => measured.filter((r) => r.state !== "not_tested"), [measured]);
+  const untested = useMemo(
+    () => [
+      ...measured.filter((r) => r.state === "not_tested").map((r) => r.name),
+      ...(mastery.data?.not_yet_tested.names ?? []),
+    ],
+    [measured, mastery.data],
+  );
   const moves = useMemo(() => movesSince(baseline.current, rows), [rows]);
 
   // Celebrate each upward move once, as it lands.
@@ -211,7 +226,8 @@ export function SkillGraphPage() {
   }, [rows]);
 
   const openId = params.get("concept");
-  const openRow = rows.find((r) => r.concept_id === openId) ?? null;
+  // From every measured row, so a link to an inferred topic still opens it.
+  const openRow = measured.find((r) => r.concept_id === openId) ?? null;
   const open = (id: string | null) => {
     const next = new URLSearchParams(params);
     if (id) next.set("concept", id);
@@ -278,7 +294,7 @@ export function SkillGraphPage() {
           <dl className="flex flex-wrap items-end gap-x-10 gap-y-4">
             <div>
               <dt className="text-2xl font-semibold tracking-tight text-ink" data-numeric>
-                {mastery.data ? mastery.data.totals.measured : "—"}
+                {mastery.data ? rows.length : "—"}
               </dt>
               <dd className="mt-0.5 text-xs text-ink-faint">
                 topics with evidence, of {mastery.data?.totals.in_ontology ?? "—"}
@@ -386,7 +402,7 @@ export function SkillGraphPage() {
 
         {mastery.data && (
           <div className="mt-8">
-            <NotYetTested names={mastery.data.not_yet_tested.names} onStartCheck={() => navigate("/mock")} />
+            <NotYetTested names={untested} onStartCheck={() => navigate("/mock")} />
           </div>
         )}
       </div>
