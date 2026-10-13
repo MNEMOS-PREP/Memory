@@ -1,0 +1,2183 @@
+{
+  "id": "amrita-btech-aie-2022",
+  "institution": "Amrita Vishwa Vidyapeetham",
+  "name": "B.Tech Computer Science and Engineering (Artificial Intelligence)",
+  "short": "AIE",
+  "curriculum_year": 2022,
+  "source": {
+    "file": "curriculum-syllabus-amrita-btech-cse-artificial-intelligence-2022.pdf",
+    "sha256": "368267c0ff2b26e762f487f3fb3053ab9abca9d56c8132963690855674848f4c",
+    "pages": 125
+  },
+  "ontology_version": "1.0",
+  "semesters": [
+    {
+      "number": 1,
+      "courses": [
+        {
+          "code": "22MAT110",
+          "title": "Mathematics for Computing 1",
+          "category": "SCI",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:linear_algebra_for_ml",
+              "hits": 4,
+              "matched": [
+                "dot product",
+                "eigenvalues",
+                "eigenvectors",
+                "linear algebra"
+              ]
+            },
+            {
+              "id": "concept:probability_for_ml",
+              "hits": 1,
+              "matched": [
+                "probability distributions"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22PHY106",
+          "title": "Computational Physics",
+          "category": "SCI",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE101",
+          "title": "Problem Solving & C Programming",
+          "category": "ENGG",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:arrays",
+              "hits": 12,
+              "matched": [
+                "array",
+                "arrays"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 6,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:pointers_and_references",
+              "hits": 5,
+              "matched": [
+                "pointers"
+              ]
+            },
+            {
+              "id": "concept:control_flow",
+              "hits": 4,
+              "matched": [
+                "conditionals",
+                "if else",
+                "loops"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 3,
+              "matched": [
+                "data types",
+                "variables"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 1,
+              "matched": [
+                "recursion"
+              ]
+            },
+            {
+              "id": "concept:sorting",
+              "hits": 1,
+              "matched": [
+                "sorting"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE102",
+          "title": "Elements of Computing Systems 1",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22MAT121",
+          "title": "Discrete Mathematics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:recurrence_relations",
+              "hits": 6,
+              "matched": [
+                "recurrence",
+                "recurrence relations"
+              ]
+            },
+            {
+              "id": "concept:combinatorics",
+              "hits": 2,
+              "matched": [
+                "permutations and combinations",
+                "pigeonhole"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 2,
+              "matched": [
+                "recursive"
+              ]
+            },
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide and conquer"
+              ]
+            },
+            {
+              "id": "concept:number_theory",
+              "hits": 1,
+              "matched": [
+                "number theory"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22ADM101",
+          "title": "Foundations of Indian Heritage",
+          "category": "HUM",
+          "ltp": "2-0-0",
+          "credits": "2",
+          "concepts": []
+        },
+        {
+          "code": "19ENG111",
+          "title": "Technical Communication",
+          "category": "HUM",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AVP103",
+          "title": "Mastery Over Mind (MAOM)",
+          "category": "HUM",
+          "ltp": "1-0-2",
+          "credits": "2",
+          "concepts": []
+        }
+      ],
+      "slots": []
+    },
+    {
+      "number": 2,
+      "courses": [
+        {
+          "code": "22MAT122",
+          "title": "Mathematics for Computing 2",
+          "category": "SCI",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:linear_algebra_for_ml",
+              "hits": 3,
+              "matched": [
+                "eigenvalues",
+                "eigenvectors"
+              ]
+            },
+            {
+              "id": "concept:probability_for_ml",
+              "hits": 1,
+              "matched": [
+                "bayes theorem"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE111",
+          "title": "Object Oriented Programming in Java",
+          "category": "ENGG",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:classes_and_objects",
+              "hits": 13,
+              "matched": [
+                "class",
+                "constructor",
+                "instance",
+                "object"
+              ]
+            },
+            {
+              "id": "concept:exception_handling",
+              "hits": 7,
+              "matched": [
+                "exception handling",
+                "exceptions",
+                "try catch"
+              ]
+            },
+            {
+              "id": "concept:inheritance",
+              "hits": 4,
+              "matched": [
+                "inheritance"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 3,
+              "matched": [
+                "multithreading",
+                "thread"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 3,
+              "matched": [
+                "data types",
+                "variables"
+              ]
+            },
+            {
+              "id": "concept:abstraction_and_interfaces",
+              "hits": 2,
+              "matched": [
+                "abstraction",
+                "interface"
+              ]
+            },
+            {
+              "id": "concept:pointers_and_references",
+              "hits": 2,
+              "matched": [
+                "references"
+              ]
+            },
+            {
+              "id": "concept:polymorphism",
+              "hits": 2,
+              "matched": [
+                "method overloading",
+                "polymorphism"
+              ]
+            },
+            {
+              "id": "concept:compilation_and_interpretation",
+              "hits": 1,
+              "matched": [
+                "bytecode"
+              ]
+            },
+            {
+              "id": "concept:encapsulation",
+              "hits": 1,
+              "matched": [
+                "encapsulation"
+              ]
+            },
+            {
+              "id": "concept:memory_model_gc",
+              "hits": 1,
+              "matched": [
+                "garbage collector"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE112",
+          "title": "Data Structures & Algorithms 1",
+          "category": "ENGG",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:arrays",
+              "hits": 18,
+              "matched": [
+                "array",
+                "arrays",
+                "dynamic array",
+                "lists"
+              ]
+            },
+            {
+              "id": "concept:trees",
+              "hits": 14,
+              "matched": [
+                "binary tree",
+                "tree",
+                "trees"
+              ]
+            },
+            {
+              "id": "concept:linked_lists",
+              "hits": 12,
+              "matched": [
+                "doubly linked list",
+                "linked list",
+                "linked lists",
+                "singly linked list"
+              ]
+            },
+            {
+              "id": "concept:queues",
+              "hits": 9,
+              "matched": [
+                "circular queue",
+                "queue",
+                "queues"
+              ]
+            },
+            {
+              "id": "concept:heaps",
+              "hits": 5,
+              "matched": [
+                "heap",
+                "heaps",
+                "priority queue"
+              ]
+            },
+            {
+              "id": "concept:stacks",
+              "hits": 3,
+              "matched": [
+                "stack",
+                "stack data structure",
+                "stacks"
+              ]
+            },
+            {
+              "id": "concept:binary_search_trees",
+              "hits": 2,
+              "matched": [
+                "binary search tree",
+                "binary search trees"
+              ]
+            },
+            {
+              "id": "concept:balanced_trees",
+              "hits": 1,
+              "matched": [
+                "avl tree"
+              ]
+            },
+            {
+              "id": "concept:binary_search",
+              "hits": 1,
+              "matched": [
+                "binary search"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 1,
+              "matched": [
+                "recursion"
+              ]
+            },
+            {
+              "id": "concept:space_complexity",
+              "hits": 1,
+              "matched": [
+                "space complexity"
+              ]
+            },
+            {
+              "id": "concept:time_complexity",
+              "hits": 1,
+              "matched": [
+                "big o"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE113",
+          "title": "Elements of Computing Systems - 2",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE114",
+          "title": "Introduction to Electrical and Electronics Engineering",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE115",
+          "title": "User Interface Design",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22ADM111",
+          "title": "Glimpses of Glorious India",
+          "category": "HUM",
+          "ltp": "2-0-0",
+          "credits": "2",
+          "concepts": []
+        }
+      ],
+      "slots": []
+    },
+    {
+      "number": 3,
+      "courses": [
+        {
+          "code": "22MAT220",
+          "title": "Mathematics for Computing 3",
+          "category": "SCI",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:support_vector_machines",
+              "hits": 2,
+              "matched": [
+                "support vector machine",
+                "support vector machines"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE201",
+          "title": "Fundamentals of AI",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE202",
+          "title": "Operating Systems",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:deadlocks",
+              "hits": 8,
+              "matched": [
+                "deadlock",
+                "deadlocks"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 8,
+              "matched": [
+                "multithreading",
+                "process",
+                "thread"
+              ]
+            },
+            {
+              "id": "concept:paging_and_segmentation",
+              "hits": 4,
+              "matched": [
+                "page table",
+                "paging",
+                "segmentation"
+              ]
+            },
+            {
+              "id": "concept:concurrency_synchronisation",
+              "hits": 3,
+              "matched": [
+                "critical section",
+                "semaphore",
+                "synchronization"
+              ]
+            },
+            {
+              "id": "concept:file_systems",
+              "hits": 3,
+              "matched": [
+                "directory structure",
+                "file system",
+                "file systems"
+              ]
+            },
+            {
+              "id": "concept:process_scheduling",
+              "hits": 3,
+              "matched": [
+                "cpu scheduling",
+                "scheduling algorithms"
+              ]
+            },
+            {
+              "id": "concept:memory_management",
+              "hits": 2,
+              "matched": [
+                "memory allocation",
+                "memory management"
+              ]
+            },
+            {
+              "id": "concept:page_replacement",
+              "hits": 2,
+              "matched": [
+                "page replacement",
+                "thrashing"
+              ]
+            },
+            {
+              "id": "concept:system_calls",
+              "hits": 1,
+              "matched": [
+                "system calls"
+              ]
+            },
+            {
+              "id": "concept:virtual_memory",
+              "hits": 1,
+              "matched": [
+                "virtual memory"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE203",
+          "title": "Data Structures & Algorithms 2",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:graphs_representation",
+              "hits": 5,
+              "matched": [
+                "adjacency list",
+                "graph representation",
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:matrix_operations",
+              "hits": 4,
+              "matched": [
+                "matrices",
+                "matrix"
+              ]
+            },
+            {
+              "id": "concept:trees",
+              "hits": 4,
+              "matched": [
+                "tree",
+                "trees"
+              ]
+            },
+            {
+              "id": "concept:tries",
+              "hits": 4,
+              "matched": [
+                "trie",
+                "tries"
+              ]
+            },
+            {
+              "id": "concept:sorting",
+              "hits": 3,
+              "matched": [
+                "sort",
+                "sorting"
+              ]
+            },
+            {
+              "id": "concept:arrays",
+              "hits": 2,
+              "matched": [
+                "lists"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 2,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:bit_manipulation",
+              "hits": 1,
+              "matched": [
+                "bitwise"
+              ]
+            },
+            {
+              "id": "concept:non_comparison_sorting",
+              "hits": 1,
+              "matched": [
+                "radix sort"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE204",
+          "title": "Introduction to Computer Networks",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:sockets",
+              "hits": 2,
+              "matched": [
+                "socket programming",
+                "sockets"
+              ]
+            },
+            {
+              "id": "concept:tcp_vs_udp",
+              "hits": 2,
+              "matched": [
+                "connection oriented",
+                "transport layer"
+              ]
+            },
+            {
+              "id": "concept:osi_and_tcp_ip_model",
+              "hits": 1,
+              "matched": [
+                "network layers"
+              ]
+            },
+            {
+              "id": "concept:routing",
+              "hits": 1,
+              "matched": [
+                "routing"
+              ]
+            },
+            {
+              "id": "concept:subnetting",
+              "hits": 1,
+              "matched": [
+                "subnet"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE205",
+          "title": "Introduction to Python",
+          "category": "ENGG",
+          "ltp": "1-0-3",
+          "credits": "2",
+          "concepts": []
+        },
+        {
+          "code": "22BIO201",
+          "title": "Intelligence of Biological Systems - 1",
+          "category": "ENGG",
+          "ltp": "2-0-0",
+          "credits": "2",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "free",
+          "title": "Free Elective 1",
+          "credits": "2"
+        },
+        {
+          "kind": "value",
+          "title": "Amrita Values Program",
+          "credits": "1"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "courses": [
+        {
+          "code": "22MAT230",
+          "title": "Mathematics for Computing 4",
+          "category": "SCI",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:gradient_descent",
+              "hits": 3,
+              "matched": [
+                "gradient descent",
+                "stochastic gradient descent"
+              ]
+            },
+            {
+              "id": "concept:clustering",
+              "hits": 2,
+              "matched": [
+                "clustering",
+                "k means"
+              ]
+            },
+            {
+              "id": "concept:loss_functions",
+              "hits": 2,
+              "matched": [
+                "loss function",
+                "loss functions"
+              ]
+            },
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 2,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:linear_algebra_for_ml",
+              "hits": 1,
+              "matched": [
+                "linear algebra"
+              ]
+            },
+            {
+              "id": "concept:optimisers",
+              "hits": 1,
+              "matched": [
+                "adam"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE211",
+          "title": "Introduction to Communication & IoT",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE212",
+          "title": "Design and Analysis of Algorithms",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:sorting",
+              "hits": 5,
+              "matched": [
+                "merge sort",
+                "quick sort",
+                "sort"
+              ]
+            },
+            {
+              "id": "concept:knapsack",
+              "hits": 4,
+              "matched": [
+                "knapsack",
+                "subset sum"
+              ]
+            },
+            {
+              "id": "concept:trees",
+              "hits": 4,
+              "matched": [
+                "tree",
+                "trees"
+              ]
+            },
+            {
+              "id": "concept:backtracking",
+              "hits": 2,
+              "matched": [
+                "backtracking",
+                "n queens"
+              ]
+            },
+            {
+              "id": "concept:binary_search",
+              "hits": 2,
+              "matched": [
+                "binary search"
+              ]
+            },
+            {
+              "id": "concept:binary_search_trees",
+              "hits": 2,
+              "matched": [
+                "binary search tree",
+                "binary search trees"
+              ]
+            },
+            {
+              "id": "concept:graphs_representation",
+              "hits": 2,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:heaps",
+              "hits": 2,
+              "matched": [
+                "heap",
+                "heaps"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 2,
+              "matched": [
+                "recursive"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 2,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide and conquer"
+              ]
+            },
+            {
+              "id": "concept:dynamic_programming",
+              "hits": 1,
+              "matched": [
+                "dynamic programming"
+              ]
+            },
+            {
+              "id": "concept:greedy",
+              "hits": 1,
+              "matched": [
+                "greedy"
+              ]
+            },
+            {
+              "id": "concept:queues",
+              "hits": 1,
+              "matched": [
+                "fifo"
+              ]
+            },
+            {
+              "id": "concept:stacks",
+              "hits": 1,
+              "matched": [
+                "lifo"
+              ]
+            },
+            {
+              "id": "concept:string_matching",
+              "hits": 1,
+              "matched": [
+                "string matching"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE213",
+          "title": "Machine Learning",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:ml_problem_framing",
+              "hits": 4,
+              "matched": [
+                "supervised learning",
+                "unsupervised learning"
+              ]
+            },
+            {
+              "id": "concept:clustering",
+              "hits": 3,
+              "matched": [
+                "clustering",
+                "k means"
+              ]
+            },
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 3,
+              "matched": [
+                "neural network",
+                "neural networks",
+                "perceptron"
+              ]
+            },
+            {
+              "id": "concept:decision_trees",
+              "hits": 2,
+              "matched": [
+                "decision tree",
+                "decision trees"
+              ]
+            },
+            {
+              "id": "concept:dimensionality_reduction",
+              "hits": 2,
+              "matched": [
+                "dimensionality reduction",
+                "principal component analysis"
+              ]
+            },
+            {
+              "id": "concept:support_vector_machines",
+              "hits": 2,
+              "matched": [
+                "support vector machine",
+                "support vector machines"
+              ]
+            },
+            {
+              "id": "concept:cross_validation",
+              "hits": 1,
+              "matched": [
+                "cross validation"
+              ]
+            },
+            {
+              "id": "concept:ensemble_methods",
+              "hits": 1,
+              "matched": [
+                "random forest"
+              ]
+            },
+            {
+              "id": "concept:k_nearest_neighbours",
+              "hits": 1,
+              "matched": [
+                "k nearest neighbors"
+              ]
+            },
+            {
+              "id": "concept:linear_regression",
+              "hits": 1,
+              "matched": [
+                "linear regression"
+              ]
+            },
+            {
+              "id": "concept:logistic_regression",
+              "hits": 1,
+              "matched": [
+                "logistic regression"
+              ]
+            },
+            {
+              "id": "concept:naive_bayes",
+              "hits": 1,
+              "matched": [
+                "naive bayes"
+              ]
+            },
+            {
+              "id": "concept:overfitting",
+              "hits": 1,
+              "matched": [
+                "overfitting"
+              ]
+            },
+            {
+              "id": "concept:probability_for_ml",
+              "hits": 1,
+              "matched": [
+                "mle"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE214",
+          "title": "Introduction to AI Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22BIO211",
+          "title": "Intelligence of Biological Systems 2",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:graphs_representation",
+              "hits": 4,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 4,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:dynamic_programming",
+              "hits": 1,
+              "matched": [
+                "dynamic programming"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "19ENV300",
+          "title": "Environmental Science",
+          "category": "HUM",
+          "ltp": null,
+          "credits": "P/F",
+          "concepts": []
+        },
+        {
+          "code": "19SSK211",
+          "title": "Soft Skills I",
+          "category": "HUM",
+          "ltp": "1-0-3",
+          "credits": "2",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "value",
+          "title": "Amrita Values Program",
+          "credits": "1"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "courses": [
+        {
+          "code": "22AIE301",
+          "title": "Probabilistic Reasoning",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE302",
+          "title": "Formal language and Automata",
+          "category": "ENGG",
+          "ltp": "2-1-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE303",
+          "title": "Database Management Systems",
+          "category": "ENGG",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:deadlocks",
+              "hits": 6,
+              "matched": [
+                "deadlock",
+                "deadlocks"
+              ]
+            },
+            {
+              "id": "concept:transactions_acid",
+              "hits": 6,
+              "matched": [
+                "atomicity",
+                "durability",
+                "transaction"
+              ]
+            },
+            {
+              "id": "concept:normalisation",
+              "hits": 4,
+              "matched": [
+                "1nf",
+                "2nf",
+                "3nf",
+                "bcnf"
+              ]
+            },
+            {
+              "id": "concept:sql_queries",
+              "hits": 4,
+              "matched": [
+                "sql"
+              ]
+            },
+            {
+              "id": "concept:concurrency_synchronisation",
+              "hits": 3,
+              "matched": [
+                "locks"
+              ]
+            },
+            {
+              "id": "concept:relational_model",
+              "hits": 3,
+              "matched": [
+                "relational database"
+              ]
+            },
+            {
+              "id": "concept:concurrency_control",
+              "hits": 2,
+              "matched": [
+                "concurrency control",
+                "two phase locking"
+              ]
+            },
+            {
+              "id": "concept:functional_dependencies",
+              "hits": 2,
+              "matched": [
+                "functional dependencies",
+                "functional dependency"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 2,
+              "matched": [
+                "process"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE304",
+          "title": "Deep Learning",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 8,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:convolutional_networks",
+              "hits": 4,
+              "matched": [
+                "cnn",
+                "convolutional neural network",
+                "convolutional neural networks"
+              ]
+            },
+            {
+              "id": "concept:sequence_models",
+              "hits": 3,
+              "matched": [
+                "lstm",
+                "recurrent neural network",
+                "rnn"
+              ]
+            },
+            {
+              "id": "concept:ensemble_methods",
+              "hits": 1,
+              "matched": [
+                "ensemble methods"
+              ]
+            },
+            {
+              "id": "concept:transfer_learning",
+              "hits": 1,
+              "matched": [
+                "transfer learning"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE305",
+          "title": "Introduction to Cloud Computing",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19SSK301",
+          "title": "Soft Skills II",
+          "category": "HUM",
+          "ltp": "1-0-3",
+          "credits": "2",
+          "concepts": [
+            {
+              "id": "concept:combinatorics",
+              "hits": 1,
+              "matched": [
+                "permutations and combinations"
+              ]
+            },
+            {
+              "id": "concept:graphs_representation",
+              "hits": 1,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:matrix_operations",
+              "hits": 1,
+              "matched": [
+                "matrix"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "19LIV390",
+          "title": "Live-in-Labs I",
+          "category": "HUM",
+          "ltp": null,
+          "credits": "[3]",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "professional",
+          "title": "Professional Elective 1",
+          "credits": "3"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "courses": [
+        {
+          "code": "22AIE311",
+          "title": "Software Engineering (Project-Based)",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:abstraction_and_interfaces",
+              "hits": 3,
+              "matched": [
+                "interface"
+              ]
+            },
+            {
+              "id": "concept:classes_and_objects",
+              "hits": 2,
+              "matched": [
+                "class",
+                "object"
+              ]
+            },
+            {
+              "id": "concept:decision_trees",
+              "hits": 2,
+              "matched": [
+                "decision tree",
+                "decision trees"
+              ]
+            },
+            {
+              "id": "concept:testing_and_debugging",
+              "hits": 2,
+              "matched": [
+                "debugging",
+                "test cases"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 1,
+              "matched": [
+                "process"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE312",
+          "title": "Big Data Analytics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:recursion",
+              "hits": 3,
+              "matched": [
+                "recursion",
+                "recursive",
+                "tail recursion"
+              ]
+            },
+            {
+              "id": "concept:arrays",
+              "hits": 2,
+              "matched": [
+                "array",
+                "arrays"
+              ]
+            },
+            {
+              "id": "concept:classes_and_objects",
+              "hits": 2,
+              "matched": [
+                "class",
+                "object"
+              ]
+            },
+            {
+              "id": "concept:file_systems",
+              "hits": 2,
+              "matched": [
+                "file system",
+                "file systems"
+              ]
+            },
+            {
+              "id": "concept:nosql_vs_relational",
+              "hits": 2,
+              "matched": [
+                "nosql"
+              ]
+            },
+            {
+              "id": "concept:sql_queries",
+              "hits": 2,
+              "matched": [
+                "sql"
+              ]
+            },
+            {
+              "id": "concept:graphs_representation",
+              "hits": 1,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:sorting",
+              "hits": 1,
+              "matched": [
+                "sorting"
+              ]
+            },
+            {
+              "id": "concept:string_matching",
+              "hits": 1,
+              "matched": [
+                "pattern matching"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 1,
+              "matched": [
+                "data types"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE313",
+          "title": "Computer Vision & Image Processing",
+          "category": "ENGG",
+          "ltp": "2-1-3",
+          "credits": "4",
+          "concepts": []
+        },
+        {
+          "code": "22AIE314",
+          "title": "Computer Security",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE315",
+          "title": "Natural Language Processing",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 4,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:attention_and_transformers",
+              "hits": 3,
+              "matched": [
+                "attention mechanism",
+                "transformer",
+                "transformers"
+              ]
+            },
+            {
+              "id": "concept:embeddings",
+              "hits": 2,
+              "matched": [
+                "embeddings",
+                "word embeddings"
+              ]
+            },
+            {
+              "id": "concept:feature_engineering",
+              "hits": 1,
+              "matched": [
+                "one hot encoding"
+              ]
+            },
+            {
+              "id": "concept:sequence_models",
+              "hits": 1,
+              "matched": [
+                "recurrent neural network"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "19SSK311",
+          "title": "Soft Skills III",
+          "category": "HUM",
+          "ltp": "1-0-3",
+          "credits": "2",
+          "concepts": []
+        },
+        {
+          "code": "19LIV490",
+          "title": "Live-in-Labs II",
+          "category": "ENGG",
+          "ltp": null,
+          "credits": "[3]",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "professional",
+          "title": "Professional Elective 2",
+          "credits": "3"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "courses": [
+        {
+          "code": "22AIE401",
+          "title": "Reinforcement Learning",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19LAW300",
+          "title": "Indian Constitution",
+          "category": "HUM",
+          "ltp": "1-0-0",
+          "credits": "P/F",
+          "concepts": []
+        },
+        {
+          "code": "22AIE498",
+          "title": "Project Phase 1",
+          "category": "PRJ",
+          "ltp": null,
+          "credits": "6",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "professional",
+          "title": "Professional Elective 3",
+          "credits": "3"
+        },
+        {
+          "kind": "professional",
+          "title": "Professional Elective 4",
+          "credits": "3"
+        },
+        {
+          "kind": "free",
+          "title": "Free Elective 2",
+          "credits": "3"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "courses": [
+        {
+          "code": "22AIE499",
+          "title": "Project Phase 2",
+          "category": null,
+          "ltp": null,
+          "credits": "10",
+          "concepts": []
+        }
+      ],
+      "slots": []
+    }
+  ],
+  "electives": [
+    {
+      "name": "PROFESSIONAL ELECTIVES",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "22AIE431",
+          "title": "Applied Cryptography",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:https_and_tls",
+              "hits": 2,
+              "matched": [
+                "ssl",
+                "tls"
+              ]
+            },
+            {
+              "id": "concept:abstraction_and_interfaces",
+              "hits": 1,
+              "matched": [
+                "abstraction"
+              ]
+            },
+            {
+              "id": "concept:network_security_basics",
+              "hits": 1,
+              "matched": [
+                "public key cryptography"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE432",
+          "title": "Network and Wireless Security",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE433",
+          "title": "Intrusion Detection and Prevention Systems",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 2,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:support_vector_machines",
+              "hits": 2,
+              "matched": [
+                "support vector machine",
+                "support vector machines"
+              ]
+            },
+            {
+              "id": "concept:clustering",
+              "hits": 1,
+              "matched": [
+                "clustering"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE434",
+          "title": "Software Vulnerability Analysis",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:exception_handling",
+              "hits": 2,
+              "matched": [
+                "exception handling",
+                "exceptions"
+              ]
+            },
+            {
+              "id": "concept:pointers_and_references",
+              "hits": 2,
+              "matched": [
+                "pointers"
+              ]
+            },
+            {
+              "id": "concept:stacks",
+              "hits": 2,
+              "matched": [
+                "stack",
+                "stacks"
+              ]
+            },
+            {
+              "id": "concept:control_flow",
+              "hits": 1,
+              "matched": [
+                "control flow"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE435",
+          "title": "Cybercrime Forensics and Digital Forensics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE436",
+          "title": "Distributed System Security",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE437",
+          "title": "Medical Image Processing",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE438",
+          "title": "Biomedical Signal Processing",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE439",
+          "title": "Clinical Information Systems",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE440",
+          "title": "Kinematics and Kinetics for Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE441",
+          "title": "Dynamics and Control of Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE442",
+          "title": "Robotic Operating Systems & Robot Simulation",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE443",
+          "title": "Underactuated Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:balanced_trees",
+              "hits": 1,
+              "matched": [
+                "rotations"
+              ]
+            },
+            {
+              "id": "concept:dynamic_programming",
+              "hits": 1,
+              "matched": [
+                "dynamic programming"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE444",
+          "title": "Probabilistic Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE445",
+          "title": "Sensors and Actuators for Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE446",
+          "title": "NLP for Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE447",
+          "title": "Data Driven Control in Robotics",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 2,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:transfer_learning",
+              "hits": 1,
+              "matched": [
+                "transfer learning"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE448",
+          "title": "Introduction to Drones",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE449",
+          "title": "Introduction to Digital Manufacturing",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE450",
+          "title": "Speech Processing",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 2,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE451",
+          "title": "Modern & Smart Materials",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE452",
+          "title": "Data Driven Material Modelling & Simulation",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 4,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:ml_problem_framing",
+              "hits": 1,
+              "matched": [
+                "unsupervised learning"
+              ]
+            },
+            {
+              "id": "concept:regularisation",
+              "hits": 1,
+              "matched": [
+                "ridge regression"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE453",
+          "title": "Computational Drug Design",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE454",
+          "title": "Deep learning in Genomics and Biomedicine",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE455",
+          "title": "DNA Sequencing Technologies",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE456",
+          "title": "CRISPR Technology",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE457",
+          "title": "Full Stack Development",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:http_and_rest",
+              "hits": 2,
+              "matched": [
+                "http",
+                "rest api"
+              ]
+            },
+            {
+              "id": "concept:https_and_tls",
+              "hits": 1,
+              "matched": [
+                "https"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE458",
+          "title": "Mobile Application Development",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE459",
+          "title": "User Experience Design",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE460",
+          "title": "Software Design Patterns",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:design_patterns",
+              "hits": 4,
+              "matched": [
+                "design patterns",
+                "factory pattern",
+                "observer pattern",
+                "singleton"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE461",
+          "title": "Concurrent Programming",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide and conquer"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 1,
+              "matched": [
+                "recursive"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "22AIE462",
+          "title": "Deep Reinforcement Learning",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "22AIE463",
+          "title": "Time Series Analysis",
+          "category": "ENGG",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "PROFESSIONAL ELECTIVES UNDER SCIENCE STREAM",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "19CHY243",
+          "title": "Computational Chemistry and Molecular Modelling",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19CHY236",
+          "title": "Electrochemical Energy Systems and Processes",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19CHY240",
+          "title": "Fuels and Combustion",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19CHY232",
+          "title": "Green Chemistry and Technology",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19CHY239",
+          "title": "Instrumental Methods of Analysis",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19CHY241",
+          "title": "Batteries and Fuel Cells",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19CHY242",
+          "title": "Corrosion Science",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19PHY340",
+          "title": "Advanced Classical Dynamics",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19PHY342",
+          "title": "Electrical Engineering Materials",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19PHY331",
+          "title": "Physics of Lasers and Applications",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19PHY341",
+          "title": "Concepts of Nanophysics and Nanotechnology",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19PHY343",
+          "title": "Physics of Semiconductor Devices",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19PHY339",
+          "title": "Astrophysics",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19MAT341",
+          "title": "Statistical Inference",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19MAT342",
+          "title": "Introduction to Game Theory",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "19MAT343",
+          "title": "Numerical Methods and Optimization",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    }
+  ]
+}

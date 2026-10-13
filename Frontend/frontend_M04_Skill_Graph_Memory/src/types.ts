@@ -152,11 +152,74 @@ export interface StudentProfile {
   drives: ProfileDrive[];
   year: string;
   branch: string;
+  /** An id from `/v1/curricula`, or "" for a programme without one. */
+  curriculum_id: string;
+  /** 1-8; null when not said, or graduated. */
+  semester: number | null;
+  /** Course codes the student is taking this semester, electives included. */
+  courses: string[];
   weekly_goal: number;
   /** `HH:MM`, or empty for no reminder. */
   reminder_time: string;
   onboarded_at: string | null;
   updated_at: string;
+}
+
+/* ── curricula: what the sign-in step offers (2026-10-13) ─────────────────── */
+
+export interface CurriculumSummary {
+  id: string;
+  name: string;
+  /** The department's code prefix: "CSE", "AIE". */
+  short: string;
+  institution: string;
+  curriculum_year: number | null;
+  semesters: number;
+}
+
+/** A concept a course's syllabus teaches, with the syllabus words behind it. */
+export interface CourseConcept {
+  id: string;
+  name: string;
+  hits: number;
+  matched: string[];
+}
+
+export interface Course {
+  code: string;
+  title: string;
+  /** The curriculum's category: SCI, ENGG, CSE, HUM, PRJ. */
+  category: string | null;
+  ltp: string | null;
+  credits: string | null;
+  /** Most taught first. Empty for a course with nothing an interview asks. */
+  concepts: CourseConcept[];
+}
+
+/** "Professional Elective I": a place in a semester the student fills. */
+export interface ElectiveSlot {
+  kind: "professional" | "free" | "value";
+  title: string;
+  credits: string | null;
+}
+
+export interface Semester {
+  number: number;
+  courses: Course[];
+  slots: ElectiveSlot[];
+}
+
+export interface ElectiveBasket {
+  name: string;
+  kind: "professional";
+  courses: Course[];
+}
+
+export interface Curriculum extends Omit<CurriculumSummary, "semesters"> {
+  source: { file: string; sha256: string; pages: number };
+  ontology_version: string;
+  semesters: Semester[];
+  electives: ElectiveBasket[];
 }
 
 export type ProfileUpdate = Partial<

@@ -233,6 +233,16 @@ class StudentProfile(SQLModel, table=True):
     drives: list[dict] = Field(default_factory=list, sa_column=Column(JSON))
     year: str = ""
     branch: str = ""
+    #: The programme, as an id from `/v1/curricula` (2026-10-13). Empty for a
+    #: branch the college has not published a curriculum for; `branch` then
+    #: carries what the student typed.
+    curriculum_id: str = ""
+    #: 1-8. None means not said, or graduated (`year` says which).
+    semester: int | None = None
+    #: Course codes the student is taking THIS semester, from that curriculum:
+    #: its courses and the electives they picked. Earlier semesters' courses
+    #: are the curriculum's, not stored twice.
+    courses: list[str] = Field(default_factory=list, sa_column=Column(JSON))
     weekly_goal: int = 3
     #: "HH:MM", local to the student. Empty means no reminder.
     reminder_time: str = ""

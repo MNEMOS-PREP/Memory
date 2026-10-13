@@ -1,0 +1,3056 @@
+{
+  "id": "amrita-btech-cse-2023",
+  "institution": "Amrita Vishwa Vidyapeetham",
+  "name": "B.Tech Computer Science and Engineering",
+  "short": "CSE",
+  "curriculum_year": 2023,
+  "source": {
+    "file": "btech-cse-curriculam-and-syllabus-2023.pdf",
+    "sha256": "0686ecf8ac2e94ae598c545a204d3c50bcbf4219b955ea5385d0b48764977aac",
+    "pages": 314
+  },
+  "ontology_version": "1.0",
+  "semesters": [
+    {
+      "number": 1,
+      "courses": [
+        {
+          "code": "23ENG101",
+          "title": "Technical Communication",
+          "category": "HUM",
+          "ltp": "2-0-3",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23MAT107",
+          "title": "Calculus",
+          "category": "SCI",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": []
+        },
+        {
+          "code": "23CSE101",
+          "title": "Computational Problem Solving",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:arrays",
+              "hits": 3,
+              "matched": [
+                "array",
+                "arrays",
+                "lists"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 2,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:control_flow",
+              "hits": 1,
+              "matched": [
+                "control flow"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 1,
+              "matched": [
+                "recursion"
+              ]
+            },
+            {
+              "id": "concept:sorting",
+              "hits": 1,
+              "matched": [
+                "sorting"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23EEE104",
+          "title": "Introduction to Electrical and Electronics Engineering",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23EEE184",
+          "title": "Basic Electrical and Electronics Engineering Practice",
+          "category": "ENGG",
+          "ltp": "0-0-2",
+          "credits": "1",
+          "concepts": []
+        },
+        {
+          "code": "23CSE102",
+          "title": "Computer Hardware Essentials",
+          "category": "ENGG",
+          "ltp": "1-0-2",
+          "credits": "2",
+          "concepts": []
+        },
+        {
+          "code": "22ADM101",
+          "title": "Foundations of Indian Heritage",
+          "category": "HUM",
+          "ltp": "2-0-1",
+          "credits": "2",
+          "concepts": []
+        },
+        {
+          "code": "22AVP103",
+          "title": "Mastery Over Mind",
+          "category": "HUM",
+          "ltp": "1-0-2",
+          "credits": "2",
+          "concepts": []
+        }
+      ],
+      "slots": []
+    },
+    {
+      "number": 2,
+      "courses": [
+        {
+          "code": "23MAT116",
+          "title": "Discrete Mathematics",
+          "category": "SCI",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:graphs_representation",
+              "hits": 8,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:recurrence_relations",
+              "hits": 6,
+              "matched": [
+                "recurrence",
+                "recurrence relations"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 3,
+              "matched": [
+                "recursive"
+              ]
+            },
+            {
+              "id": "concept:combinatorics",
+              "hits": 2,
+              "matched": [
+                "permutations and combinations",
+                "pigeonhole"
+              ]
+            },
+            {
+              "id": "concept:shortest_paths",
+              "hits": 2,
+              "matched": [
+                "shortest paths"
+              ]
+            },
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide and conquer"
+              ]
+            },
+            {
+              "id": "concept:matrix_operations",
+              "hits": 1,
+              "matched": [
+                "matrices"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23MAT117",
+          "title": "Linear Algebra",
+          "category": "SCI",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": []
+        },
+        {
+          "code": "23CSE111",
+          "title": "Object Oriented Programming",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:classes_and_objects",
+              "hits": 15,
+              "matched": [
+                "class",
+                "constructor",
+                "instance",
+                "object"
+              ]
+            },
+            {
+              "id": "concept:encapsulation",
+              "hits": 2,
+              "matched": [
+                "data hiding",
+                "encapsulation"
+              ]
+            },
+            {
+              "id": "concept:exception_handling",
+              "hits": 2,
+              "matched": [
+                "exception handling",
+                "exceptions"
+              ]
+            },
+            {
+              "id": "concept:abstraction_and_interfaces",
+              "hits": 1,
+              "matched": [
+                "interface"
+              ]
+            },
+            {
+              "id": "concept:inheritance",
+              "hits": 1,
+              "matched": [
+                "inheritance"
+              ]
+            },
+            {
+              "id": "concept:polymorphism",
+              "hits": 1,
+              "matched": [
+                "polymorphism"
+              ]
+            },
+            {
+              "id": "concept:testing_and_debugging",
+              "hits": 1,
+              "matched": [
+                "debugging"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23PHY115",
+          "title": "Modern Physics",
+          "category": "SCI",
+          "ltp": "2-1-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE113",
+          "title": "User Interface Design",
+          "category": "CSE",
+          "ltp": "2-0-2",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23MEE115",
+          "title": "Manufacturing Practice",
+          "category": "ENGG",
+          "ltp": "0-0-3",
+          "credits": "1",
+          "concepts": []
+        },
+        {
+          "code": "22ADM111",
+          "title": "Glimpses of Glorious India",
+          "category": "HUM",
+          "ltp": "2-0-1",
+          "credits": "2",
+          "concepts": []
+        }
+      ],
+      "slots": []
+    },
+    {
+      "number": 3,
+      "courses": [
+        {
+          "code": "23MAT206",
+          "title": "Optimization Techniques",
+          "category": "SCI",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": []
+        },
+        {
+          "code": "23CSE205",
+          "title": "Digital Electronics",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE201",
+          "title": "Procedural Programming using C",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:strings",
+              "hits": 7,
+              "matched": [
+                "string",
+                "string manipulation",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:arrays",
+              "hits": 4,
+              "matched": [
+                "array",
+                "arrays"
+              ]
+            },
+            {
+              "id": "concept:pointers_and_references",
+              "hits": 3,
+              "matched": [
+                "pointers"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 2,
+              "matched": [
+                "data types",
+                "variables"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 1,
+              "matched": [
+                "recursion"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE202",
+          "title": "Database Management Systems",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:normalisation",
+              "hits": 4,
+              "matched": [
+                "1nf",
+                "2nf",
+                "3nf",
+                "bcnf"
+              ]
+            },
+            {
+              "id": "concept:sql_queries",
+              "hits": 4,
+              "matched": [
+                "sql"
+              ]
+            },
+            {
+              "id": "concept:relational_model",
+              "hits": 3,
+              "matched": [
+                "relational database"
+              ]
+            },
+            {
+              "id": "concept:deadlocks",
+              "hits": 2,
+              "matched": [
+                "deadlock",
+                "deadlocks"
+              ]
+            },
+            {
+              "id": "concept:functional_dependencies",
+              "hits": 2,
+              "matched": [
+                "functional dependencies",
+                "functional dependency"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 2,
+              "matched": [
+                "process"
+              ]
+            },
+            {
+              "id": "concept:transactions_acid",
+              "hits": 2,
+              "matched": [
+                "acid",
+                "transaction"
+              ]
+            },
+            {
+              "id": "concept:indexing",
+              "hits": 1,
+              "matched": [
+                "indexing"
+              ]
+            },
+            {
+              "id": "concept:nosql_vs_relational",
+              "hits": 1,
+              "matched": [
+                "nosql"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE203",
+          "title": "Data Structures and Algorithms",
+          "category": "CSE",
+          "ltp": "3-1-2",
+          "credits": "5",
+          "concepts": [
+            {
+              "id": "concept:trees",
+              "hits": 31,
+              "matched": [
+                "binary tree",
+                "tree",
+                "tree data structure",
+                "trees"
+              ]
+            },
+            {
+              "id": "concept:arrays",
+              "hits": 22,
+              "matched": [
+                "array",
+                "arrays",
+                "lists"
+              ]
+            },
+            {
+              "id": "concept:queues",
+              "hits": 17,
+              "matched": [
+                "circular queue",
+                "queue",
+                "queues"
+              ]
+            },
+            {
+              "id": "concept:linked_lists",
+              "hits": 12,
+              "matched": [
+                "doubly linked list",
+                "linked list",
+                "linked lists",
+                "singly linked list"
+              ]
+            },
+            {
+              "id": "concept:stacks",
+              "hits": 10,
+              "matched": [
+                "stack",
+                "stacks"
+              ]
+            },
+            {
+              "id": "concept:graphs_representation",
+              "hits": 4,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:heaps",
+              "hits": 4,
+              "matched": [
+                "heap",
+                "heaps",
+                "priority queue"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 4,
+              "matched": [
+                "recursion"
+              ]
+            },
+            {
+              "id": "concept:minimum_spanning_tree",
+              "hits": 3,
+              "matched": [
+                "minimum spanning tree",
+                "mst",
+                "spanning tree"
+              ]
+            },
+            {
+              "id": "concept:balanced_trees",
+              "hits": 2,
+              "matched": [
+                "avl tree",
+                "rotations"
+              ]
+            },
+            {
+              "id": "concept:binary_search_trees",
+              "hits": 2,
+              "matched": [
+                "binary search tree",
+                "binary search trees"
+              ]
+            },
+            {
+              "id": "concept:hashing",
+              "hits": 2,
+              "matched": [
+                "dictionary",
+                "hash table"
+              ]
+            },
+            {
+              "id": "concept:segment_trees",
+              "hits": 2,
+              "matched": [
+                "segment tree",
+                "segment trees"
+              ]
+            },
+            {
+              "id": "concept:time_complexity",
+              "hits": 2,
+              "matched": [
+                "asymptotic analysis",
+                "complexity analysis"
+              ]
+            },
+            {
+              "id": "concept:binary_search",
+              "hits": 1,
+              "matched": [
+                "binary search"
+              ]
+            },
+            {
+              "id": "concept:greedy",
+              "hits": 1,
+              "matched": [
+                "greedy"
+              ]
+            },
+            {
+              "id": "concept:shortest_paths",
+              "hits": 1,
+              "matched": [
+                "shortest paths"
+              ]
+            },
+            {
+              "id": "concept:sorting",
+              "hits": 1,
+              "matched": [
+                "sorting"
+              ]
+            },
+            {
+              "id": "concept:tree_traversals",
+              "hits": 1,
+              "matched": [
+                "tree traversals"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 1,
+              "matched": [
+                "data types"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE285",
+          "title": "Digital Electronics Laboratory",
+          "category": "ENGG",
+          "ltp": "0-0-3",
+          "credits": "1",
+          "concepts": []
+        },
+        {
+          "code": "23LSE201",
+          "title": "Life Skills for Engineers I",
+          "category": "HUM",
+          "ltp": "1-0-2",
+          "credits": "P/F",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "value",
+          "title": "Amrita Value Programme I",
+          "credits": "1"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "courses": [
+        {
+          "code": "23MAT216",
+          "title": "Probability and Random Processes",
+          "category": "SCI",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:probability_for_ml",
+              "hits": 2,
+              "matched": [
+                "bayes theorem",
+                "conditional probability"
+              ]
+            },
+            {
+              "id": "concept:linear_regression",
+              "hits": 1,
+              "matched": [
+                "linear regression"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE211",
+          "title": "Design and Analysis of Algorithms",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:sorting",
+              "hits": 7,
+              "matched": [
+                "merge sort",
+                "quick sort",
+                "sort",
+                "sorting"
+              ]
+            },
+            {
+              "id": "concept:knapsack",
+              "hits": 6,
+              "matched": [
+                "0 1 knapsack",
+                "knapsack",
+                "subset sum"
+              ]
+            },
+            {
+              "id": "concept:trees",
+              "hits": 6,
+              "matched": [
+                "tree",
+                "trees"
+              ]
+            },
+            {
+              "id": "concept:graphs_representation",
+              "hits": 4,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:shortest_paths",
+              "hits": 3,
+              "matched": [
+                "bellman ford",
+                "floyd warshall",
+                "shortest paths"
+              ]
+            },
+            {
+              "id": "concept:string_matching",
+              "hits": 3,
+              "matched": [
+                "kmp",
+                "rabin karp",
+                "string matching"
+              ]
+            },
+            {
+              "id": "concept:arrays",
+              "hits": 2,
+              "matched": [
+                "array",
+                "arrays"
+              ]
+            },
+            {
+              "id": "concept:backtracking",
+              "hits": 2,
+              "matched": [
+                "backtracking",
+                "n queens"
+              ]
+            },
+            {
+              "id": "concept:binary_search",
+              "hits": 2,
+              "matched": [
+                "binary search"
+              ]
+            },
+            {
+              "id": "concept:binary_search_trees",
+              "hits": 2,
+              "matched": [
+                "binary search tree",
+                "binary search trees"
+              ]
+            },
+            {
+              "id": "concept:graph_traversal_dfs",
+              "hits": 2,
+              "matched": [
+                "connected components",
+                "dfs"
+              ]
+            },
+            {
+              "id": "concept:greedy",
+              "hits": 2,
+              "matched": [
+                "greedy",
+                "greedy algorithms"
+              ]
+            },
+            {
+              "id": "concept:heaps",
+              "hits": 2,
+              "matched": [
+                "heap",
+                "heaps"
+              ]
+            },
+            {
+              "id": "concept:minimum_spanning_tree",
+              "hits": 2,
+              "matched": [
+                "minimum spanning tree",
+                "spanning tree"
+              ]
+            },
+            {
+              "id": "concept:recurrence_relations",
+              "hits": 2,
+              "matched": [
+                "recurrence",
+                "recurrence relations"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 2,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:combinatorics",
+              "hits": 1,
+              "matched": [
+                "combinatorics"
+              ]
+            },
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide and conquer"
+              ]
+            },
+            {
+              "id": "concept:dynamic_programming",
+              "hits": 1,
+              "matched": [
+                "dynamic programming"
+              ]
+            },
+            {
+              "id": "concept:edit_distance",
+              "hits": 1,
+              "matched": [
+                "longest common subsequence"
+              ]
+            },
+            {
+              "id": "concept:graph_traversal_bfs",
+              "hits": 1,
+              "matched": [
+                "bfs"
+              ]
+            },
+            {
+              "id": "concept:matrix_operations",
+              "hits": 1,
+              "matched": [
+                "matrix"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 1,
+              "matched": [
+                "recursion"
+              ]
+            },
+            {
+              "id": "concept:topological_sort",
+              "hits": 1,
+              "matched": [
+                "topological sort"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE212",
+          "title": "Principles of Functional Languages",
+          "category": "CSE",
+          "ltp": "2-0-2",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:arrays",
+              "hits": 2,
+              "matched": [
+                "lists"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 2,
+              "matched": [
+                "recursion"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 2,
+              "matched": [
+                "data types"
+              ]
+            },
+            {
+              "id": "concept:string_matching",
+              "hits": 1,
+              "matched": [
+                "pattern matching"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE213",
+          "title": "Computer Organization and Architecture",
+          "category": "ENGG",
+          "ltp": "3-1-0",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:computer_architecture_basics",
+              "hits": 2,
+              "matched": [
+                "pipelining"
+              ]
+            },
+            {
+              "id": "concept:paging_and_segmentation",
+              "hits": 2,
+              "matched": [
+                "page table",
+                "tlb"
+              ]
+            },
+            {
+              "id": "concept:caching_and_locality",
+              "hits": 1,
+              "matched": [
+                "cache"
+              ]
+            },
+            {
+              "id": "concept:virtual_memory",
+              "hits": 1,
+              "matched": [
+                "virtual memory"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE214",
+          "title": "Operating Systems",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 10,
+              "matched": [
+                "process",
+                "thread"
+              ]
+            },
+            {
+              "id": "concept:concurrency_synchronisation",
+              "hits": 5,
+              "matched": [
+                "critical section",
+                "semaphore",
+                "synchronization"
+              ]
+            },
+            {
+              "id": "concept:paging_and_segmentation",
+              "hits": 5,
+              "matched": [
+                "paging",
+                "paging and segmentation",
+                "segmentation"
+              ]
+            },
+            {
+              "id": "concept:deadlocks",
+              "hits": 4,
+              "matched": [
+                "deadlock",
+                "deadlocks"
+              ]
+            },
+            {
+              "id": "concept:file_systems",
+              "hits": 3,
+              "matched": [
+                "directory structure",
+                "file system",
+                "file systems"
+              ]
+            },
+            {
+              "id": "concept:memory_management",
+              "hits": 3,
+              "matched": [
+                "memory allocation",
+                "memory management"
+              ]
+            },
+            {
+              "id": "concept:page_replacement",
+              "hits": 2,
+              "matched": [
+                "page replacement",
+                "thrashing"
+              ]
+            },
+            {
+              "id": "concept:process_scheduling",
+              "hits": 2,
+              "matched": [
+                "cpu scheduling",
+                "scheduling algorithms"
+              ]
+            },
+            {
+              "id": "concept:inter_process_communication",
+              "hits": 1,
+              "matched": [
+                "inter process communication"
+              ]
+            },
+            {
+              "id": "concept:system_calls",
+              "hits": 1,
+              "matched": [
+                "system calls"
+              ]
+            },
+            {
+              "id": "concept:virtual_memory",
+              "hits": 1,
+              "matched": [
+                "virtual memory"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23LSE211",
+          "title": "Life Skills for Engineers II",
+          "category": "HUM",
+          "ltp": "1-0-2",
+          "credits": "2",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "value",
+          "title": "Amrita Value Programme II",
+          "credits": "1"
+        },
+        {
+          "kind": "free",
+          "title": "Free Elective I",
+          "credits": "2"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "courses": [
+        {
+          "code": "23CSE301",
+          "title": "Machine Learning",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:ensemble_methods",
+              "hits": 4,
+              "matched": [
+                "adaboost",
+                "bagging",
+                "boosting",
+                "random forest"
+              ]
+            },
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 4,
+              "matched": [
+                "mlp",
+                "neural network",
+                "neural networks",
+                "perceptron"
+              ]
+            },
+            {
+              "id": "concept:clustering",
+              "hits": 2,
+              "matched": [
+                "clustering",
+                "k means"
+              ]
+            },
+            {
+              "id": "concept:decision_trees",
+              "hits": 2,
+              "matched": [
+                "decision tree",
+                "decision trees"
+              ]
+            },
+            {
+              "id": "concept:dimensionality_reduction",
+              "hits": 2,
+              "matched": [
+                "dimensionality reduction",
+                "principal component analysis"
+              ]
+            },
+            {
+              "id": "concept:k_nearest_neighbours",
+              "hits": 2,
+              "matched": [
+                "k nearest neighbours",
+                "nearest neighbour classifier"
+              ]
+            },
+            {
+              "id": "concept:ml_problem_framing",
+              "hits": 2,
+              "matched": [
+                "supervised learning",
+                "unsupervised learning"
+              ]
+            },
+            {
+              "id": "concept:regression_metrics",
+              "hits": 2,
+              "matched": [
+                "r2 score",
+                "rmse"
+              ]
+            },
+            {
+              "id": "concept:regularisation",
+              "hits": 2,
+              "matched": [
+                "lasso",
+                "regularization"
+              ]
+            },
+            {
+              "id": "concept:support_vector_machines",
+              "hits": 2,
+              "matched": [
+                "support vector machine",
+                "support vector machines"
+              ]
+            },
+            {
+              "id": "concept:feature_engineering",
+              "hits": 1,
+              "matched": [
+                "feature selection"
+              ]
+            },
+            {
+              "id": "concept:loss_functions",
+              "hits": 1,
+              "matched": [
+                "cost function"
+              ]
+            },
+            {
+              "id": "concept:naive_bayes",
+              "hits": 1,
+              "matched": [
+                "naive bayes"
+              ]
+            },
+            {
+              "id": "concept:probability_for_ml",
+              "hits": 1,
+              "matched": [
+                "mle"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE302",
+          "title": "Computer Networks",
+          "category": "CSE",
+          "ltp": "3-1-2",
+          "credits": "5",
+          "concepts": [
+            {
+              "id": "concept:tcp_vs_udp",
+              "hits": 6,
+              "matched": [
+                "connection oriented",
+                "tcp",
+                "transport layer",
+                "udp"
+              ]
+            },
+            {
+              "id": "concept:routing",
+              "hits": 3,
+              "matched": [
+                "routing"
+              ]
+            },
+            {
+              "id": "concept:congestion_control",
+              "hits": 2,
+              "matched": [
+                "congestion control"
+              ]
+            },
+            {
+              "id": "concept:dns",
+              "hits": 1,
+              "matched": [
+                "dns"
+              ]
+            },
+            {
+              "id": "concept:http_and_rest",
+              "hits": 1,
+              "matched": [
+                "http"
+              ]
+            },
+            {
+              "id": "concept:https_and_tls",
+              "hits": 1,
+              "matched": [
+                "https"
+              ]
+            },
+            {
+              "id": "concept:osi_and_tcp_ip_model",
+              "hits": 1,
+              "matched": [
+                "network layers"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE303",
+          "title": "Theory of Computation",
+          "category": "CSE",
+          "ltp": "3-1-0",
+          "credits": "4",
+          "concepts": []
+        },
+        {
+          "code": "23CSE304",
+          "title": "Embedded Systems",
+          "category": "ENGG",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:testing_and_debugging",
+              "hits": 2,
+              "matched": [
+                "debugging",
+                "testing and debugging"
+              ]
+            },
+            {
+              "id": "concept:abstraction_and_interfaces",
+              "hits": 1,
+              "matched": [
+                "abstraction"
+              ]
+            },
+            {
+              "id": "concept:computer_architecture_basics",
+              "hits": 1,
+              "matched": [
+                "registers"
+              ]
+            },
+            {
+              "id": "concept:concurrency_synchronisation",
+              "hits": 1,
+              "matched": [
+                "synchronization"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23LSE301",
+          "title": "Life Skills for Engineers III",
+          "category": "HUM",
+          "ltp": "1-0-2",
+          "credits": "2",
+          "concepts": [
+            {
+              "id": "concept:probability_for_ml",
+              "hits": 2,
+              "matched": [
+                "bayes theorem",
+                "conditional probability"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23LIV390",
+          "title": "Live-in –Labs I",
+          "category": "ENGG",
+          "ltp": "[3]-0-0",
+          "credits": "[3]",
+          "concepts": []
+        },
+        {
+          "code": "23ENV300",
+          "title": "Environmental Science",
+          "category": "HUM",
+          "ltp": null,
+          "credits": "P/F",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "professional",
+          "title": "Professional Elective I",
+          "credits": "3"
+        },
+        {
+          "kind": "professional",
+          "title": "Professional Elective II",
+          "credits": "3"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "courses": [
+        {
+          "code": "23CSE311",
+          "title": "Software Engineering",
+          "category": "ENGG",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": []
+        },
+        {
+          "code": "23CSE312",
+          "title": "Distributed Systems",
+          "category": "ENGG",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:file_systems",
+              "hits": 4,
+              "matched": [
+                "file system",
+                "file systems"
+              ]
+            },
+            {
+              "id": "concept:deadlocks",
+              "hits": 2,
+              "matched": [
+                "deadlock",
+                "deadlocks"
+              ]
+            },
+            {
+              "id": "concept:inter_process_communication",
+              "hits": 2,
+              "matched": [
+                "message passing",
+                "shared memory"
+              ]
+            },
+            {
+              "id": "concept:concurrency_control",
+              "hits": 1,
+              "matched": [
+                "concurrency control"
+              ]
+            },
+            {
+              "id": "concept:concurrency_synchronisation",
+              "hits": 1,
+              "matched": [
+                "synchronization"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE313",
+          "title": "Foundations of Cyber Security",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE314",
+          "title": "Compiler Design",
+          "category": "CSE",
+          "ltp": "3-0-2",
+          "credits": "4",
+          "concepts": [
+            {
+              "id": "concept:stacks",
+              "hits": 2,
+              "matched": [
+                "stack",
+                "stacks"
+              ]
+            },
+            {
+              "id": "concept:control_flow",
+              "hits": 1,
+              "matched": [
+                "control flow"
+              ]
+            },
+            {
+              "id": "concept:hashing",
+              "hits": 1,
+              "matched": [
+                "hash table"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE399",
+          "title": "Project Phase-I",
+          "category": "PRJ",
+          "ltp": "0-0-6",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23LSE311",
+          "title": "Life Skills for Engineers IV",
+          "category": "HUM",
+          "ltp": "1-0-2",
+          "credits": "2",
+          "concepts": []
+        },
+        {
+          "code": "23LIV490",
+          "title": "Live-in –Labs II",
+          "category": "ENGG",
+          "ltp": "[3]-0-0",
+          "credits": "[3]",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "professional",
+          "title": "Professional Elective III",
+          "credits": "3"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "courses": [
+        {
+          "code": "23CSE401",
+          "title": "Fundamentals of Artificial Intelligence",
+          "category": "CSE",
+          "ltp": "2-0-2",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE498",
+          "title": "Project - Phase II",
+          "category": "PRJ",
+          "ltp": "0-0-12",
+          "credits": "6",
+          "concepts": []
+        },
+        {
+          "code": "23LAW300",
+          "title": "Indian Constitution",
+          "category": "HUM",
+          "ltp": null,
+          "credits": "P/F",
+          "concepts": []
+        }
+      ],
+      "slots": [
+        {
+          "kind": "professional",
+          "title": "Professional Elective IV",
+          "credits": "3"
+        },
+        {
+          "kind": "professional",
+          "title": "Professional Elective V",
+          "credits": "3"
+        },
+        {
+          "kind": "professional",
+          "title": "Professional Elective VI",
+          "credits": "3"
+        },
+        {
+          "kind": "free",
+          "title": "Free Elective II",
+          "credits": "2"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "courses": [
+        {
+          "code": "23CSE499",
+          "title": "Project - Phase III",
+          "category": "PRJ",
+          "ltp": "0-0-12",
+          "credits": "6",
+          "concepts": []
+        }
+      ],
+      "slots": []
+    }
+  ],
+  "electives": [
+    {
+      "name": "Electives in Cyber Security",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CSE331",
+          "title": "Cryptography",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE332",
+          "title": "Information Security",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE333",
+          "title": "Secure Coding",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:exception_handling",
+              "hits": 2,
+              "matched": [
+                "error handling"
+              ]
+            },
+            {
+              "id": "concept:sql_queries",
+              "hits": 1,
+              "matched": [
+                "sql"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE334",
+          "title": "Cyber Forensics and Malware",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:file_systems",
+              "hits": 2,
+              "matched": [
+                "file system",
+                "file systems"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 2,
+              "matched": [
+                "process"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 2,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:network_security_basics",
+              "hits": 1,
+              "matched": [
+                "firewall"
+              ]
+            },
+            {
+              "id": "concept:paging_and_segmentation",
+              "hits": 1,
+              "matched": [
+                "segmentation"
+              ]
+            },
+            {
+              "id": "concept:testing_and_debugging",
+              "hits": 1,
+              "matched": [
+                "debugging"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE335",
+          "title": "Block Chain and its Applications",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE336",
+          "title": "Secure Networks",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:https_and_tls",
+              "hits": 2,
+              "matched": [
+                "ssl",
+                "tls"
+              ]
+            },
+            {
+              "id": "concept:network_security_basics",
+              "hits": 2,
+              "matched": [
+                "firewall",
+                "network security basics"
+              ]
+            },
+            {
+              "id": "concept:paging_and_segmentation",
+              "hits": 1,
+              "matched": [
+                "segmentation"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electives in Computer Networks",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CSE341",
+          "title": "Wireless Sensor Networks",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE342",
+          "title": "Advanced Computer Networks",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:routing",
+              "hits": 5,
+              "matched": [
+                "bgp",
+                "ospf",
+                "routing"
+              ]
+            },
+            {
+              "id": "concept:tcp_vs_udp",
+              "hits": 2,
+              "matched": [
+                "tcp",
+                "transport layer"
+              ]
+            },
+            {
+              "id": "concept:tcp_reliability",
+              "hits": 1,
+              "matched": [
+                "sliding window protocol"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE343",
+          "title": "Wireless and Mobile Networks",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:tcp_vs_udp",
+              "hits": 4,
+              "matched": [
+                "tcp",
+                "transport layer"
+              ]
+            },
+            {
+              "id": "concept:routing",
+              "hits": 1,
+              "matched": [
+                "routing"
+              ]
+            },
+            {
+              "id": "concept:tcp_reliability",
+              "hits": 1,
+              "matched": [
+                "retransmission"
+              ]
+            },
+            {
+              "id": "concept:transactions_acid",
+              "hits": 1,
+              "matched": [
+                "transaction"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE344",
+          "title": "Modern Cellular Wireless Networks",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE345",
+          "title": "Software Defined Networks",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "Electives in Data Science",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CSE351",
+          "title": "Foundations of Data Science",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:probability_for_ml",
+              "hits": 2,
+              "matched": [
+                "bayes theorem",
+                "probability distributions"
+              ]
+            },
+            {
+              "id": "concept:linear_regression",
+              "hits": 1,
+              "matched": [
+                "linear regression"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE352",
+          "title": "Big Data Analytics",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:arrays",
+              "hits": 3,
+              "matched": [
+                "array",
+                "arrays",
+                "lists"
+              ]
+            },
+            {
+              "id": "concept:classes_and_objects",
+              "hits": 3,
+              "matched": [
+                "class",
+                "classes and objects",
+                "object"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 3,
+              "matched": [
+                "recursion",
+                "recursive",
+                "tail recursion"
+              ]
+            },
+            {
+              "id": "concept:string_matching",
+              "hits": 1,
+              "matched": [
+                "pattern matching"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE353",
+          "title": "Data Visualization",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE354",
+          "title": "Database Management Systems for Data Science",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:sql_queries",
+              "hits": 9,
+              "matched": [
+                "sql"
+              ]
+            },
+            {
+              "id": "concept:aggregation_and_grouping",
+              "hits": 1,
+              "matched": [
+                "group by"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE355",
+          "title": "Mining of Massive Datasets",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:clustering",
+              "hits": 2,
+              "matched": [
+                "clustering"
+              ]
+            },
+            {
+              "id": "concept:dimensionality_reduction",
+              "hits": 1,
+              "matched": [
+                "dimensionality reduction"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE356",
+          "title": "Social Network Analytics",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:graphs_representation",
+              "hits": 7,
+              "matched": [
+                "graph representation",
+                "graphs"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE357",
+          "title": "Time Series Analysis and Forecasting",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "Electives in Cyber Physical Systems",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CSE361",
+          "title": "Real Time Operating Systems for Cyber- Physical Systems",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:file_systems",
+              "hits": 2,
+              "matched": [
+                "file system",
+                "file systems"
+              ]
+            },
+            {
+              "id": "concept:process_scheduling",
+              "hits": 2,
+              "matched": [
+                "scheduling algorithms"
+              ]
+            },
+            {
+              "id": "concept:concurrency_synchronisation",
+              "hits": 1,
+              "matched": [
+                "synchronization"
+              ]
+            },
+            {
+              "id": "concept:memory_management",
+              "hits": 1,
+              "matched": [
+                "memory management"
+              ]
+            },
+            {
+              "id": "concept:testing_and_debugging",
+              "hits": 1,
+              "matched": [
+                "debugging"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE362",
+          "title": "Edge Computing",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE363",
+          "title": "Cloud Computing",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE364",
+          "title": "Cyber Physical Systems",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE365",
+          "title": "Internet of Things",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "Electives in Computer Vision",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CSE371",
+          "title": "Digital Image Processing",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE372",
+          "title": "Computer Graphics and Animation",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE373",
+          "title": "Computer Vision",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE374",
+          "title": "Video Analysis",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE375",
+          "title": "Augmented and Virtual Reality",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "Electives in Artificial Intelligence",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CSE470",
+          "title": "Semantic Web",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE471",
+          "title": "Natural Language Processing",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE472",
+          "title": "Artificial Intelligence and Robotics",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE473",
+          "title": "Neural Networks and Deep Learning",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 11,
+              "matched": [
+                "activation function",
+                "mlp",
+                "neural network",
+                "neural network basics",
+                "neural networks",
+                "perceptron",
+                "relu"
+              ]
+            },
+            {
+              "id": "concept:convolutional_networks",
+              "hits": 4,
+              "matched": [
+                "cnn",
+                "convolutional neural network",
+                "convolutional neural networks"
+              ]
+            },
+            {
+              "id": "concept:gradient_descent",
+              "hits": 4,
+              "matched": [
+                "gradient descent",
+                "learning rate",
+                "mini batch gradient descent"
+              ]
+            },
+            {
+              "id": "concept:sequence_models",
+              "hits": 3,
+              "matched": [
+                "gru",
+                "lstm",
+                "recurrent neural network"
+              ]
+            },
+            {
+              "id": "concept:attention_and_transformers",
+              "hits": 2,
+              "matched": [
+                "transformer",
+                "transformers"
+              ]
+            },
+            {
+              "id": "concept:backpropagation",
+              "hits": 2,
+              "matched": [
+                "backpropagation"
+              ]
+            },
+            {
+              "id": "concept:embeddings",
+              "hits": 2,
+              "matched": [
+                "embeddings",
+                "word embeddings"
+              ]
+            },
+            {
+              "id": "concept:loss_functions",
+              "hits": 2,
+              "matched": [
+                "loss function",
+                "loss functions"
+              ]
+            },
+            {
+              "id": "concept:optimisers",
+              "hits": 2,
+              "matched": [
+                "momentum",
+                "rmsprop"
+              ]
+            },
+            {
+              "id": "concept:bias_variance_tradeoff",
+              "hits": 1,
+              "matched": [
+                "bias variance trade off"
+              ]
+            },
+            {
+              "id": "concept:dimensionality_reduction",
+              "hits": 1,
+              "matched": [
+                "dimensionality reduction"
+              ]
+            },
+            {
+              "id": "concept:overfitting",
+              "hits": 1,
+              "matched": [
+                "overfitting"
+              ]
+            },
+            {
+              "id": "concept:regularisation",
+              "hits": 1,
+              "matched": [
+                "regularization"
+              ]
+            },
+            {
+              "id": "concept:transfer_learning",
+              "hits": 1,
+              "matched": [
+                "transfer learning"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE474",
+          "title": "Computational Intelligence",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 6,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:backpropagation",
+              "hits": 1,
+              "matched": [
+                "backpropagation"
+              ]
+            },
+            {
+              "id": "concept:sequence_models",
+              "hits": 1,
+              "matched": [
+                "recurrent neural network"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE475",
+          "title": "Generative AI",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE476",
+          "title": "Conversational AI",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE477",
+          "title": "Reinforcement Learning",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE478",
+          "title": "Drones and Robotics",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE479",
+          "title": "Machine Learning with Graphs",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:graphs_representation",
+              "hits": 19,
+              "matched": [
+                "graph representation",
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:neural_network_basics",
+              "hits": 4,
+              "matched": [
+                "neural network",
+                "neural networks"
+              ]
+            },
+            {
+              "id": "concept:attention_and_transformers",
+              "hits": 2,
+              "matched": [
+                "transformer",
+                "transformers"
+              ]
+            },
+            {
+              "id": "concept:matrix_operations",
+              "hits": 1,
+              "matched": [
+                "matrix"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE480",
+          "title": "AI for Industrial Decision Making",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "General Electives",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CSE451",
+          "title": "Graph Mining",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:graphs_representation",
+              "hits": 13,
+              "matched": [
+                "graphs"
+              ]
+            },
+            {
+              "id": "concept:clustering",
+              "hits": 8,
+              "matched": [
+                "clustering",
+                "hierarchical clustering",
+                "k means"
+              ]
+            },
+            {
+              "id": "concept:minimum_spanning_tree",
+              "hits": 2,
+              "matched": [
+                "minimum spanning tree",
+                "spanning tree"
+              ]
+            },
+            {
+              "id": "concept:trees",
+              "hits": 2,
+              "matched": [
+                "tree",
+                "trees"
+              ]
+            },
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide conquer"
+              ]
+            },
+            {
+              "id": "concept:shortest_paths",
+              "hits": 1,
+              "matched": [
+                "shortest paths"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE452",
+          "title": "Business Analytics",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:clustering",
+              "hits": 2,
+              "matched": [
+                "clustering",
+                "k means"
+              ]
+            },
+            {
+              "id": "concept:naive_bayes",
+              "hits": 2,
+              "matched": [
+                "naive bayes",
+                "naive bayes classifier"
+              ]
+            },
+            {
+              "id": "concept:dimensionality_reduction",
+              "hits": 1,
+              "matched": [
+                "principal component analysis"
+              ]
+            },
+            {
+              "id": "concept:linear_regression",
+              "hits": 1,
+              "matched": [
+                "linear regression"
+              ]
+            },
+            {
+              "id": "concept:logistic_regression",
+              "hits": 1,
+              "matched": [
+                "logistic regression"
+              ]
+            },
+            {
+              "id": "concept:overfitting",
+              "hits": 1,
+              "matched": [
+                "overfitting"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE453",
+          "title": "Competitive Programming",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:trees",
+              "hits": 8,
+              "matched": [
+                "tree",
+                "trees"
+              ]
+            },
+            {
+              "id": "concept:number_theory",
+              "hits": 6,
+              "matched": [
+                "gcd",
+                "lcm",
+                "number theory",
+                "primes"
+              ]
+            },
+            {
+              "id": "concept:arrays",
+              "hits": 2,
+              "matched": [
+                "array",
+                "arrays"
+              ]
+            },
+            {
+              "id": "concept:decision_trees",
+              "hits": 2,
+              "matched": [
+                "decision tree",
+                "decision trees"
+              ]
+            },
+            {
+              "id": "concept:fenwick_trees",
+              "hits": 2,
+              "matched": [
+                "fenwick tree",
+                "fenwick trees"
+              ]
+            },
+            {
+              "id": "concept:segment_trees",
+              "hits": 2,
+              "matched": [
+                "segment tree",
+                "segment trees"
+              ]
+            },
+            {
+              "id": "concept:combinatorics",
+              "hits": 1,
+              "matched": [
+                "combinatorics"
+              ]
+            },
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide and conquer"
+              ]
+            },
+            {
+              "id": "concept:dynamic_programming",
+              "hits": 1,
+              "matched": [
+                "dynamic programming"
+              ]
+            },
+            {
+              "id": "concept:greedy",
+              "hits": 1,
+              "matched": [
+                "greedy"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE454",
+          "title": "Concurrent Programming",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:divide_and_conquer",
+              "hits": 1,
+              "matched": [
+                "divide and conquer"
+              ]
+            },
+            {
+              "id": "concept:recursion",
+              "hits": 1,
+              "matched": [
+                "recursive"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE455",
+          "title": "Design Patterns",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:design_patterns",
+              "hits": 10,
+              "matched": [
+                "design patterns",
+                "factory pattern",
+                "observer pattern",
+                "singleton"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE456",
+          "title": "Domain Specific Languages",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE457",
+          "title": "Elements of Computing",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE458",
+          "title": "Embedded Programming",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:arrays",
+              "hits": 3,
+              "matched": [
+                "array",
+                "arrays",
+                "lists"
+              ]
+            },
+            {
+              "id": "concept:linked_lists",
+              "hits": 2,
+              "matched": [
+                "linked list",
+                "linked lists"
+              ]
+            },
+            {
+              "id": "concept:queues",
+              "hits": 2,
+              "matched": [
+                "queue",
+                "queues"
+              ]
+            },
+            {
+              "id": "concept:stacks",
+              "hits": 2,
+              "matched": [
+                "stack",
+                "stacks"
+              ]
+            },
+            {
+              "id": "concept:pointers_and_references",
+              "hits": 1,
+              "matched": [
+                "pointers"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 1,
+              "matched": [
+                "data types"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE459",
+          "title": "Fault tolerant Computing Systems",
+          "category": "ENGG",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:exception_handling",
+              "hits": 1,
+              "matched": [
+                "exceptions"
+              ]
+            },
+            {
+              "id": "concept:inter_process_communication",
+              "hits": 1,
+              "matched": [
+                "shared memory"
+              ]
+            },
+            {
+              "id": "concept:routing",
+              "hits": 1,
+              "matched": [
+                "routing"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE460",
+          "title": "Features in Modern Programming Languages",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:arrays",
+              "hits": 4,
+              "matched": [
+                "array",
+                "arrays"
+              ]
+            },
+            {
+              "id": "concept:exception_handling",
+              "hits": 4,
+              "matched": [
+                "exception handling",
+                "exceptions"
+              ]
+            },
+            {
+              "id": "concept:variables_and_types",
+              "hits": 3,
+              "matched": [
+                "data types",
+                "variables"
+              ]
+            },
+            {
+              "id": "concept:control_flow",
+              "hits": 2,
+              "matched": [
+                "control flow"
+              ]
+            },
+            {
+              "id": "concept:strings",
+              "hits": 2,
+              "matched": [
+                "string",
+                "strings"
+              ]
+            },
+            {
+              "id": "concept:pointers_and_references",
+              "hits": 1,
+              "matched": [
+                "pointers"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE461",
+          "title": "Full Stack Frameworks",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:http_and_rest",
+              "hits": 4,
+              "matched": [
+                "http",
+                "http methods",
+                "restful"
+              ]
+            },
+            {
+              "id": "concept:routing",
+              "hits": 2,
+              "matched": [
+                "routing"
+              ]
+            },
+            {
+              "id": "concept:classes_and_objects",
+              "hits": 1,
+              "matched": [
+                "class"
+              ]
+            },
+            {
+              "id": "concept:exception_handling",
+              "hits": 1,
+              "matched": [
+                "error handling"
+              ]
+            },
+            {
+              "id": "concept:https_and_tls",
+              "hits": 1,
+              "matched": [
+                "https"
+              ]
+            },
+            {
+              "id": "concept:indexing",
+              "hits": 1,
+              "matched": [
+                "indexing"
+              ]
+            },
+            {
+              "id": "concept:testing_and_debugging",
+              "hits": 1,
+              "matched": [
+                "debugging"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE462",
+          "title": "Multimedia Communication Systems",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:congestion_control",
+              "hits": 1,
+              "matched": [
+                "congestion control"
+              ]
+            },
+            {
+              "id": "concept:tcp_vs_udp",
+              "hits": 1,
+              "matched": [
+                "transport layer"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE463",
+          "title": "Quantum Computing",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:clustering",
+              "hits": 1,
+              "matched": [
+                "clustering"
+              ]
+            },
+            {
+              "id": "concept:linear_algebra_for_ml",
+              "hits": 1,
+              "matched": [
+                "linear algebra"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE464",
+          "title": "Formal Verification",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CSE465",
+          "title": "Mobile Application Development",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:http_and_rest",
+              "hits": 2,
+              "matched": [
+                "http",
+                "rest api"
+              ]
+            },
+            {
+              "id": "concept:classes_and_objects",
+              "hits": 1,
+              "matched": [
+                "class"
+              ]
+            },
+            {
+              "id": "concept:https_and_tls",
+              "hits": 1,
+              "matched": [
+                "https"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 1,
+              "matched": [
+                "multithreading"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23CSE466",
+          "title": "Parallel Programming",
+          "category": "CSE",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:concurrency_synchronisation",
+              "hits": 3,
+              "matched": [
+                "locks",
+                "race condition",
+                "synchronization"
+              ]
+            },
+            {
+              "id": "concept:computer_architecture_basics",
+              "hits": 2,
+              "matched": [
+                "pipelining"
+              ]
+            },
+            {
+              "id": "concept:deadlocks",
+              "hits": 2,
+              "matched": [
+                "deadlock",
+                "deadlocks"
+              ]
+            },
+            {
+              "id": "concept:inter_process_communication",
+              "hits": 1,
+              "matched": [
+                "inter process communication"
+              ]
+            },
+            {
+              "id": "concept:process_vs_thread",
+              "hits": 1,
+              "matched": [
+                "process"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PROFESSIONAL ELECTIVES UNDER SCIENCE STREAM",
+      "kind": "professional",
+      "courses": [
+        {
+          "code": "23CHY240",
+          "title": "Computational Chemistry and Molecular Modelling",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CHY241",
+          "title": "Electrochemical Energy Systems and Processes",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CHY242",
+          "title": "Fuels and Combustion",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CHY243",
+          "title": "Green Chemistry and Technology",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CHY244",
+          "title": "Instrumental Methods of Analysis",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CHY245",
+          "title": "Batteries and Fuel Cells",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23CHY246",
+          "title": "Corrosion Science",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23PHY240",
+          "title": "Advanced Classical Dynamics",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23PHY241",
+          "title": "Electrical Engineering Materials",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23PHY242",
+          "title": "Physics of Lasers and Applications",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23PHY243",
+          "title": "Concepts of Nanophysics and Nanotechnology",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23PHY244",
+          "title": "Physics of Semiconductor Devices",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23PHY245",
+          "title": "Astrophysics",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23MAT240",
+          "title": "Statistical Inference",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": [
+            {
+              "id": "concept:linear_regression",
+              "hits": 1,
+              "matched": [
+                "linear regression"
+              ]
+            },
+            {
+              "id": "concept:logistic_regression",
+              "hits": 1,
+              "matched": [
+                "logistic regression"
+              ]
+            }
+          ]
+        },
+        {
+          "code": "23MAT241",
+          "title": "Introduction to Game Theory",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        },
+        {
+          "code": "23MAT242",
+          "title": "Numerical Methods and Optimization",
+          "category": "SCI",
+          "ltp": "3-0-0",
+          "credits": "3",
+          "concepts": []
+        }
+      ]
+    }
+  ]
+}

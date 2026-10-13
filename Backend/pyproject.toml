@@ -42,6 +42,10 @@ dev = [
 # not a dependency of the module - three internal surfaces do not get to make
 # `pip install` slower for everyone.
 ops = ["streamlit>=1.38"]
+# `jobs/curricula.py`, which builds packages/knowledge/curricula/ from the
+# college's curriculum PDFs. Run when a curriculum is published, never on a
+# request path, so it is not a dependency of the module either.
+curricula = ["pymupdf>=1.24"]
 
 [tool.setuptools.packages.find]
 # This repo holds ONE module. Shared wiring comes from the `ai-core` package.

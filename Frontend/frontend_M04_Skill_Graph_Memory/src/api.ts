@@ -11,6 +11,8 @@ import type {
   BottlenecksResponse,
   ConceptDetail,
   ConsentRecord,
+  Curriculum,
+  CurriculumSummary,
   EvidenceResponse,
   MasteryResponse,
   ProfileUpdate,
@@ -27,6 +29,8 @@ export const m04Keys = {
   concept: (id: string) => ["m04", "concept", id] as const,
   consent: (candidate: string) => ["m04", "consent", candidate] as const,
   profile: (candidate: string) => ["m04", "profile", candidate] as const,
+  curricula: () => ["m04", "curricula"] as const,
+  curriculum: (id: string) => ["m04", "curriculum", id] as const,
 };
 
 /**
@@ -122,6 +126,26 @@ export function useSaveProfile(candidate: string | null) {
     mutationFn: (update: ProfileUpdate) =>
       api.put<StudentProfile>(`/v1/candidates/${candidate}/profile`, update),
     onSuccess: (profile) => client.setQueryData(m04Keys.profile(candidate ?? ""), profile),
+  });
+}
+
+/** The programmes a student can pick at sign-in. Changes only when the college
+ *  publishes a curriculum, so it is fetched once per visit. */
+export function useCurricula() {
+  return useQuery({
+    queryKey: m04Keys.curricula(),
+    queryFn: () => api.get<CurriculumSummary[]>("/v1/curricula"),
+    staleTime: Infinity,
+  });
+}
+
+/** One programme: its semesters, elective baskets, and what each course teaches. */
+export function useCurriculum(id: string | null | undefined) {
+  return useQuery({
+    queryKey: m04Keys.curriculum(id ?? ""),
+    enabled: Boolean(id),
+    queryFn: () => api.get<Curriculum>(`/v1/curricula/${encodeURIComponent(id ?? "")}`),
+    staleTime: Infinity,
   });
 }
 

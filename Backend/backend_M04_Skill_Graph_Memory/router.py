@@ -42,6 +42,8 @@ from pydantic import BaseModel, Field
 from sqlmodel import Session
 
 from . import service, store
+from .curricula import coursework as coursework_for
+from .curricula import load_curricula
 from .models import RecordResult
 from .ontology import UnknownConcept, load
 from .store import ContendedMastery, NoConsent, ObservationIn, UnresolvableEvidence
@@ -149,6 +151,29 @@ def resolve(payload: ResolveRequest, session: Session = Depends(get_session)) ->
         "unresolved": sorted(label for label, cid in resolved.items() if cid is None),
         "ontology_version": graph.version,
     }
+
+
+# ─────────────────────────────────────────────────────────────
+#  CURRICULA  (public) — what the sign-in step offers
+# ─────────────────────────────────────────────────────────────
+
+
+@router.get("/v1/curricula", tags=["curricula"])
+def list_curricula() -> list[dict]:
+    """The programmes a student can pick at sign-in, built from the college's
+    own curriculum PDFs (`jobs/curricula.py`)."""
+    return [c.summary() for c in load_curricula().values()]
+
+
+@router.get("/v1/curricula/{curriculum_id}", tags=["curricula"])
+def get_curriculum(curriculum_id: str) -> dict:
+    """Every semester's courses and elective slots, the elective baskets, and
+    for each course the concepts its syllabus teaches, named, with the
+    syllabus words that matched."""
+    curriculum = load_curricula().get(curriculum_id)
+    if curriculum is None:
+        raise HTTPException(status_code=404, detail=f"no curriculum {curriculum_id!r}")
+    return curriculum.document
 
 
 # ─────────────────────────────────────────────────────────────
@@ -405,6 +430,11 @@ class ProfileIn(BaseModel):
     drives: list[DriveIn] | None = Field(default=None, max_length=10)
     year: str | None = Field(default=None, max_length=20)
     branch: str | None = Field(default=None, max_length=60)
+    #: An id from `/v1/curricula`, or "" for a programme without one.
+    curriculum_id: str | None = Field(default=None, max_length=80)
+    semester: int | None = Field(default=None, ge=1, le=8)
+    #: Codes from that curriculum: this semester's courses and chosen electives.
+    courses: list[str] | None = Field(default=None, max_length=24)
     weekly_goal: int | None = Field(default=None, ge=1, le=7)
     reminder_time: str | None = Field(default=None, pattern=r"^$|^([01]\d|2[0-3]):[0-5]\d$")
     #: True from the welcome step: stamps `onboarded_at` the first time.
@@ -419,6 +449,9 @@ class ProfileOut(BaseModel):
     drives: list[dict]
     year: str
     branch: str
+    curriculum_id: str
+    semester: int | None
+    courses: list[str]
     weekly_goal: int
     reminder_time: str
     onboarded_at: datetime | None
@@ -441,13 +474,57 @@ def write_profile(
     body: ProfileIn, candidate_id: uuid.UUID, session: Session = Depends(get_session)
 ) -> ProfileOut:
     fields = body.model_dump(exclude_unset=True, exclude={"onboarded"}, mode="json")
+    # `semester: null` is an answer ("graduated", or "I'd rather not say"),
+    # unlike every other field, where null means "not part of this save".
+    clear_semester = "semester" in fields and fields["semester"] is None
     fields = {k: v for k, v in fields.items() if v is not None}
+    if clear_semester:
+        fields["semester"] = None
     if "drives" in fields:
         # Soonest first, so "your next drive" is the first row everywhere.
         fields["drives"] = sorted(fields["drives"], key=lambda d: d["date"])
+    if "curriculum_id" in fields or "courses" in fields:
+        _check_courses(session, candidate_id, fields)
     return _profile_out(
         service.write_profile(session, candidate_id, fields, onboarded=body.onboarded)
     )
+
+
+@router.get("/v1/candidates/{candidate_id}/coursework", tags=["curricula"])
+def read_coursework(candidate_id: uuid.UUID, session: Session = Depends(get_session)) -> dict:
+    """The concepts the student's courses have taught so far: this semester's
+    ticked courses, then every earlier semester's (`curricula.coursework`).
+    M06 plans a mixed interview from it (2026-10-13). Empty, never 404, for a
+    student who has not said their programme or semester."""
+    profile = service.read_profile(session, candidate_id)
+    curriculum = load_curricula().get(profile.curriculum_id) if profile.curriculum_id else None
+    return coursework_for(curriculum, profile.semester, profile.year, list(profile.courses or []))
+
+
+def _check_courses(session: Session, candidate_id: uuid.UUID, fields: dict) -> None:
+    """A course code is an exact value a planner will act on, so it is
+    checked against the curriculum, never trusted (422 names what is wrong).
+    Changing programme without naming courses clears them: the old codes
+    belong to the other curriculum."""
+    current = service.read_profile(session, candidate_id)
+    curriculum_id = fields.get("curriculum_id", current.curriculum_id)
+    curricula = load_curricula()
+    if curriculum_id and curriculum_id not in curricula:
+        raise HTTPException(status_code=422, detail=f"no curriculum {curriculum_id!r}")
+    if "courses" not in fields:
+        if curriculum_id != current.curriculum_id:
+            fields["courses"] = []
+        return
+    courses = list(dict.fromkeys(fields["courses"]))  # one of each, order kept
+    if courses and not curriculum_id:
+        raise HTTPException(status_code=422, detail="courses need a curriculum_id")
+    unknown = [c for c in courses if curriculum_id and c not in curricula[curriculum_id].courses]
+    if unknown:
+        raise HTTPException(
+            status_code=422,
+            detail=f"not in {curriculum_id}: {', '.join(unknown)}",
+        )
+    fields["courses"] = courses
 
 
 @router.get("/v1/candidates/{candidate_id}/export", tags=["rights"])
