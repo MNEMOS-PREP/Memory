@@ -3,7 +3,7 @@
 
 > **Completion: 95%** — 25 of 28 functional requirements met, 3 partially. Three requirements are declared and unfed: the semantic tier's fields, its versioning and its failure signatures all exist and are read, and nothing writes a `MemoryFact` because the nightly distiller is not built. The skill graph has had a screen since 2026-10-03 (`/skills` in the shell); the spec's six UI moments sit outside the FR table, so this figure does not count them either way.
 >
-> _Method: `(met + ½ × partial) ÷ total`, audited against shipped code, 2026-08-28; re-checked 2026-10-04: unchanged, the distiller is still not built. One measure applied the same way to all nineteen modules so they compare; it counts requirements, not screens or gates._
+> _Method: `(met + ½ × partial) ÷ total`, audited against shipped code, 2026-08-28; re-checked 2026-10-04 and 2026-10-17: unchanged, the distiller is still not built. One measure applied the same way to all nineteen modules so they compare; it counts requirements, not screens or gates._
 
 Running list for **M04 Candidate Skill Graph & Memory Core**.
 Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
@@ -17,6 +17,33 @@ Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 - **Repo:** `Memory`
 
 Legend: ✅ done · 🟡 partly done · ⬜ not started
+
+### 2026-10-07/13 — machine-learning concepts, the college's curricula, an honest count
+
+- ✅ **36 machine-learning concepts** (`f710a2c`, the user's decision): the `ml`
+  domain was declared with none, so asking for a machine-learning interview
+  gave DSA. Added from public syllabi (CS229, Google's ML Crash Course,
+  CS231n/CS224n), topic names only — foundations, models, deep learning.
+  Prerequisite edges acyclic, no alias collisions, `reviewed: false` like
+  every other edge. The ontology is 120 + 36.
+- ✅ **Curricula from the college's own PDFs** (`55a01bd`): `jobs/curricula.py`
+  builds `packages/knowledge/curricula/<id>.json` for B.Tech CSE 2023 and
+  B.Tech CSE-AI 2022 — every semester's courses, elective slots and baskets,
+  and each course's ontology concepts with the syllabus words that matched.
+  Tables are read by their cells (PyMuPDF) and every title is checked against
+  its syllabus page; a single word maps only where the same syllabus teaches
+  that domain by phrase ("functions" in Calculus maps to nothing).
+  `GET /v1/curricula[/{id}]`; the profile gains `curriculum_id`, `semester`
+  and `courses` (an unknown code is a 422); `GET /v1/candidates/{id}/coursework`
+  answers what the student's courses have taught so far, and M06 plans a
+  mixed interview from it. The shell's welcome step and Settings ask for them.
+- ✅ **The skill graph counts what was tested** (`a7a9efe`): a topic moved only
+  by its neighbours' answers is listed with the untested ones, so the count is
+  the rows shown; every bar starts at one x (Core's `labelWidth`). Frontend on
+  `@ai/core` v0.36.0.
+- No requirement moves: the curricula and the profile sit outside §4, and the
+  distiller is still not built (checked 2026-10-17: `jobs/` holds curricula,
+  decay and simulate, and nothing writes a `MemoryFact`).
 
 ### 2026-10-04 — the student's profile, and a skill graph that teaches
 
@@ -145,14 +172,14 @@ origin channel stamped at capture, and a privacy filter before storage.
 
 | | |
 |---|---|
-| Status | **Built.** FR coverage was audited on 2026-08-28 (the header's counts) and re-checked on 2026-10-04. The per-requirement table was never written into this file, and the §13 acceptance gates have not been walked one by one |
-| Backend tests passing | **151** |
+| Status | **Built.** FR coverage was audited on 2026-08-28 (the header's counts) and re-checked on 2026-10-04 and 2026-10-17. The per-requirement table was never written into this file, and the §13 acceptance gates have not been walked one by one |
+| Backend tests passing | **170** |
 | Release gates (`-m gate`) | **16** |
 | Frontend | **`/skills`** — the skill graph, mounted in the shell (2026-10-03) |
 
-*Counted 2026-10-04 by running the suite, not by reading this file.*
+*Counted 2026-10-17 by running the suite, not by reading this file.*
 
-> **Re-checked 2026-10-04:** the semantic tier is still unfed. `MemoryFact`
+> **Re-checked 2026-10-17:** the semantic tier is still unfed. `MemoryFact`
 > has readers (`service.py`) and no writer, because the nightly distiller does
 > not exist — so the header's three partial requirements stand.
 
