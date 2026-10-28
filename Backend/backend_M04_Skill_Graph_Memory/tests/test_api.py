@@ -36,13 +36,13 @@ def test_deps_says_this_module_is_a_root(client):
 def test_status_reports_the_ontology_and_whether_it_was_reviewed(client):
     body = client.get("/status").json()
     assert body["id"] == "M04"
-    assert body["ontology"]["concepts"] == 156
+    assert body["ontology"]["concepts"] == 165
     assert body["ontology"]["faculty_reviewed"] is False
 
 
 def test_concepts_are_public_and_filterable(client):
     body = client.get("/v1/concepts", params={"domain": "communication"}).json()
-    assert body["count"] == 156
+    assert body["count"] == 165
     assert all(c["domain"] == "communication" for c in body["concepts"])
     assert len(body["concepts"]) == 15
 
@@ -82,7 +82,7 @@ def test_mastery_separates_measured_from_untested(client, session, candidate_id,
     measured = {row["concept_id"] for row in body["measured"]}
     assert DP in measured
     assert body["not_yet_tested"]["count"] > 100
-    assert body["totals"]["in_ontology"] == 156
+    assert body["totals"]["in_ontology"] == 165
 
 
 def test_the_evidence_drawer_answers_why(client, session, candidate_id, consent, graph):

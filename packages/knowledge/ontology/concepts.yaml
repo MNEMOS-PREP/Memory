@@ -1508,3 +1508,94 @@ concepts:
     prerequisites:
       - {id: concept:train_test_split, strength: 0.5}
       - {id: concept:classification_metrics, strength: 0.5}
+
+  # ─── ML · reinforcement learning ─────────────────────────────────────────
+  #  Added 2026-10-29: the user's viva on their RL course (M20) found no
+  #  concept to file its answers under. Built the way the rest was (Trap 5):
+  #  from the syllabus of Amrita's Reinforcement Learning course (25AID301 /
+  #  22AIE401, its four units) and the chapter names of Sutton and Barto's
+  #  textbook, which that syllabus follows — topic names only. "Dynamic
+  #  programming" stays the DSA concept's: here it is policy and value
+  #  iteration, by those names. `reviewed: false` covers these edges too.
+  - id: concept:rl_foundations
+    name: Reinforcement Learning Basics
+    domain: ml
+    level: foundational
+    aliases: [reinforcement learning, agent and environment, reward signal, rl agent, exploration vs exploitation, exploration and exploitation]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:probability_for_ml, strength: 0.5}
+
+  - id: concept:multi_armed_bandits
+    name: Multi-armed Bandits
+    domain: ml
+    level: intermediate
+    aliases: [multi armed bandit, multi armed bandits, k armed bandit, epsilon greedy, upper confidence bound]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:rl_foundations, strength: 0.8}
+
+  - id: concept:markov_decision_processes
+    name: Markov Decision Processes
+    domain: ml
+    level: intermediate
+    aliases: [markov decision process, markov decision processes, mdp, finite mdp, bellman equation, discount factor, state value function]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:rl_foundations, strength: 0.8}
+      - {id: concept:probability_for_ml, strength: 0.6}
+
+  - id: concept:policy_and_value_iteration
+    name: Policy and Value Iteration
+    domain: ml
+    level: intermediate
+    aliases: [policy iteration, value iteration, policy evaluation, policy improvement, generalized policy iteration]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:markov_decision_processes, strength: 0.9}
+
+  - id: concept:monte_carlo_methods
+    name: Monte Carlo Methods in RL
+    domain: ml
+    level: intermediate
+    aliases: [monte carlo methods, monte carlo prediction, monte carlo control, first visit monte carlo, every visit monte carlo]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:markov_decision_processes, strength: 0.8}
+
+  - id: concept:temporal_difference_learning
+    name: Temporal-Difference Learning
+    domain: ml
+    level: advanced
+    aliases: [temporal difference, temporal difference learning, temporal differencing, td learning, td error, td prediction, td target]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:monte_carlo_methods, strength: 0.7}
+      - {id: concept:policy_and_value_iteration, strength: 0.6}
+
+  - id: concept:q_learning_and_sarsa
+    name: Q-learning and SARSA
+    domain: ml
+    level: advanced
+    aliases: [q learning, sarsa, on policy, off policy, action value function, q value, td control]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:temporal_difference_learning, strength: 0.9}
+
+  - id: concept:n_step_bootstrapping
+    name: n-step Bootstrapping
+    domain: ml
+    level: advanced
+    aliases: [n step td, n step return, n step bootstrapping, n step sarsa]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:temporal_difference_learning, strength: 0.9}
+
+  - id: concept:planning_with_models
+    name: Planning and Learning with Models
+    domain: ml
+    level: advanced
+    aliases: [model based reinforcement learning, dyna, dyna q, prioritized sweeping, trajectory sampling, rollout algorithms]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:q_learning_and_sarsa, strength: 0.7}

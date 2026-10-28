@@ -24,11 +24,12 @@ def test_the_shipped_ontology_is_phase_one_sized(graph):
     by the user's decision of 2026-10-07, 36 for machine learning, because an
     ML interview had nothing in ML to ask about. At 180 the granularity check
     fails by construction, because M05 cannot seed 3+ calibrated items per
-    concept that fast."""
-    assert len(graph) == 156
+    concept that fast. 2026-10-29: 9 for reinforcement learning, from the RL
+    course's syllabus, because a viva on it (M20) had nothing to file under."""
+    assert len(graph) == 165
     domains = {str(c.domain) for c in graph.concepts.values()}
     assert domains == {"dsa", "cs_core", "communication", "ml"}
-    assert sum(1 for c in graph.concepts.values() if str(c.domain) == "ml") == 36
+    assert sum(1 for c in graph.concepts.values() if str(c.domain) == "ml") == 45
 
 
 def test_it_says_it_has_not_been_reviewed(graph):

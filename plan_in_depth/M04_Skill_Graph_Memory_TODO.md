@@ -18,6 +18,23 @@ Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 
 Legend: ✅ done · 🟡 partly done · ⬜ not started
 
+### 2026-10-29 — reinforcement-learning concepts, and M20's vivas as evidence
+
+- ✅ **9 reinforcement-learning concepts** (the user's request, from M20): a
+  viva on the RL course found nothing to file its answers under. Added from
+  that course's syllabus (25AID301 / 22AIE401, its four units) and the
+  chapter names of Sutton and Barto, which it follows — topic names only:
+  RL basics, bandits, MDPs, policy and value iteration ("dynamic programming"
+  stays the DSA concept's), Monte Carlo methods, temporal-difference
+  learning, Q-learning and SARSA, n-step bootstrapping, planning with models.
+  Acyclic, no alias collisions, `reviewed: false`. The ontology is 120 + 45
+  (165, under the 180 where the granularity check breaks). 170 tests.
+- ✅ **M20 (Course Viva) sends viva results** (FR-20.20): `answer_scored`,
+  `response_model: none` per concept a viva's questions were on, plus
+  `answer_structuring`, citing a `viva_answers` artifact, behind practice
+  consent — GD Arena's path. Live-checked 2026-10-29: three observations
+  recorded, `moved_the_estimate: false` (EC-4.17).
+
 ### 2026-10-07/13 — machine-learning concepts, the college's curricula, an honest count
 
 - ✅ **36 machine-learning concepts** (`f710a2c`, the user's decision): the `ml`
