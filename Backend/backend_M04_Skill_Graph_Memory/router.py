@@ -110,7 +110,37 @@ def list_concepts(domain: str | None = Query(default=None)) -> dict:
         "ontology_version": graph.version,
         "faculty_reviewed": graph.reviewed,
         "count": len(graph.concepts),
-        "concepts": [c.model_dump() for c in graph.by_domain(domain)],
+        "concepts": [_concept_out(graph, c) for c in graph.by_domain(domain)],
+    }
+
+
+def _concept_out(graph, concept) -> dict:
+    """A concept as served: its fields, and what a question on it may be
+    about. List aliases are never served (see `Ontology.list_aliases`)."""
+    return {**concept.model_dump(), "facets": graph.facets.get(concept.id, [])}
+
+
+@router.get("/v1/concepts/graph", tags=["ontology"])
+def concept_graph(domain: str | None = Query(default=None)) -> dict:
+    """The whole graph in one read: every concept and every edge (2026-11-12).
+
+    Follow Your Goal (M22) builds a role's competency graph from this, so the
+    roadmap, the interviews and the evidence all stand on the one model M04
+    owns rather than on a copy. Declared before `/v1/concepts/{concept_id}`,
+    which would otherwise take "graph" for an id.
+    """
+    graph = load()
+    concepts = graph.by_domain(domain)
+    wanted = {c.id for c in concepts}
+    return {
+        "ontology_version": graph.version,
+        "faculty_reviewed": graph.reviewed,
+        "concepts": [_concept_out(graph, c) for c in concepts],
+        "edges": [
+            {"src": e.src, "dst": e.dst, "kind": str(e.kind), "strength": e.strength}
+            for e in graph.edges
+            if e.src in wanted and e.dst in wanted
+        ],
     }
 
 
@@ -127,7 +157,7 @@ def get_concept(concept_id: str) -> dict:
         return {**n.__dict__, "name": graph.get(n.concept_id).name}
 
     return {
-        **concept.model_dump(),
+        **_concept_out(graph, concept),
         "prerequisites": [named(n) for n in graph.walk_up(concept_id, max_hops=1)],
         "unlocks": [named(n) for n in graph.walk_down(concept_id, max_hops=1)],
     }

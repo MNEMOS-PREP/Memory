@@ -26,10 +26,13 @@ def test_the_shipped_ontology_is_phase_one_sized(graph):
     fails by construction, because M05 cannot seed 3+ calibrated items per
     concept that fast. 2026-10-29: 9 for reinforcement learning, from the RL
     course's syllabus, because a viva on it (M20) had nothing to file under."""
-    assert len(graph) == 165
+    assert len(graph) == 323
     domains = {str(c.domain) for c in graph.concepts.values()}
-    assert domains == {"dsa", "cs_core", "communication", "ml"}
-    assert sum(1 for c in graph.concepts.values() if str(c.domain) == "ml") == 45
+    assert domains == {
+        "dsa", "cs_core", "communication", "ml",
+        "system_design", "tooling", "aptitude", "behavioural",
+    }
+    assert sum(1 for c in graph.concepts.values() if str(c.domain) == "ml") == 61
 
 
 def test_it_says_it_has_not_been_reviewed(graph):
@@ -206,3 +209,21 @@ def test_alias_keys_include_the_id_and_the_name(graph):
     concept = graph.get(DP)
     keys = Ontology._alias_keys(concept)
     assert "dynamic programming" in keys
+
+
+def test_cpp_and_csharp_do_not_collapse_into_c(graph):
+    """The shared normaliser drops punctuation, so "C++" and "C#" ARE "c".
+    Neither may be an alias of anything but C, or the lint fails; the
+    spellings that survive normalising name them instead."""
+    assert graph.resolve("C") == "concept:c_language"
+    assert graph.resolve("cpp") == "concept:cpp_language"
+    assert graph.resolve("c sharp") == "concept:csharp_dotnet"
+
+
+def test_related_edges_are_not_prerequisites(graph):
+    """`related` travels with a concept without coming first, so the
+    bottleneck walk and propagation never follow it."""
+    related = [e for e in graph.edges if str(e.kind) == "co_occurs_with"]
+    assert related
+    ups = {n.concept_id for n in graph.walk_up("concept:authentication", max_hops=1)}
+    assert "concept:applied_cryptography" not in ups
