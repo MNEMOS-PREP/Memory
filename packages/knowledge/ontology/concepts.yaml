@@ -1493,7 +1493,7 @@ concepts:
     name: Large Language Models
     domain: ml
     level: advanced
-    aliases: [llm, large language model, large language models, prompt engineering, retrieval augmented generation, rag pipeline]
+    aliases: [llm, large language model, large language models, llms, foundation models, generative ai, gen ai, transformer language models]
     typical_question_time_s: 480
     prerequisites:
       - {id: concept:attention_and_transformers, strength: 0.9}
@@ -1599,3 +1599,1689 @@ concepts:
     typical_question_time_s: 420
     prerequisites:
       - {id: concept:q_learning_and_sarsa, strength: 0.7}
+
+  # =============================================================================
+  #  2026-11-12 — THE GOAL GRAPH (M22, Follow Your Goal)
+  #
+  #  Everything below was added so that a career goal has something to stand
+  #  on. A role on the placement portal asks for React, Spring Boot, Docker,
+  #  system design, SQL on a warehouse, a security mindset — and until today
+  #  none of those was a concept, so no question could be filed under them, no
+  #  resume line could map to them and no mastery could be held for them.
+  #
+  #  WHERE THE LIST CAME FROM (Trap 5 still holds — not "ask a model for 150"):
+  #    1. The "Skills Required" lists of the 80 Haveloc postings in the DATA
+  #       repo (2027 batch), counted: what the companies that visit actually ask.
+  #    2. M02's 24 role archetypes and their requirement labels.
+  #    3. The follow_goal_module brief's own worked example (Full Stack).
+  #
+  #  THREE DOMAINS THAT WERE DECLARED AND EMPTY NOW HAVE CONCEPTS:
+  #    system_design   how systems are put together: APIs, scale, data systems,
+  #                    delivery, and frontend architecture
+  #    tooling         NAMED technologies: languages, frameworks, databases,
+  #                    platforms. A stack choice is a choice between these.
+  #    aptitude        reasoning a placement test or a case round asks for
+  #  and `behavioural` holds what an HR round looks for. `cs_core` gains the
+  #  web platform, security, engineering practice and embedded fundamentals;
+  #  `ml` gains statistics, applied AI and ML engineering.
+  #
+  #  THE SPLIT THAT MAKES A STACK CHANGE CHEAP: a framework-independent idea
+  #  (API design, authentication, state management) is one concept; a named
+  #  technology (Spring Boot, FastAPI, React, Angular) is another, with the
+  #  idea as its prerequisite. Swapping Spring Boot for FastAPI then keeps
+  #  everything the student has shown about APIs and auth, by construction.
+  #
+  #  THREE NEW OPTIONAL KEYS (read by M04's loader; older readers ignore them):
+  #    facets        what a question on this concept may be about. The unit of
+  #                  question COVERAGE; the concept stays the unit of mastery.
+  #    list_aliases  single ordinary words ("react", "go", "express", "excel")
+  #                  that name the concept only in an enumeration. Resolved by
+  #                  `/v1/concepts/resolve`, never served in `aliases`, so no
+  #                  consumer scans prose for them — "react quickly" in a job
+  #                  description is not a React requirement.
+  #    related       concepts that travel together without one coming first
+  #                  (`co_occurs_with`). Not walked by propagation.
+  # =============================================================================
+
+  # ─── CS core · web platform ──────────────────────────────────────────────
+  - id: concept:html_semantics
+    name: HTML and Semantic Markup
+    domain: cs_core
+    level: foundational
+    aliases: [html, html5, semantic html, semantic markup, html forms]
+    facets: [document structure, semantic elements, forms and validation, metadata and links]
+    typical_question_time_s: 180
+
+  - id: concept:css_layout
+    name: CSS Layout and Styling
+    domain: cs_core
+    level: intermediate
+    aliases: [css, css3, flexbox, css grid, box model, css specificity, responsive design, media queries]
+    facets: [box model, flexbox and grid, cascade and specificity, responsive layout, positioning]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:html_semantics, strength: 0.7}
+
+  - id: concept:dom_and_events
+    name: The DOM and Events
+    domain: cs_core
+    level: intermediate
+    aliases: [dom, document object model, dom manipulation, event bubbling, event delegation, event listeners]
+    facets: [the DOM tree, event propagation, event delegation, updating the page efficiently]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:html_semantics, strength: 0.6}
+      - {id: concept:javascript, strength: 0.7}
+
+  - id: concept:browser_rendering
+    name: How Browsers Render a Page
+    domain: cs_core
+    level: advanced
+    aliases: [browser rendering, browser internals, critical rendering path, reflow and repaint, javascript event loop, event loop]
+    facets: [critical rendering path, reflow and repaint, the event loop, script loading]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:dom_and_events, strength: 0.7}
+      - {id: concept:css_layout, strength: 0.5}
+
+  - id: concept:web_storage_and_cookies
+    name: Cookies, Sessions and Web Storage
+    domain: cs_core
+    level: intermediate
+    aliases: [cookies, local storage, session storage, browser storage, http cookies, same origin policy, cors]
+    facets: [cookies and their flags, local and session storage, same-origin policy and CORS]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.7}
+
+  - id: concept:web_accessibility
+    name: Web Accessibility
+    domain: cs_core
+    level: intermediate
+    aliases: [accessibility, a11y, wcag, aria, screen reader support, keyboard navigation]
+    facets: [semantic structure for assistive technology, keyboard access and focus, ARIA, colour and contrast]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:html_semantics, strength: 0.8}
+
+  - id: concept:web_performance
+    name: Web Performance
+    domain: cs_core
+    level: advanced
+    aliases: [web performance, frontend performance, performance optimization, core web vitals, lazy loading, code splitting, bundle size]
+    facets: [measuring with web vitals, loading less, rendering faster, caching on the client]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:browser_rendering, strength: 0.7}
+      - {id: concept:http_and_rest, strength: 0.5}
+
+  # ─── CS core · software engineering practice ─────────────────────────────
+  - id: concept:linux_fundamentals
+    name: Linux and the Command Line
+    domain: cs_core
+    level: intermediate
+    aliases: [linux, unix, linux os, bash, shell scripting, command line, linux commands, scripting]
+    facets: [files and permissions, processes and services, shell scripting, networking tools, logs and troubleshooting]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:file_systems, strength: 0.5}
+      - {id: concept:process_vs_thread, strength: 0.4}
+
+  - id: concept:virtualisation_and_containers
+    name: Virtual Machines and Containers
+    domain: cs_core
+    level: intermediate
+    aliases: [virtualisation, virtualization, virtual machines, hypervisor, containers, containerization, containerisation, namespaces and cgroups]
+    facets: [virtual machines and hypervisors, how a container isolates, containers versus virtual machines]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:process_vs_thread, strength: 0.6}
+      - {id: concept:virtual_memory, strength: 0.4}
+
+  - id: concept:sdlc_and_agile
+    name: SDLC and Agile Delivery
+    domain: cs_core
+    level: foundational
+    aliases: [sdlc, software development lifecycle, software development life cycle, agile methodology, scrum, kanban, sprint planning, waterfall model]
+    list_aliases: [agile]
+    facets: [phases of the lifecycle, agile and scrum, estimating and planning, definition of done]
+    typical_question_time_s: 180
+
+  - id: concept:code_quality_and_review
+    name: Code Quality and Review
+    domain: cs_core
+    level: intermediate
+    aliases: [code review, code quality, clean code, refactoring, code smells, coding standards, technical debt]
+    facets: [readability and naming, refactoring safely, reviewing someone else's code, technical debt]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:functions_and_scope, strength: 0.5}
+      - {id: concept:testing_and_debugging, strength: 0.5}
+    related: [concept:solid_principles]
+
+  - id: concept:troubleshooting
+    name: Troubleshooting and Root-Cause Analysis
+    domain: cs_core
+    level: intermediate
+    aliases: [troubleshooting, root cause analysis, rca, production support, incident management, technical support, application support]
+    facets: [reproducing and isolating a fault, reading logs and metrics, escalation and communication, writing a root-cause analysis]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:testing_and_debugging, strength: 0.7}
+
+  # ─── CS core · testing and QA ────────────────────────────────────────────
+  - id: concept:test_design
+    name: Test Case Design
+    domain: cs_core
+    level: intermediate
+    aliases: [test case design, testing fundamentals, manual testing, software testing, boundary value analysis, equivalence partitioning, test plan, quality assurance, qa]
+    facets: [equivalence classes and boundaries, levels of testing, exploratory testing, writing a bug report, regression testing]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:testing_and_debugging, strength: 0.7}
+
+  - id: concept:test_automation
+    name: Test Automation
+    domain: cs_core
+    level: intermediate
+    aliases: [test automation, automation testing, automated testing, test automation framework, testing frameworks, integration testing, end to end testing, mocking, test pyramid]
+    facets: [the test pyramid, mocks stubs and fakes, flaky tests, tests in a pipeline, page objects and maintainability]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:test_design, strength: 0.7}
+      - {id: concept:functions_and_scope, strength: 0.4}
+
+  - id: concept:api_testing
+    name: API Testing
+    domain: cs_core
+    level: intermediate
+    aliases: [api testing, rest api testing, postman, contract testing, api automation]
+    facets: [what to assert on a response, negative and boundary cases, authentication in tests, contract testing]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.8}
+      - {id: concept:test_design, strength: 0.5}
+
+  - id: concept:performance_testing
+    name: Performance and Load Testing
+    domain: cs_core
+    level: advanced
+    aliases: [performance testing, load testing, stress testing, jmeter, benchmarking]
+    facets: [load stress and soak tests, choosing what to measure, reading latency percentiles, finding the bottleneck]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:test_automation, strength: 0.5}
+      - {id: concept:http_and_rest, strength: 0.5}
+
+  # ─── CS core · security ──────────────────────────────────────────────────
+  - id: concept:security_fundamentals
+    name: Security Fundamentals
+    domain: cs_core
+    level: foundational
+    aliases: [cybersecurity, cyber security, cybersecurity fundamentals, information security, security basics, cia triad, threat modelling, threat modeling, least privilege, defence in depth]
+    facets: [confidentiality integrity availability, threats and attack surface, least privilege, defence in depth]
+    typical_question_time_s: 240
+
+  - id: concept:applied_cryptography
+    name: Applied Cryptography
+    domain: cs_core
+    level: intermediate
+    aliases: [cryptography, cryptography basics, encryption, digital signatures, key exchange, password hashing, salting, hashing vs encryption]
+    facets: [hashing versus encryption, symmetric and asymmetric keys, signatures and certificates, storing passwords]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:security_fundamentals, strength: 0.6}
+    related: [concept:network_security_basics, concept:https_and_tls]
+
+  - id: concept:web_application_security
+    name: Web Application Security
+    domain: cs_core
+    level: advanced
+    aliases: [web security, application security, owasp, owasp top 10, xss, cross site scripting, csrf, sql injection, input validation, product security]
+    facets: [injection, cross-site scripting, cross-site request forgery, broken access control, validating input]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.7}
+      - {id: concept:security_fundamentals, strength: 0.6}
+      - {id: concept:web_storage_and_cookies, strength: 0.4}
+
+  - id: concept:secure_coding
+    name: Secure Coding Practices
+    domain: cs_core
+    level: intermediate
+    aliases: [secure coding, secure coding practices, secure software development, secrets management, dependency vulnerabilities, devsecops]
+    facets: [never trusting input, handling secrets, vulnerable dependencies, security in review and CI]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:security_fundamentals, strength: 0.7}
+
+  - id: concept:vulnerability_assessment
+    name: Vulnerability Assessment and Penetration Testing
+    domain: cs_core
+    level: advanced
+    aliases: [vulnerability assessment, penetration testing, pentesting, vapt, ethical hacking, offensive security, bug bounty, capture the flag, ctf, ctfs, red teaming]
+    facets: [reconnaissance and scanning, exploiting a finding, rating severity, writing the report, staying in scope]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:web_application_security, strength: 0.6}
+      - {id: concept:network_security_basics, strength: 0.6}
+
+  - id: concept:memory_corruption_and_exploitation
+    name: Memory Corruption and Exploitation
+    domain: cs_core
+    level: advanced
+    aliases: [buffer overflow, memory corruption, binary exploitation, stack smashing, use after free, exploit development, reverse engineering]
+    facets: [stack and heap overflows, how an overflow becomes control, mitigations, reading a binary]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:pointers_and_references, strength: 0.7}
+      - {id: concept:memory_management, strength: 0.7}
+
+  - id: concept:incident_response
+    name: Incident Response and Security Operations
+    domain: cs_core
+    level: advanced
+    aliases: [incident response, security operations, soc, siem, security monitoring, cyber defense, cyber defence, threat detection]
+    facets: [detect triage contain recover, reading security logs, indicators of compromise, the post-incident review]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:security_fundamentals, strength: 0.7}
+      - {id: concept:network_security_basics, strength: 0.5}
+
+  - id: concept:identity_and_access_management
+    name: Identity and Access Management
+    domain: cs_core
+    level: advanced
+    aliases: [identity and access management, iam, single sign on, sso, identity federation, user provisioning, multi factor authentication, mfa]
+    facets: [single sign-on and federation, provisioning and deprovisioning, multi-factor authentication, auditing access]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:authorization, strength: 0.7}
+
+  - id: concept:cloud_security
+    name: Cloud Security
+    domain: cs_core
+    level: advanced
+    aliases: [cloud security, shared responsibility model, cloud iam, security groups, cloud compliance]
+    facets: [the shared responsibility model, identities and policies, network boundaries, encrypting data at rest and in transit]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:cloud_fundamentals, strength: 0.7}
+      - {id: concept:security_fundamentals, strength: 0.6}
+
+  # ─── CS core · embedded and hardware ─────────────────────────────────────
+  - id: concept:digital_electronics
+    name: Digital Logic and Electronics
+    domain: cs_core
+    level: foundational
+    aliases: [digital electronics, digital logic, logic gates, flip flops, combinational circuits, sequential circuits, finite state machines, electronics]
+    facets: [gates and boolean algebra, combinational circuits, flip-flops and state machines, timing]
+    typical_question_time_s: 240
+
+  - id: concept:microcontrollers
+    name: Microcontrollers and Peripherals
+    domain: cs_core
+    level: intermediate
+    aliases: [microcontrollers, microcontroller, embedded systems, embedded software, embedded design, gpio, interrupts, timers and counters, adc, arm cortex, arm processor, firmware]
+    list_aliases: [embedded]
+    facets: [memory map and registers, interrupts, timers and PWM, analogue to digital conversion, low-power design]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:computer_architecture_basics, strength: 0.7}
+      - {id: concept:digital_electronics, strength: 0.6}
+      - {id: concept:c_language, strength: 0.6}
+
+  - id: concept:rtos
+    name: Real-Time Operating Systems
+    domain: cs_core
+    level: advanced
+    aliases: [rtos, real time operating system, real time systems, freertos, priority inversion, real time scheduling]
+    facets: [tasks and scheduling, priority inversion, what an interrupt handler may do, queues and semaphores, meeting a deadline]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:process_scheduling, strength: 0.7}
+      - {id: concept:concurrency_synchronisation, strength: 0.7}
+      - {id: concept:microcontrollers, strength: 0.5}
+
+  - id: concept:embedded_protocols
+    name: Embedded Communication Protocols
+    domain: cs_core
+    level: intermediate
+    aliases: [communication protocols, uart, spi, i2c, can bus, serial communication, modbus]
+    facets: [UART, SPI, I2C, CAN, choosing between them]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:microcontrollers, strength: 0.7}
+
+  - id: concept:fpga_and_hdl
+    name: FPGA Design and HDL
+    domain: cs_core
+    level: advanced
+    aliases: [fpga, verilog, vhdl, hdl, vlsi, rtl design, timing closure, clock domain crossing]
+    facets: [describing hardware in an HDL, synthesis and timing, clock domains, simulation and verification]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:digital_electronics, strength: 0.85}
+
+  - id: concept:signal_processing
+    name: Digital Signal Processing
+    domain: cs_core
+    level: advanced
+    aliases: [signal processing, digital signal processing, dsp, sampling theorem, fourier transform, fft, digital filters, signals and systems]
+    facets: [sampling and aliasing, the Fourier transform, FIR and IIR filters, convolution]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:linear_algebra_for_ml, strength: 0.4}
+
+  - id: concept:control_systems
+    name: Control Systems
+    domain: cs_core
+    level: intermediate
+    aliases: [control systems, feedback control, pid controller, pid control, stability analysis, controls, instrumentation]
+    facets: [open and closed loop, PID tuning, stability, sensors and actuators]
+    typical_question_time_s: 300
+
+  - id: concept:robotics_fundamentals
+    name: Robotics — Kinematics and Motion Planning
+    domain: cs_core
+    level: advanced
+    aliases: [robotics, robotics kinematics, forward kinematics, inverse kinematics, motion planning, path planning, ros, robot operating system, slam]
+    facets: [frames and transforms, forward and inverse kinematics, planning a path, localisation and mapping, ROS nodes and topics]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:linear_algebra_for_ml, strength: 0.6}
+      - {id: concept:control_systems, strength: 0.5}
+
+  # ─── System design · APIs and services ───────────────────────────────────
+  - id: concept:api_design
+    name: API Design
+    domain: system_design
+    level: intermediate
+    aliases: [api design, api development, rest api design, apis, restful apis, api versioning, pagination, idempotency, web services, backend development]
+    facets: [modelling resources, status codes and error contracts, pagination and filtering, idempotency, versioning]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.85}
+
+  - id: concept:authentication
+    name: Authentication
+    domain: system_design
+    level: intermediate
+    aliases: [authentication, user authentication, jwt, json web token, oauth, oauth2, openid connect, session based authentication, token based authentication, login flow]
+    facets: [sessions versus tokens, JWT, OAuth 2.0 and OpenID Connect, storing credentials, refresh and revocation]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.7}
+      - {id: concept:web_storage_and_cookies, strength: 0.5}
+    related: [concept:applied_cryptography]
+
+  - id: concept:authorization
+    name: Authorization and Access Control
+    domain: system_design
+    level: intermediate
+    aliases: [authorization, authorisation, access control, rbac, role based access control, abac, permissions model]
+    facets: [roles and permissions, checking access on every request, attribute-based rules, least privilege in practice]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:authentication, strength: 0.85}
+
+  - id: concept:caching_strategies
+    name: Caching Strategies
+    domain: system_design
+    level: intermediate
+    aliases: [caching, cache aside, application caching, distributed cache, cdn, content delivery network, cache eviction, ttl]
+    facets: [what to cache and where, cache-aside and write-behind, expiry and eviction, keeping a cache correct, CDNs]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:caching_and_locality, strength: 0.5}
+      - {id: concept:http_and_rest, strength: 0.4}
+
+  - id: concept:message_queues
+    name: Message Queues and Asynchronous Processing
+    domain: system_design
+    level: intermediate
+    aliases: [message queues, message queue, message broker, asynchronous processing, background jobs, pub sub, publish subscribe, rabbitmq, dead letter queue]
+    facets: [queues versus topics, delivery guarantees, retries and dead letters, ordering, backpressure]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:inter_process_communication, strength: 0.4}
+      - {id: concept:api_design, strength: 0.4}
+
+  - id: concept:microservices
+    name: Microservices
+    domain: system_design
+    level: advanced
+    aliases: [microservices, microservices architecture, microservice, service oriented architecture, api gateway, service discovery, monolith vs microservices]
+    facets: [drawing a service boundary, how services talk, who owns which data, the API gateway, when a monolith is the better answer]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:api_design, strength: 0.7}
+      - {id: concept:message_queues, strength: 0.5}
+
+  - id: concept:event_driven_architecture
+    name: Event-Driven Architecture
+    domain: system_design
+    level: advanced
+    aliases: [event driven architecture, event driven, event sourcing, cqrs, outbox pattern, domain events]
+    facets: [events versus commands, eventual consistency between services, the outbox pattern, event sourcing]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:message_queues, strength: 0.85}
+
+  - id: concept:rate_limiting
+    name: Rate Limiting and Throttling
+    domain: system_design
+    level: intermediate
+    aliases: [rate limiting, rate limiter, throttling, token bucket, leaky bucket, api quotas]
+    facets: [token bucket and sliding window, where to enforce a limit, limiting across many servers]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:api_design, strength: 0.6}
+      - {id: concept:caching_strategies, strength: 0.4}
+
+  - id: concept:data_modelling
+    name: Data Modelling
+    domain: system_design
+    level: intermediate
+    aliases: [data modelling, data modeling, database design, er diagram, entity relationship model, schema modelling]
+    facets: [entities and relationships, modelling for how data is read, relational versus document models, evolving a schema]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:relational_model, strength: 0.8}
+      - {id: concept:normalisation, strength: 0.5}
+
+  # ─── System design · scale and reliability ───────────────────────────────
+  - id: concept:load_balancing
+    name: Load Balancing
+    domain: system_design
+    level: intermediate
+    aliases: [load balancing, load balancer, reverse proxy, round robin load balancing, health checks, sticky sessions]
+    facets: [layer 4 versus layer 7, balancing algorithms, health checks, session affinity]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.5}
+      - {id: concept:osi_and_tcp_ip_model, strength: 0.4}
+
+  - id: concept:scalability
+    name: Scalability
+    domain: system_design
+    level: intermediate
+    aliases: [scalability, horizontal scaling, vertical scaling, scaling a system, stateless services, high throughput]
+    facets: [scaling up versus out, statelessness, finding the bottleneck, scaling reads and writes]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:load_balancing, strength: 0.6}
+      - {id: concept:caching_strategies, strength: 0.5}
+
+  - id: concept:database_replication
+    name: Database Replication
+    domain: system_design
+    level: advanced
+    aliases: [replication, database replication, read replicas, leader follower replication, master slave replication, replication lag]
+    facets: [leader and followers, synchronous versus asynchronous, replication lag, failover]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:transactions_acid, strength: 0.5}
+
+  - id: concept:database_sharding
+    name: Partitioning and Sharding
+    domain: system_design
+    level: advanced
+    aliases: [sharding, database sharding, partitioning, horizontal partitioning, shard key, consistent hashing]
+    facets: [choosing a shard key, consistent hashing, rebalancing, queries that cross shards]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:indexing, strength: 0.5}
+      - {id: concept:database_replication, strength: 0.5}
+      - {id: concept:hashing, strength: 0.4}
+
+  - id: concept:consistency_models
+    name: Consistency in Distributed Systems
+    domain: system_design
+    level: advanced
+    aliases: [consistency models, eventual consistency, strong consistency, quorum, linearizability, consistency vs availability]
+    facets: [strong versus eventual consistency, the availability trade-off under a partition, quorums, choosing per feature]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:database_replication, strength: 0.7}
+      - {id: concept:transactions_acid, strength: 0.5}
+    related: [concept:nosql_vs_relational]
+
+  - id: concept:distributed_systems_fundamentals
+    name: Distributed Systems Fundamentals
+    domain: system_design
+    level: advanced
+    aliases: [distributed systems, distributed computing, consensus, raft, leader election, distributed transactions, two phase commit, exactly once]
+    facets: [partial failure, time and ordering, consensus and leader election, idempotency and retries, distributed transactions]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:concurrency_synchronisation, strength: 0.5}
+      - {id: concept:tcp_reliability, strength: 0.4}
+      - {id: concept:message_queues, strength: 0.4}
+
+  - id: concept:availability_and_reliability
+    name: Availability and Reliability
+    domain: system_design
+    level: advanced
+    aliases: [high availability, availability, reliability, redundancy, failover, slo, sla, single point of failure, disaster recovery]
+    facets: [removing single points of failure, redundancy and failover, measuring with SLOs, degrading gracefully, recovering from disaster]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:scalability, strength: 0.6}
+      - {id: concept:database_replication, strength: 0.5}
+
+  - id: concept:fault_tolerance
+    name: Fault Tolerance and Resilience
+    domain: system_design
+    level: advanced
+    aliases: [fault tolerance, resilience, circuit breaker, retries with backoff, bulkhead pattern, timeouts, graceful degradation]
+    facets: [timeouts and retries with backoff, circuit breakers, bulkheads, stopping a failure from spreading]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:distributed_systems_fundamentals, strength: 0.6}
+
+  - id: concept:high_level_design
+    name: High-Level System Design
+    domain: system_design
+    level: advanced
+    aliases: [system design, high level design, hld, system architecture, designing scalable systems, architecture design, software architecture]
+    facets: [pinning down requirements, back-of-envelope estimation, components and data flow, the data store, bottlenecks and trade-offs]
+    typical_question_time_s: 480
+    prerequisites:
+      - {id: concept:scalability, strength: 0.7}
+      - {id: concept:api_design, strength: 0.6}
+      - {id: concept:data_modelling, strength: 0.6}
+
+  - id: concept:low_level_design
+    name: Low-Level Design
+    domain: system_design
+    level: advanced
+    aliases: [low level design, lld, object oriented design, class design, machine coding, uml class diagram]
+    facets: [finding the classes, responsibilities and interfaces, designing for change, concurrency in the design]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:solid_principles, strength: 0.7}
+      - {id: concept:design_patterns, strength: 0.7}
+      - {id: concept:abstraction_and_interfaces, strength: 0.6}
+
+  # ─── System design · delivery and operations ─────────────────────────────
+  - id: concept:ci_cd
+    name: Continuous Integration and Delivery
+    domain: system_design
+    level: intermediate
+    aliases: [ci cd, cicd, continuous integration, continuous delivery, continuous deployment, build pipeline, jenkins, github actions, gitlab ci, devops, devops tools]
+    facets: [what a pipeline does on each commit, stages and gates, artefacts and environments, keeping the pipeline fast]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:git, strength: 0.6}
+      - {id: concept:testing_and_debugging, strength: 0.5}
+
+  - id: concept:deployment_strategies
+    name: Deployment Strategies
+    domain: system_design
+    level: intermediate
+    aliases: [deployment strategies, blue green deployment, canary release, rolling update, rollback, feature flags, zero downtime deployment]
+    facets: [rolling blue-green and canary, rolling back, feature flags, changing a database without downtime]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:ci_cd, strength: 0.7}
+
+  - id: concept:observability
+    name: Monitoring, Logging and Observability
+    domain: system_design
+    level: intermediate
+    aliases: [observability, monitoring, logging, monitoring systems, distributed tracing, alerting, prometheus, grafana, metrics and logs]
+    facets: [metrics logs and traces, what to alert on, latency percentiles, finding a fault from the outside]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:http_and_rest, strength: 0.4}
+
+  - id: concept:cloud_fundamentals
+    name: Cloud Computing Fundamentals
+    domain: system_design
+    level: intermediate
+    aliases: [cloud computing, cloud platforms, cloud concepts, cloud services, cloud technologies, cloud native, iaas paas saas, regions and availability zones, serverless, object storage]
+    facets: [service models, regions and zones, compute storage and network building blocks, serverless, paying for what you use]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:virtualisation_and_containers, strength: 0.5}
+      - {id: concept:ip_addressing, strength: 0.4}
+
+  - id: concept:infrastructure_as_code
+    name: Infrastructure as Code
+    domain: system_design
+    level: advanced
+    aliases: [infrastructure as code, iac, terraform, cloudformation, ansible, configuration management]
+    facets: [declaring infrastructure, state and drift, modules and environments, reviewing an infrastructure change]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:cloud_fundamentals, strength: 0.7}
+      - {id: concept:git, strength: 0.4}
+
+  # ─── System design · frontend architecture ───────────────────────────────
+  - id: concept:component_architecture
+    name: Component-Based UI Architecture
+    domain: system_design
+    level: intermediate
+    aliases: [component architecture, component based architecture, ui components, component design, props and state, component composition, frontend architecture, frontend development]
+    list_aliases: [frontend]
+    facets: [splitting a screen into components, props state and data flow, composition over inheritance, reusable versus one-off]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:dom_and_events, strength: 0.6}
+      - {id: concept:javascript, strength: 0.7}
+
+  - id: concept:state_management
+    name: Client-Side State Management
+    domain: system_design
+    level: advanced
+    aliases: [state management, client side state, global state, redux, context api, state store, ngrx, pinia]
+    facets: [local versus shared state, server state versus UI state, stores and reducers, avoiding needless re-renders]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:component_architecture, strength: 0.85}
+
+  - id: concept:rendering_strategies
+    name: Rendering Strategies — CSR, SSR and SSG
+    domain: system_design
+    level: advanced
+    aliases: [server side rendering, ssr, client side rendering, csr, static site generation, ssg, hydration, single page application, spa]
+    facets: [client versus server rendering, hydration, static generation, choosing per page]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:browser_rendering, strength: 0.6}
+      - {id: concept:component_architecture, strength: 0.6}
+
+  - id: concept:frontend_testing
+    name: Testing User Interfaces
+    domain: system_design
+    level: intermediate
+    aliases: [frontend testing, ui testing, component testing, react testing library, jest, cypress, playwright]
+    facets: [testing behaviour not implementation, component tests, end-to-end tests, mocking the network]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:component_architecture, strength: 0.6}
+      - {id: concept:testing_and_debugging, strength: 0.6}
+
+  - id: concept:mobile_app_architecture
+    name: Mobile App Architecture
+    domain: system_design
+    level: intermediate
+    aliases: [mobile app development, mobile development, mobile app design, app lifecycle, mobile app lifecycle, offline first, mobile architecture, mvvm]
+    facets: [the app lifecycle, navigation and state, working offline, battery and network limits, releasing an app]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:classes_and_objects, strength: 0.5}
+      - {id: concept:http_and_rest, strength: 0.5}
+
+  # ─── System design · data systems ────────────────────────────────────────
+  - id: concept:data_pipelines
+    name: Data Pipelines — ETL and ELT
+    domain: system_design
+    level: intermediate
+    aliases: [data pipelines, data pipeline, etl, elt, data engineering, data ingestion, data integration, batch processing, data flow development, dataops]
+    facets: [extract transform load, batch versus streaming, idempotent and re-runnable loads, orchestration, handling late and bad data]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:sql_queries, strength: 0.7}
+      - {id: concept:data_modelling, strength: 0.5}
+
+  - id: concept:data_warehousing
+    name: Data Warehousing and Dimensional Modelling
+    domain: system_design
+    level: advanced
+    aliases: [data warehousing, data warehouse, dimensional modelling, star schema, snowflake schema, olap, oltp vs olap, columnar storage, bigquery, redshift, data lake, cloud data platforms]
+    facets: [facts and dimensions, OLTP versus OLAP, columnar storage and partitioning, slowly changing dimensions, lake versus warehouse]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:data_modelling, strength: 0.7}
+      - {id: concept:aggregation_and_grouping, strength: 0.6}
+
+  - id: concept:distributed_data_processing
+    name: Distributed Data Processing
+    domain: system_design
+    level: advanced
+    aliases: [big data, big data technologies, mapreduce, hadoop, distributed data processing, batch data processing, data partitioning, shuffle]
+    facets: [splitting work across machines, partitions and shuffles, skewed data, wide versus narrow transformations]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:data_pipelines, strength: 0.6}
+      - {id: concept:hashing, strength: 0.4}
+
+  - id: concept:stream_processing
+    name: Stream Processing
+    domain: system_design
+    level: advanced
+    aliases: [stream processing, real time data, streaming data, event streaming, windowing, watermarks, real time analytics]
+    facets: [event time versus processing time, windows and watermarks, state and checkpoints, delivery guarantees]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:message_queues, strength: 0.7}
+      - {id: concept:data_pipelines, strength: 0.6}
+
+  - id: concept:data_quality_and_governance
+    name: Data Quality and Governance
+    domain: system_design
+    level: intermediate
+    aliases: [data quality, data governance, data quality frameworks, data validation, data lineage, data catalog, master data management]
+    facets: [checks that catch bad data, lineage, ownership and access, privacy and retention]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:data_pipelines, strength: 0.6}
+
+  # ─── CS core · human-computer interaction ────────────────────────────────
+  - id: concept:ux_design_fundamentals
+    name: UX Design Fundamentals
+    domain: cs_core
+    level: foundational
+    aliases: [ux design, user experience design, ui ux, ui ux design, ui ux development, usability heuristics, user centred design, user centered design, design thinking, information architecture]
+    facets: [who the user is, usability heuristics, information architecture, design thinking]
+    typical_question_time_s: 240
+
+  - id: concept:wireframing_and_prototyping
+    name: Wireframing and Prototyping
+    domain: cs_core
+    level: intermediate
+    aliases: [wireframing, wireframes, prototyping, figma, interaction design, design systems, user flows]
+    facets: [from flow to wireframe, fidelity and when to raise it, design systems, handing a design to engineers]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:ux_design_fundamentals, strength: 0.8}
+
+  - id: concept:usability_research
+    name: User Research and Usability Testing
+    domain: cs_core
+    level: intermediate
+    aliases: [user research, usability testing, user interviews, user testing, personas]
+    facets: [planning a study, asking without leading, usability tests, turning findings into decisions]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:ux_design_fundamentals, strength: 0.6}
+
+  - id: concept:switching_and_vlans
+    name: Switching and VLANs
+    domain: cs_core
+    level: intermediate
+    aliases: [switching, routing and switching, vlan, vlans, mac address table, spanning tree protocol, stp, ethernet switching, ccna]
+    facets: [how a switch learns, VLANs and trunks, spanning tree, ARP]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:osi_and_tcp_ip_model, strength: 0.7}
+
+  # ─── Tooling · languages ─────────────────────────────────────────────────
+  - id: concept:python_language
+    name: Python
+    domain: tooling
+    level: foundational
+    aliases: [python programming, python 3, python scripting, core python]
+    list_aliases: [python, py]
+    facets: [data types and mutability, comprehensions and generators, functions and decorators, the GIL and concurrency, packaging and virtual environments]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:functions_and_scope, strength: 0.6}
+
+  - id: concept:java_language
+    name: Java
+    domain: tooling
+    level: foundational
+    aliases: [core java, java programming, java collections, jvm, java virtual machine, java 8 streams]
+    list_aliases: [java]
+    facets: [the JVM and memory, collections, equals and hashCode, concurrency in Java, streams and lambdas]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:classes_and_objects, strength: 0.6}
+
+  - id: concept:javascript
+    name: JavaScript
+    domain: tooling
+    level: foundational
+    aliases: [javascript, js, es6, ecmascript, closures in javascript, promises, async await, javascript prototypes]
+    facets: [scope closures and this, prototypes, promises and async-await, equality and types, modules]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:functions_and_scope, strength: 0.6}
+
+  - id: concept:typescript
+    name: TypeScript
+    domain: tooling
+    level: intermediate
+    aliases: [typescript, ts, static typing in javascript, typescript generics]
+    facets: [types versus interfaces, generics, narrowing, typing a real codebase]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:javascript, strength: 0.85}
+
+  - id: concept:c_language
+    name: C Programming
+    domain: tooling
+    level: foundational
+    aliases: [c programming, c language, ansi c, embedded c]
+    list_aliases: [c]
+    facets: [pointers and arrays, memory allocation, undefined behaviour, the preprocessor, structs and bit fields]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:pointers_and_references, strength: 0.7}
+
+  - id: concept:cpp_language
+    name: Modern C++
+    domain: tooling
+    level: intermediate
+    aliases: [cpp, c plus plus, cplusplus, modern cpp, stl, standard template library, raii, smart pointers, move semantics]
+    facets: [RAII and smart pointers, the STL, move semantics, virtual functions, templates]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:c_language, strength: 0.6}
+      - {id: concept:classes_and_objects, strength: 0.5}
+
+  - id: concept:go_language
+    name: Go (Golang)
+    domain: tooling
+    level: intermediate
+    aliases: [golang, go language, go programming, goroutines, go channels]
+    list_aliases: [go]
+    facets: [goroutines and channels, interfaces, error handling, the standard library for services]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:concurrency_synchronisation, strength: 0.5}
+
+  - id: concept:csharp_dotnet
+    name: C# and .NET
+    domain: tooling
+    level: intermediate
+    aliases: [csharp, c sharp, dotnet, dot net, net core, asp net, asp net core, net framework]
+    list_aliases: [net]
+    facets: [the CLR and garbage collection, LINQ, async and tasks, ASP.NET Core services]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:classes_and_objects, strength: 0.6}
+
+  - id: concept:kotlin_android
+    name: Kotlin and Android
+    domain: tooling
+    level: intermediate
+    aliases: [android, android development, android developer, android sdk, kotlin, jetpack compose, android activity lifecycle]
+    facets: [activity and fragment lifecycle, Kotlin null safety and coroutines, Jetpack Compose, background work]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:mobile_app_architecture, strength: 0.7}
+
+  - id: concept:swift_ios
+    name: Swift and iOS
+    domain: tooling
+    level: intermediate
+    aliases: [ios, ios development, ios developer, swift, swiftui, uikit, xcode]
+    facets: [the app lifecycle on iOS, optionals and value types, SwiftUI and UIKit, memory and ARC]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:mobile_app_architecture, strength: 0.7}
+
+  # ─── Tooling · frontend frameworks ───────────────────────────────────────
+  - id: concept:react
+    name: React.js
+    domain: tooling
+    level: intermediate
+    aliases: [react js, reactjs, react hooks, react components, jsx, virtual dom, react reconciliation, custom hooks]
+    list_aliases: [react]
+    facets: [components and JSX, hooks, rendering and reconciliation, state and context, performance, testing React]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:javascript, strength: 0.85}
+      - {id: concept:component_architecture, strength: 0.7}
+
+  - id: concept:angular
+    name: Angular Framework
+    domain: tooling
+    level: intermediate
+    aliases: [angular js, angularjs, angular framework, angular components, rxjs, angular services, dependency injection in angular]
+    list_aliases: [angular]
+    facets: [components and modules, dependency injection, RxJS and observables, change detection, routing and forms]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:typescript, strength: 0.8}
+      - {id: concept:component_architecture, strength: 0.7}
+
+  - id: concept:vue
+    name: Vue.js
+    domain: tooling
+    level: intermediate
+    aliases: [vue js, vuejs, vue 3, composition api, vue reactivity]
+    list_aliases: [vue]
+    facets: [the reactivity system, options and composition API, components and props, state with Pinia]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:javascript, strength: 0.85}
+      - {id: concept:component_architecture, strength: 0.7}
+
+  - id: concept:nextjs
+    name: Next.js
+    domain: tooling
+    level: advanced
+    aliases: [next js, nextjs, next js app router, react server components]
+    facets: [server and client components, data fetching and caching, routing, static versus dynamic pages]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:react, strength: 0.85}
+      - {id: concept:rendering_strategies, strength: 0.7}
+
+  - id: concept:react_native_and_flutter
+    name: Cross-Platform Mobile — React Native and Flutter
+    domain: tooling
+    level: intermediate
+    aliases: [react native, flutter, dart, cross platform mobile development, flutter widgets]
+    facets: [how cross-platform rendering works, widgets and components, platform channels and native modules, performance on a phone]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:mobile_app_architecture, strength: 0.7}
+      - {id: concept:component_architecture, strength: 0.5}
+
+  # ─── Tooling · backend frameworks ────────────────────────────────────────
+  - id: concept:nodejs_express
+    name: Node.js and Express
+    domain: tooling
+    level: intermediate
+    aliases: [node js, nodejs, node, express js, expressjs, express middleware, node event loop]
+    list_aliases: [express]
+    facets: [the Node event loop, middleware, async error handling, streams, structuring an Express service]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:javascript, strength: 0.85}
+      - {id: concept:api_design, strength: 0.6}
+
+  - id: concept:nestjs
+    name: NestJS
+    domain: tooling
+    level: advanced
+    aliases: [nest js, nestjs, nestjs modules, nestjs guards]
+    facets: [modules providers and controllers, dependency injection, guards pipes and interceptors, testing a Nest service]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:nodejs_express, strength: 0.8}
+      - {id: concept:typescript, strength: 0.7}
+
+  - id: concept:spring_boot
+    name: Spring Boot
+    domain: tooling
+    level: intermediate
+    aliases: [spring boot, spring, spring framework, spring mvc, spring data jpa, hibernate, jpa, spring security, dependency injection in spring]
+    facets: [dependency injection and beans, REST controllers, Spring Data and JPA, transactions, Spring Security]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:java_language, strength: 0.85}
+      - {id: concept:api_design, strength: 0.6}
+
+  - id: concept:django
+    name: Django
+    domain: tooling
+    level: intermediate
+    aliases: [django, django rest framework, drf, django orm, django models]
+    facets: [models and the ORM, views and URLs, the request cycle and middleware, Django REST framework]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:python_language, strength: 0.85}
+      - {id: concept:api_design, strength: 0.6}
+
+  - id: concept:fastapi
+    name: FastAPI
+    domain: tooling
+    level: intermediate
+    aliases: [fastapi, fast api, pydantic, asgi, uvicorn]
+    facets: [path operations and Pydantic models, dependency injection, async endpoints, generated API docs]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:python_language, strength: 0.85}
+      - {id: concept:api_design, strength: 0.6}
+
+  - id: concept:graphql
+    name: GraphQL
+    domain: tooling
+    level: advanced
+    aliases: [graphql, graphql schema, resolvers, apollo]
+    facets: [schemas and resolvers, the N+1 problem, GraphQL versus REST, caching GraphQL]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:api_design, strength: 0.8}
+
+  # ─── Tooling · databases and data stores ─────────────────────────────────
+  - id: concept:postgresql
+    name: PostgreSQL
+    domain: tooling
+    level: intermediate
+    aliases: [postgresql, postgres, psql, postgres indexes, jsonb]
+    facets: [MVCC and vacuum, index types, reading EXPLAIN, JSONB, extensions]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:sql_queries, strength: 0.85}
+
+  - id: concept:mysql
+    name: MySQL
+    domain: tooling
+    level: intermediate
+    aliases: [mysql, innodb, mariadb, mysql replication]
+    facets: [InnoDB and clustered indexes, isolation in MySQL, replication, tuning a slow query]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:sql_queries, strength: 0.85}
+
+  - id: concept:oracle_plsql
+    name: Oracle and PL/SQL
+    domain: tooling
+    level: intermediate
+    aliases: [oracle, oracle database, pl sql, plsql, stored procedures, triggers, teradata]
+    facets: [stored procedures and functions, cursors, triggers, packages, performance in PL/SQL]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:sql_queries, strength: 0.85}
+
+  - id: concept:mongodb
+    name: MongoDB
+    domain: tooling
+    level: intermediate
+    aliases: [mongodb, mongo, document store, aggregation pipeline, mongoose]
+    facets: [document modelling, embedding versus referencing, indexes, the aggregation pipeline, replica sets]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:nosql_vs_relational, strength: 0.7}
+
+  - id: concept:redis
+    name: Redis
+    domain: tooling
+    level: intermediate
+    aliases: [redis, redis cache, in memory data store, redis pub sub]
+    facets: [data structures, expiry and eviction, persistence, Redis as a cache lock and queue]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:caching_strategies, strength: 0.7}
+
+  - id: concept:cassandra
+    name: Cassandra and Wide-Column Stores
+    domain: tooling
+    level: advanced
+    aliases: [cassandra, wide column store, dynamodb, hbase, scylladb]
+    facets: [partition and clustering keys, modelling by query, tunable consistency, compaction]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:nosql_vs_relational, strength: 0.7}
+      - {id: concept:database_sharding, strength: 0.5}
+
+  # ─── Tooling · delivery and cloud ────────────────────────────────────────
+  - id: concept:git
+    name: Git and Version Control
+    domain: tooling
+    level: foundational
+    aliases: [git, version control, github, gitlab, branching strategy, merge conflicts, git rebase, pull requests]
+    facets: [commits branches and merges, rebase versus merge, resolving conflicts, branching strategies, undoing safely]
+    typical_question_time_s: 180
+
+  - id: concept:docker
+    name: Docker
+    domain: tooling
+    level: intermediate
+    aliases: [docker, dockerfile, docker compose, dockerization, docker images, container images]
+    facets: [images and layers, writing a Dockerfile, volumes and networks, compose, small and secure images]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:virtualisation_and_containers, strength: 0.8}
+      - {id: concept:linux_fundamentals, strength: 0.5}
+
+  - id: concept:kubernetes
+    name: Kubernetes
+    domain: tooling
+    level: advanced
+    aliases: [kubernetes, k8s, kubectl, pods, kubernetes deployments, helm, container orchestration]
+    facets: [pods deployments and services, scheduling and resources, configuration and secrets, scaling and probes, networking and ingress]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:docker, strength: 0.85}
+
+  - id: concept:aws
+    name: Amazon Web Services
+    domain: tooling
+    level: intermediate
+    aliases: [aws, amazon web services, ec2, s3, aws lambda, rds, aws iam, vpc]
+    facets: [compute choices, storage choices, networking in a VPC, IAM, managed services]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:cloud_fundamentals, strength: 0.85}
+
+  - id: concept:azure
+    name: Microsoft Azure
+    domain: tooling
+    level: intermediate
+    aliases: [azure, microsoft azure, ms azure, azure functions, azure data factory, azure devops, azure machine learning, azure cognitive services]
+    facets: [compute choices, storage and data services, identity with Entra ID, networking]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:cloud_fundamentals, strength: 0.85}
+
+  - id: concept:gcp
+    name: Google Cloud Platform
+    domain: tooling
+    level: intermediate
+    aliases: [gcp, google cloud, google cloud platform, cloud run, gke, cloud functions, vertex ai]
+    facets: [compute choices, BigQuery and data services, identity and projects, networking]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:cloud_fundamentals, strength: 0.85}
+
+  - id: concept:kafka
+    name: Apache Kafka
+    domain: tooling
+    level: advanced
+    aliases: [kafka, apache kafka, kafka topics, consumer groups, kafka streams]
+    facets: [topics partitions and offsets, consumer groups, delivery semantics, retention and compaction]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:message_queues, strength: 0.85}
+
+  - id: concept:selenium
+    name: Selenium and Browser Automation
+    domain: tooling
+    level: intermediate
+    aliases: [selenium, selenium webdriver, webdriver, browser automation, page object model]
+    facets: [locators and waits, the page object model, flaky UI tests, running in a grid]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:test_automation, strength: 0.7}
+
+  # ─── Tooling · data and ML ───────────────────────────────────────────────
+  - id: concept:sql_for_analytics
+    name: SQL for Analytics
+    domain: tooling
+    level: intermediate
+    aliases: [analytical sql, sql for analysis, cte, common table expressions, ranking functions, cohort queries, sql queries for reporting]
+    facets: [window functions, CTEs, cohorts and funnels in SQL, dates and time zones]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:aggregation_and_grouping, strength: 0.85}
+      - {id: concept:joins, strength: 0.7}
+
+  - id: concept:excel_analytics
+    name: Spreadsheet Analysis
+    domain: tooling
+    level: foundational
+    aliases: [ms excel, microsoft excel, excel formulas, pivot tables, vlookup, xlookup, spreadsheets, vba, google sheets]
+    list_aliases: [excel]
+    facets: [lookups and references, pivot tables, cleaning data in a sheet, building a model someone else can read]
+    typical_question_time_s: 180
+
+  - id: concept:bi_dashboards
+    name: BI Tools and Dashboards
+    domain: tooling
+    level: intermediate
+    aliases: [power bi, tableau, looker, dashboarding, dashboards, business intelligence, bi solutions, dax, data storytelling]
+    facets: [choosing the right chart, building a dashboard people use, data models in a BI tool, refresh and performance]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:data_visualisation, strength: 0.7}
+
+  - id: concept:sap_platform
+    name: SAP — HANA and BW
+    domain: tooling
+    level: intermediate
+    aliases: [sap, sap hana, hana, sap bi, sap bw, sap s 4hana, abap]
+    facets: [HANA's column store, modelling views, extraction and BW, reporting on SAP data]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:data_warehousing, strength: 0.6}
+
+  - id: concept:pandas_numpy
+    name: pandas and NumPy
+    domain: tooling
+    level: foundational
+    aliases: [pandas, numpy, dataframes, data wrangling, data cleaning, vectorisation, vectorization]
+    facets: [vectorised operations, indexing and selection, groupby and joins, missing values, memory and performance]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:python_language, strength: 0.7}
+
+  - id: concept:apache_spark
+    name: Apache Spark
+    domain: tooling
+    level: advanced
+    aliases: [apache spark, pyspark, spark sql, databricks, spark rdd]
+    list_aliases: [spark]
+    facets: [lazy evaluation and the DAG, partitions and shuffles, DataFrames and Spark SQL, tuning a slow job]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:distributed_data_processing, strength: 0.8}
+
+  - id: concept:airflow
+    name: Workflow Orchestration with Airflow
+    domain: tooling
+    level: intermediate
+    aliases: [airflow, apache airflow, dag scheduling, workflow orchestration, prefect, dagster]
+    facets: [DAGs tasks and dependencies, scheduling and backfills, retries and idempotency, sensors]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:data_pipelines, strength: 0.8}
+
+  - id: concept:scikit_learn
+    name: scikit-learn
+    domain: tooling
+    level: intermediate
+    aliases: [scikit learn, sklearn, sklearn pipelines]
+    facets: [estimators and pipelines, preprocessing without leakage, model selection, persisting a model]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:pandas_numpy, strength: 0.6}
+      - {id: concept:cross_validation, strength: 0.5}
+
+  - id: concept:pytorch
+    name: PyTorch
+    domain: tooling
+    level: intermediate
+    aliases: [pytorch, torch, autograd, pytorch lightning]
+    facets: [tensors and autograd, writing a training loop, datasets and data loaders, moving to the GPU, saving and loading]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:backpropagation, strength: 0.6}
+      - {id: concept:python_language, strength: 0.6}
+
+  - id: concept:tensorflow
+    name: TensorFlow and Keras
+    domain: tooling
+    level: intermediate
+    aliases: [tensorflow, keras, tf keras, tensorflow lite, jax]
+    facets: [Keras models and layers, graphs and eager mode, tf.data input pipelines, exporting a model]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:neural_network_basics, strength: 0.6}
+      - {id: concept:python_language, strength: 0.6}
+
+  - id: concept:opencv
+    name: OpenCV and Image Processing
+    domain: tooling
+    level: intermediate
+    aliases: [opencv, image processing, image filtering, edge detection, image segmentation basics, itk, vtk]
+    facets: [images as arrays, filtering and edges, colour spaces, geometric transforms, contours]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:linear_algebra_for_ml, strength: 0.5}
+
+  - id: concept:llm_frameworks
+    name: LLM Application Frameworks
+    domain: tooling
+    level: intermediate
+    aliases: [langchain, langgraph, llamaindex, autogen, semantic kernel, llm orchestration frameworks, ai orchestration]
+    facets: [chains and graphs, tools and memory, when a framework helps and when it hides too much, tracing a run]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:retrieval_augmented_generation, strength: 0.6}
+
+  # ─── ML · statistics and analytics ───────────────────────────────────────
+  - id: concept:descriptive_statistics
+    name: Descriptive Statistics
+    domain: ml
+    level: foundational
+    aliases: [descriptive statistics, statistics, mean median mode, variance and standard deviation, distributions, percentiles, outliers, statistical analysis]
+    facets: [centre and spread, distributions and skew, percentiles, outliers, correlation versus causation]
+    typical_question_time_s: 180
+
+  - id: concept:hypothesis_testing
+    name: Hypothesis Testing
+    domain: ml
+    level: intermediate
+    aliases: [hypothesis testing, p value, p values, t test, chi square test, confidence intervals, statistical significance, statistical inference]
+    facets: [null and alternative, p-values and what they are not, confidence intervals, type I and type II errors, choosing a test]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:descriptive_statistics, strength: 0.7}
+      - {id: concept:probability_for_ml, strength: 0.7}
+
+  - id: concept:ab_testing
+    name: A/B Testing and Experimentation
+    domain: ml
+    level: advanced
+    aliases: [ab testing, a b testing, experimentation, online experiments, split testing, sample size calculation]
+    facets: [designing the experiment, sample size and power, reading the result, novelty and peeking, guardrail metrics]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:hypothesis_testing, strength: 0.85}
+
+  - id: concept:exploratory_data_analysis
+    name: Exploratory Data Analysis
+    domain: ml
+    level: foundational
+    aliases: [exploratory data analysis, eda, data exploration, data profiling, data analysis, analytical skills]
+    facets: [first look at a dataset, missing and odd values, distributions and relationships, forming hypotheses]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:descriptive_statistics, strength: 0.7}
+
+  - id: concept:data_visualisation
+    name: Data Visualisation
+    domain: ml
+    level: foundational
+    aliases: [data visualisation, data visualization, charts, matplotlib, seaborn, plotly, visualization]
+    facets: [choosing a chart, honest axes and scales, showing uncertainty, a chart for an audience]
+    typical_question_time_s: 180
+    prerequisites:
+      - {id: concept:descriptive_statistics, strength: 0.5}
+
+  - id: concept:time_series_forecasting
+    name: Time-Series Forecasting
+    domain: ml
+    level: advanced
+    aliases: [time series, time series forecasting, forecasting, arima, seasonality, demand forecasting]
+    facets: [trend and seasonality, validating without leakage, classical versus ML forecasting, forecast error]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:linear_regression, strength: 0.6}
+      - {id: concept:train_test_split, strength: 0.6}
+
+  - id: concept:recommender_systems
+    name: Recommender Systems
+    domain: ml
+    level: advanced
+    aliases: [recommender systems, recommendation engines, collaborative filtering, content based filtering, matrix factorization]
+    facets: [collaborative and content-based, cold start, ranking metrics, feedback loops]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:embeddings, strength: 0.6}
+      - {id: concept:classification_metrics, strength: 0.4}
+
+  # ─── ML · applied AI ─────────────────────────────────────────────────────
+  - id: concept:nlp_fundamentals
+    name: NLP Fundamentals
+    domain: ml
+    level: intermediate
+    aliases: [nlp, natural language processing, text classification, tokenization, tokenisation, named entity recognition, ner, tf idf, sentiment analysis]
+    facets: [tokenising text, representing text, classic NLP tasks, evaluating language models]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:embeddings, strength: 0.6}
+
+  - id: concept:computer_vision
+    name: Computer Vision
+    domain: ml
+    level: advanced
+    aliases: [computer vision, object detection, image classification, semantic segmentation, instance segmentation, yolo, image registration, cvml]
+    facets: [classification detection and segmentation, augmentation, evaluation with IoU and mAP, deploying a vision model]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:convolutional_networks, strength: 0.8}
+
+  - id: concept:retrieval_augmented_generation
+    name: Retrieval-Augmented Generation
+    domain: ml
+    level: advanced
+    aliases: [rag, retrieval augmented generation, rag pipeline, rag pipelines, vector database, vector databases, vector search, semantic search, chunking, information retrieval, knowledge bases, enterprise search]
+    facets: [chunking and indexing, retrieval quality, grounding and citations, evaluating a RAG system, when RAG is the wrong tool]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:embeddings, strength: 0.7}
+      - {id: concept:large_language_models, strength: 0.7}
+
+  - id: concept:prompt_engineering
+    name: Prompt Engineering and Structured Output
+    domain: ml
+    level: intermediate
+    aliases: [prompt engineering, prompting, few shot prompting, chain of thought, structured outputs, context engineering, system prompts]
+    facets: [instructions and examples, structured output, reducing hallucination, prompt injection, testing prompts]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:large_language_models, strength: 0.7}
+
+  - id: concept:llm_fine_tuning
+    name: Fine-Tuning Language Models
+    domain: ml
+    level: advanced
+    aliases: [fine tuning llms, llm fine tuning, lora, qlora, peft, instruction tuning, rlhf, model fine tuning]
+    facets: [when to fine-tune instead of prompt, LoRA and parameter-efficient tuning, data for tuning, evaluating the tuned model]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:transfer_learning, strength: 0.7}
+      - {id: concept:large_language_models, strength: 0.7}
+
+  - id: concept:ai_agents
+    name: AI Agents and Tool Use
+    domain: ml
+    level: advanced
+    aliases: [ai agents, agentic ai, llm agents, tool calling, function calling, agentic workflows, multi agent systems, model context protocol, mcp]
+    facets: [tools and function calling, planning loops, memory, guardrails and failure modes, evaluating an agent]
+    typical_question_time_s: 360
+    prerequisites:
+      - {id: concept:prompt_engineering, strength: 0.7}
+      - {id: concept:retrieval_augmented_generation, strength: 0.5}
+
+  - id: concept:llm_evaluation
+    name: Evaluating LLM Systems
+    domain: ml
+    level: advanced
+    aliases: [llm evaluation, evaluation benchmarks, llm as a judge, hallucination detection, red teaming llms, ai safety evaluation]
+    facets: [golden sets and benchmarks, model-graded evaluation, measuring hallucination, regression tests for prompts]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:large_language_models, strength: 0.6}
+      - {id: concept:classification_metrics, strength: 0.4}
+
+  - id: concept:model_optimisation
+    name: Model Optimisation and Edge Deployment
+    domain: ml
+    level: advanced
+    aliases: [model optimization, model optimisation, quantization, quantisation, pruning, knowledge distillation, onnx, tensorrt, edge deployment, tflite, nvidia jetson, cuda]
+    facets: [quantisation, pruning and distillation, exporting with ONNX, latency on a device, GPU basics]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:training_deep_networks, strength: 0.6}
+      - {id: concept:computer_architecture_basics, strength: 0.4}
+
+  - id: concept:ml_pipelines
+    name: ML Pipelines and Experiment Tracking
+    domain: ml
+    level: advanced
+    aliases: [ml pipelines, experiment tracking, mlflow, feature store, model registry, ml lifecycle, ai lifecycle, kubeflow]
+    facets: [reproducible training, tracking experiments, feature stores, registries and promotion, retraining]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:ml_deployment_and_monitoring, strength: 0.7}
+
+  # ─── Aptitude and business reasoning ─────────────────────────────────────
+  - id: concept:quantitative_aptitude
+    name: Quantitative Aptitude
+    domain: aptitude
+    level: foundational
+    aliases: [quantitative aptitude, quants, arithmetic aptitude, percentages and ratios, time and work, speed and distance, profit and loss]
+    facets: [percentages and ratios, rates and work, probability puzzles, estimation under time pressure]
+    typical_question_time_s: 180
+
+  - id: concept:logical_reasoning
+    name: Logical Reasoning
+    domain: aptitude
+    level: foundational
+    aliases: [logical reasoning, analytical reasoning, puzzles, deductive reasoning, syllogisms, seating arrangement]
+    facets: [deduction, sequences and patterns, constraint puzzles, explaining your reasoning aloud]
+    typical_question_time_s: 180
+
+  - id: concept:data_interpretation
+    name: Data Interpretation
+    domain: aptitude
+    level: intermediate
+    aliases: [data interpretation, reading charts, data sufficiency, table interpretation]
+    facets: [reading a chart correctly, comparing rates not totals, sufficiency, spotting a misleading figure]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:quantitative_aptitude, strength: 0.6}
+
+  - id: concept:guesstimates
+    name: Guesstimates and Estimation
+    domain: aptitude
+    level: intermediate
+    aliases: [guesstimates, guesstimate, market sizing, estimation questions, fermi estimation]
+    facets: [structuring the estimate, stating assumptions, sanity checks, top-down versus bottom-up]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:quantitative_aptitude, strength: 0.5}
+
+  - id: concept:business_case_analysis
+    name: Business Case Analysis
+    domain: aptitude
+    level: advanced
+    aliases: [case study, case analysis, case interview, business case, profitability case, root cause case, consulting case]
+    facets: [structuring the problem, hypotheses and data, profitability and growth cases, a recommendation with its risks]
+    typical_question_time_s: 420
+    prerequisites:
+      - {id: concept:logical_reasoning, strength: 0.6}
+      - {id: concept:data_interpretation, strength: 0.5}
+
+  - id: concept:product_sense
+    name: Product Sense
+    domain: aptitude
+    level: intermediate
+    aliases: [product sense, product thinking, product design question, improve a product, product strategy, product management]
+    facets: [who the users are, problems worth solving, designing a feature, trade-offs and scope]
+    typical_question_time_s: 360
+
+  - id: concept:product_metrics
+    name: Metrics and KPIs
+    domain: aptitude
+    level: intermediate
+    aliases: [kpis, kpi, product metrics, business metrics, north star metric, funnel analysis, retention analysis, metrics and analytics, success metrics]
+    facets: [choosing a north-star metric, funnels and retention, diagnosing a metric drop, counter-metrics]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:descriptive_statistics, strength: 0.4}
+
+  - id: concept:prioritisation_frameworks
+    name: Prioritisation and Roadmapping
+    domain: aptitude
+    level: intermediate
+    aliases: [prioritisation, prioritization, product roadmap, rice framework, moscow method, backlog prioritisation, roadmap planning]
+    facets: [impact against effort, saying no, sequencing a roadmap, communicating a trade-off]
+    typical_question_time_s: 300
+    prerequisites:
+      - {id: concept:product_sense, strength: 0.6}
+
+  - id: concept:requirements_elicitation
+    name: Requirements Elicitation
+    domain: aptitude
+    level: intermediate
+    aliases: [requirements elicitation, business requirements, brd, user stories, functional requirements, non functional requirements, use cases, gap analysis]
+    facets: [finding the real need, user stories and acceptance criteria, functional and non-functional, documenting so others can build]
+    typical_question_time_s: 300
+
+  - id: concept:process_modelling
+    name: Process Modelling
+    domain: aptitude
+    level: intermediate
+    aliases: [process modelling, process modeling, bpmn, process mapping, flowcharts, as is to be analysis]
+    facets: [mapping the current process, finding waste, the to-be process, measuring the change]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:requirements_elicitation, strength: 0.5}
+
+  - id: concept:project_management_basics
+    name: Project Management Basics
+    domain: aptitude
+    level: foundational
+    aliases: [project management, project planning, risk management, raid log, milestones and deliverables, project coordination]
+    facets: [scope time and cost, risks and dependencies, tracking a plan, reporting status honestly]
+    typical_question_time_s: 240
+
+  # ─── Communication · beyond the interview ────────────────────────────────
+  - id: concept:stakeholder_communication
+    name: Stakeholder Communication
+    domain: communication
+    level: intermediate
+    aliases: [stakeholder management, stakeholder communication, client communication, business communication, presenting to non technical audiences, cross functional collaboration]
+    facets: [knowing what each audience needs, explaining technical work simply, bad news early, written updates]
+    typical_question_time_s: 240
+
+  - id: concept:negotiation_and_persuasion
+    name: Negotiation and Persuasion
+    domain: communication
+    level: intermediate
+    aliases: [negotiation, persuasion, objection handling, sales pitch, closing a deal, consultative selling]
+    facets: [understanding the other side, handling an objection, framing value, knowing your walk-away]
+    typical_question_time_s: 240
+
+  - id: concept:writing_for_an_audience
+    name: Writing for an Audience
+    domain: communication
+    level: foundational
+    aliases: [copywriting, content writing, technical writing, documentation writing, brand communication, storytelling in writing, seo writing]
+    facets: [audience and purpose, structure and headlines, editing for clarity, tone and brand voice]
+    typical_question_time_s: 240
+
+  # ─── Behavioural ─────────────────────────────────────────────────────────
+  - id: concept:ownership_and_accountability
+    name: Ownership and Accountability
+    domain: behavioural
+    level: foundational
+    aliases: [ownership, accountability, taking ownership, bias for action, owning a mistake]
+    facets: [owning an outcome end to end, admitting a mistake, going beyond the assignment]
+    typical_question_time_s: 240
+
+  - id: concept:teamwork_and_collaboration
+    name: Teamwork and Collaboration
+    domain: behavioural
+    level: foundational
+    aliases: [teamwork, collaboration, team player, working in a team, cross team collaboration]
+    facets: [your role in a team, helping a struggling teammate, sharing credit, working with people unlike you]
+    typical_question_time_s: 240
+
+  - id: concept:conflict_resolution
+    name: Conflict Resolution
+    domain: behavioural
+    level: intermediate
+    aliases: [conflict resolution, handling conflict, disagreement with a teammate, difficult colleague, conflict management]
+    facets: [a disagreement over a decision, a difficult person, conflict over workload, what changed afterwards]
+    typical_question_time_s: 240
+    prerequisites:
+      - {id: concept:teamwork_and_collaboration, strength: 0.5}
+
+  - id: concept:leadership_and_initiative
+    name: Leadership and Initiative
+    domain: behavioural
+    level: intermediate
+    aliases: [leadership, initiative, leading a team, mentoring, influence without authority, self motivation]
+    facets: [leading without a title, starting something nobody asked for, mentoring, making a call under uncertainty]
+    typical_question_time_s: 240
+
+  - id: concept:learning_from_failure
+    name: Learning from Failure
+    domain: behavioural
+    level: intermediate
+    aliases: [failure, learning from failure, biggest mistake, setback, resilience at work, handling rejection]
+    facets: [a real failure and your part in it, what you changed, bouncing back]
+    typical_question_time_s: 240
+
+  - id: concept:adaptability_and_learning
+    name: Adaptability and Learning Agility
+    domain: behavioural
+    level: foundational
+    aliases: [adaptability, learning agility, learning ability, self learning, curiosity, learning a new technology quickly, flexibility]
+    facets: [learning something fast, a change of plan, working with ambiguity]
+    typical_question_time_s: 240
+
+  - id: concept:prioritisation_under_pressure
+    name: Prioritising Under Pressure
+    domain: behavioural
+    level: intermediate
+    aliases: [time management, prioritising under pressure, meeting deadlines, deadline discipline, multitasking, working under pressure]
+    facets: [competing deadlines, deciding what to drop, telling people early, sustaining quality under pressure]
+    typical_question_time_s: 240
+
+  - id: concept:customer_focus
+    name: Customer Focus
+    domain: behavioural
+    level: intermediate
+    aliases: [customer focus, customer obsession, customer handling, user empathy, customer centricity, service orientation]
+    facets: [understanding what the customer needed, an unhappy customer, a trade-off made for the user]
+    typical_question_time_s: 240
+
+  - id: concept:integrity_and_ethics
+    name: Integrity and Ethics
+    domain: behavioural
+    level: intermediate
+    aliases: [integrity, ethics, ethical dilemma, honesty at work, professional ethics, responsible ai]
+    facets: [an ethical dilemma, saying no to a shortcut, protecting user data, reporting a problem]
+    typical_question_time_s: 240
+
+  - id: concept:motivation_and_role_fit
+    name: Motivation and Role Fit
+    domain: behavioural
+    level: foundational
+    aliases: [why this company, why this role, career goals, motivation, tell me about yourself, where do you see yourself]
+    facets: [tell me about yourself, why this role, why this company, where you are heading]
+    typical_question_time_s: 180

@@ -36,15 +36,15 @@ def test_deps_says_this_module_is_a_root(client):
 def test_status_reports_the_ontology_and_whether_it_was_reviewed(client):
     body = client.get("/status").json()
     assert body["id"] == "M04"
-    assert body["ontology"]["concepts"] == 165
+    assert body["ontology"]["concepts"] == 323
     assert body["ontology"]["faculty_reviewed"] is False
 
 
 def test_concepts_are_public_and_filterable(client):
     body = client.get("/v1/concepts", params={"domain": "communication"}).json()
-    assert body["count"] == 165
+    assert body["count"] == 323
     assert all(c["domain"] == "communication" for c in body["concepts"])
-    assert len(body["concepts"]) == 15
+    assert len(body["concepts"]) == 18  # 15, + 3 beyond the interview (2026-11-12)
 
 
 def test_one_concept_carries_its_neighbourhood(client):
@@ -82,7 +82,7 @@ def test_mastery_separates_measured_from_untested(client, session, candidate_id,
     measured = {row["concept_id"] for row in body["measured"]}
     assert DP in measured
     assert body["not_yet_tested"]["count"] > 100
-    assert body["totals"]["in_ontology"] == 165
+    assert body["totals"]["in_ontology"] == 323
 
 
 def test_the_evidence_drawer_answers_why(client, session, candidate_id, consent, graph):
@@ -568,3 +568,27 @@ def test_the_profile_is_the_students_own_and_goes_with_export_and_delete(
 
     client.delete(f"/v1/candidates/{candidate_id}/memory", headers=me)
     assert client.get(url, headers=me).json()["display_name"] == ""
+
+
+def test_the_whole_graph_is_one_read(client):
+    """M22 builds a role's competency graph from this, so it must carry every
+    concept, every edge between them, and what a question may be about."""
+    body = client.get("/v1/concepts/graph").json()
+    assert len(body["concepts"]) == 323
+    ids = {c["id"] for c in body["concepts"]}
+    assert all(e["src"] in ids and e["dst"] in ids for e in body["edges"])
+    kinds = {e["kind"] for e in body["edges"]}
+    assert {"prerequisite_of", "co_occurs_with"} <= kinds
+    react = next(c for c in body["concepts"] if c["id"] == "concept:react")
+    assert "hooks" in react["facets"]
+    # A list alias resolves, but is never served for prose scanning.
+    assert "react" not in [a.lower() for a in react["aliases"]]
+
+
+def test_a_list_alias_resolves_inside_an_enumeration(client):
+    body = client.post("/v1/concepts/resolve", json={"labels": ["React", "Go", "Excel"]}).json()
+    assert body["resolved"] == {
+        "React": "concept:react",
+        "Go": "concept:go_language",
+        "Excel": "concept:excel_analytics",
+    }

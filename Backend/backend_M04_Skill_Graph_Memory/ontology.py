@@ -91,6 +91,14 @@ class Ontology:
     _prereqs_of: dict[str, list[ConceptEdge]] = field(default_factory=dict)
     _dependents_of: dict[str, list[ConceptEdge]] = field(default_factory=dict)
     source_path: Path | None = None
+    #: concept id -> what a question on it may be about (2026-11-12, M22). The
+    #: unit of question COVERAGE; the concept stays the unit of mastery.
+    facets: dict[str, list[str]] = field(default_factory=dict)
+    #: concept id -> single ordinary words ("react", "go", "excel") that name it
+    #: only inside an enumeration. Resolved, linted, and never served with
+    #: `aliases`, so no module scans prose for them: "react quickly" in a job
+    #: description is not a React requirement.
+    list_aliases: dict[str, list[str]] = field(default_factory=dict)
 
     # ── construction ─────────────────────────────────────────────────────
 
@@ -226,6 +234,17 @@ class Ontology:
             if edge.src == edge.dst:
                 issues.append(LintIssue("error", "self-edge", f"{edge.src} depends on itself"))
 
+        for concept_id, words in self.list_aliases.items():
+            for word in words:
+                if len(normalise_alias(word).split()) > 1:
+                    issues.append(
+                        LintIssue(
+                            "warning",
+                            "list-alias-not-a-word",
+                            f'{concept_id}: "{word}" has several words; put it in aliases',
+                        )
+                    )
+
         for cycle in self.find_cycles():
             issues.append(
                 LintIssue("error", "cycle", "prerequisite cycle: " + " -> ".join(cycle))
@@ -233,7 +252,8 @@ class Ontology:
 
         seen: dict[str, str] = {}
         for concept in self.concepts.values():
-            for alias in self._alias_keys(concept):
+            listed = [normalise_alias(w) for w in self.list_aliases.get(concept.id, [])]
+            for alias in [*self._alias_keys(concept), *filter(None, listed)]:
                 owner = seen.get(alias)
                 if owner is not None and owner != concept.id:
                     issues.append(
@@ -313,6 +333,8 @@ def parse(document: dict) -> Ontology:
     version = str(document.get("version") or "1.0")
     concepts: dict[str, Concept] = {}
     edges: list[ConceptEdge] = []
+    facets: dict[str, list[str]] = {}
+    list_aliases: dict[str, list[str]] = {}
 
     entries = document.get("concepts") or []
     if not entries:
@@ -343,6 +365,22 @@ def parse(document: dict) -> Ontology:
                     ontology_version=version,
                 )
             )
+        if entry.get("facets"):
+            facets[concept.id] = [str(f) for f in entry["facets"]]
+        if entry.get("list_aliases"):
+            list_aliases[concept.id] = [str(a) for a in entry["list_aliases"]]
+        for other in entry.get("related") or []:
+            # Travel together, neither first. Not walked by propagation or the
+            # bottleneck query: those read `prerequisite_of` only.
+            edges.append(
+                ConceptEdge(
+                    src=concept.id,
+                    dst=other,
+                    kind=EdgeKind.co_occurs_with,
+                    strength=0.5,
+                    ontology_version=version,
+                )
+            )
         for narrower in entry.get("specialises") or []:
             edges.append(
                 ConceptEdge(
@@ -359,6 +397,8 @@ def parse(document: dict) -> Ontology:
         reviewed=bool(document.get("reviewed", False)),
         concepts=concepts,
         edges=edges,
+        facets=facets,
+        list_aliases=list_aliases,
     )
     ontology.alias_index = _build_alias_index(ontology)
     return ontology
@@ -372,6 +412,12 @@ def _build_alias_index(ontology: Ontology) -> dict[str, str]:
             # letting the last one win would make resolution depend on YAML
             # ordering, which is the least debuggable failure available.
             index.setdefault(key, concept.id)
+    # List aliases after every real alias, so one never shadows another's.
+    for concept_id, words in ontology.list_aliases.items():
+        for word in words:
+            key = normalise_alias(word)
+            if key:
+                index.setdefault(key, concept_id)
     return index
 
 
