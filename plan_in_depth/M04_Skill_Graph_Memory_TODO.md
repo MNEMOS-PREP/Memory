@@ -18,6 +18,16 @@ Spec: [M04_Skill_Graph_Memory.md](M04_Skill_Graph_Memory.md)
 
 Legend: ✅ done · 🟡 partly done · ⬜ not started
 
+### 2026-11-17 — the student's picture
+
+- ✅ `m04_profile_photo` and `PUT/GET/DELETE /v1/candidates/{id}/photo`: a JPEG
+  or PNG by its own bytes, 1.5 MB at most, ETag on read; the profile carries
+  its digest as `photo`. Returned by the export, removed by the delete.
+  Frontend: `useProfilePhoto`, `useSetPhoto`, `useRemovePhoto`, `squarePhoto`
+  (the browser crops it square, 512 px). Shown by the shell (top-right corner,
+  Settings), M06 (the tile when the camera is off) and M01 (tailored resumes).
+- Tests: **179 passed** (`test_photo.py`).
+
 ### 2026-10-29 — reinforcement-learning concepts, and M20's vivas as evidence
 
 - ✅ **9 reinforcement-learning concepts** (the user's request, from M20): a
