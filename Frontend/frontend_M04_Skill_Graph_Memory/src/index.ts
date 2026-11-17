@@ -21,6 +21,10 @@ export {
   usePracticeConsent,
   useProfile,
   useSaveProfile,
+  useProfilePhoto,
+  useSetPhoto,
+  useRemovePhoto,
+  squarePhoto,
   useTrajectory,
 } from "./api";
 export { movesSince, snapshot } from "./movement";

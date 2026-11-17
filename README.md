@@ -148,6 +148,14 @@ empty list is a promise, a missing key is a migration.
 
 ---
 
+## The student's picture (2026-11-17)
+
+`/v1/candidates/{id}/photo` holds one picture per student, set from the
+platform's Settings (JPEG or PNG, checked by its bytes; the browser crops it
+square first). The profile names it by digest as `photo`. The shell shows it
+top right, M06 on the student's tile when the camera is off, M01 on tailored
+resumes; the export returns it and the delete removes it.
+
 ## The rules this module keeps
 
 1. **Every number traces to something the student said or did.** One write

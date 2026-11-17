@@ -163,6 +163,8 @@ export interface StudentProfile {
   reminder_time: string;
   onboarded_at: string | null;
   updated_at: string;
+  /** The picture's digest, or "" when there is none (2026-11-17). */
+  photo: string;
 }
 
 /* ── curricula: what the sign-in step offers (2026-10-13) ─────────────────── */

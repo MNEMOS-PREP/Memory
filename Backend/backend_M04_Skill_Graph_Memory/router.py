@@ -37,7 +37,7 @@ from ai_core.db import get_session
 from ai_core.guard import candidate_guard
 from ai_core.modules_meta import module_status
 from ai_core.service import require_service
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from pydantic import BaseModel, Field
 from sqlmodel import Session
 
@@ -486,17 +486,21 @@ class ProfileOut(BaseModel):
     reminder_time: str
     onboarded_at: datetime | None
     updated_at: datetime
+    #: The picture's content digest, or "" when the student has not added one
+    #: (2026-11-17). A screen keys its copy of the image on it.
+    photo: str = ""
 
 
-def _profile_out(row) -> ProfileOut:
-    return ProfileOut(**row.model_dump())
+def _profile_out(row, session: Session) -> ProfileOut:
+    photo = service.read_photo(session, row.candidate_id)
+    return ProfileOut(**row.model_dump(), photo=photo.sha256 if photo else "")
 
 
 @router.get("/v1/candidates/{candidate_id}/profile", tags=["rights"], response_model=ProfileOut)
 def read_profile(candidate_id: uuid.UUID, session: Session = Depends(get_session)) -> ProfileOut:
     """What the student said they are preparing for. Empty, not 404, before
     they have said anything."""
-    return _profile_out(service.read_profile(session, candidate_id))
+    return _profile_out(service.read_profile(session, candidate_id), session)
 
 
 @router.put("/v1/candidates/{candidate_id}/profile", tags=["rights"], response_model=ProfileOut)
@@ -516,8 +520,110 @@ def write_profile(
     if "curriculum_id" in fields or "courses" in fields:
         _check_courses(session, candidate_id, fields)
     return _profile_out(
-        service.write_profile(session, candidate_id, fields, onboarded=body.onboarded)
+        service.write_profile(session, candidate_id, fields, onboarded=body.onboarded), session
     )
+
+
+# ─────────────────────────────────────────────────────────────
+#  The student's picture (2026-11-17)
+# ─────────────────────────────────────────────────────────────
+
+#: A square picture the browser has already cropped and resized is ~60 KB;
+#: this leaves room for one it could not shrink, and nothing larger.
+PHOTO_MAX_BYTES = 1_500_000
+
+
+class PhotoOut(BaseModel):
+    candidate_id: uuid.UUID
+    mime: str
+    sha256: str
+    width: int
+    height: int
+    bytes: int
+    updated_at: datetime
+
+
+def _sniff(data: bytes) -> str | None:
+    """JPEG or PNG by their first bytes — never by what the request claims."""
+    if data[:3] == b"\xff\xd8\xff":
+        return "image/jpeg"
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return "image/png"
+    return None
+
+
+def _size(data: bytes, mime: str) -> tuple[int, int]:
+    """Width and height from the file's own header (no image library)."""
+    if mime == "image/png" and len(data) >= 24:
+        return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+    at = 2
+    while at + 9 < len(data):
+        if data[at] != 0xFF:
+            at += 1
+            continue
+        marker = data[at + 1]
+        length = int.from_bytes(data[at + 2 : at + 4], "big")
+        if marker in {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}:
+            return int.from_bytes(data[at + 7 : at + 9], "big"), int.from_bytes(
+                data[at + 5 : at + 7], "big"
+            )
+        at += 2 + length
+    return 0, 0
+
+
+@router.put("/v1/candidates/{candidate_id}/photo", tags=["rights"], response_model=PhotoOut)
+async def put_photo(
+    candidate_id: uuid.UUID, request: Request, session: Session = Depends(get_session)
+) -> PhotoOut:
+    """The student's picture, as the image bytes (JPEG or PNG) in the body."""
+    data = await request.body()
+    if not data:
+        raise HTTPException(status_code=422, detail="No picture was sent.")
+    if len(data) > PHOTO_MAX_BYTES:
+        raise HTTPException(status_code=413, detail="That picture is too large — 1.5 MB at most.")
+    mime = _sniff(data)
+    if mime is None:
+        raise HTTPException(status_code=415, detail="Use a JPEG or PNG picture.")
+    width, height = _size(data, mime)
+    if width and height and (width < 64 or height < 64):
+        raise HTTPException(status_code=422, detail="That picture is too small to show clearly.")
+    row = service.write_photo(
+        session, candidate_id, data=data, mime=mime, width=width, height=height
+    )
+    return PhotoOut(
+        candidate_id=row.candidate_id,
+        mime=row.mime,
+        sha256=row.sha256,
+        width=row.width,
+        height=row.height,
+        bytes=len(row.data),
+        updated_at=row.updated_at,
+    )
+
+
+@router.get("/v1/candidates/{candidate_id}/photo", tags=["rights"])
+def get_photo(
+    candidate_id: uuid.UUID, request: Request, session: Session = Depends(get_session)
+) -> Response:
+    """The picture's bytes. 404 when there is none — every screen then shows
+    what it showed before (initials, "You"), so no picture is never an error."""
+    row = service.read_photo(session, candidate_id)
+    if row is None:
+        raise HTTPException(status_code=404, detail="No picture yet.")
+    etag = f'"{row.sha256}"'
+    if request.headers.get("if-none-match") == etag:
+        return Response(status_code=304, headers={"ETag": etag})
+    return Response(
+        content=row.data,
+        media_type=row.mime,
+        headers={"ETag": etag, "Cache-Control": "private, no-cache"},
+    )
+
+
+@router.delete("/v1/candidates/{candidate_id}/photo", tags=["rights"], status_code=204)
+def delete_photo(candidate_id: uuid.UUID, session: Session = Depends(get_session)) -> Response:
+    service.delete_photo(session, candidate_id)
+    return Response(status_code=204)
 
 
 @router.get("/v1/candidates/{candidate_id}/coursework", tags=["curricula"])

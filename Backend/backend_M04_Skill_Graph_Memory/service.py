@@ -16,6 +16,7 @@ downstream module quietly wrong at once.
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import logging
 import math
@@ -42,6 +43,7 @@ from .models import (
     Observation,
     ObservationKind,
     PendingObservation,
+    ProfilePhoto,
     ProfileSummary,
     Purpose,
     RetestQueueItem,
@@ -1060,6 +1062,37 @@ def consents_for(session: Session, candidate_id: uuid.UUID) -> list[ConsentRecor
     )
 
 
+def read_photo(session: Session, candidate_id: uuid.UUID) -> ProfilePhoto | None:
+    return session.get(ProfilePhoto, candidate_id)
+
+
+def write_photo(
+    session: Session, candidate_id: uuid.UUID, *, data: bytes, mime: str, width: int, height: int
+) -> ProfilePhoto:
+    """Store the student's picture, replacing any earlier one."""
+    row = session.get(ProfilePhoto, candidate_id) or ProfilePhoto(
+        candidate_id=candidate_id, mime=mime, data=b""
+    )
+    row.mime = mime
+    row.data = data
+    row.sha256 = hashlib.sha256(data).hexdigest()
+    row.width, row.height = width, height
+    row.updated_at = utcnow()
+    session.add(row)
+    session.commit()
+    session.refresh(row)
+    return row
+
+
+def delete_photo(session: Session, candidate_id: uuid.UUID) -> bool:
+    row = session.get(ProfilePhoto, candidate_id)
+    if row is None:
+        return False
+    session.delete(row)
+    session.commit()
+    return True
+
+
 def read_profile(session: Session, candidate_id: uuid.UUID) -> StudentProfile:
     """The student's own answers, or an empty profile — never a 404. A
     student who has not onboarded yet is a normal state, not an error."""
@@ -1117,6 +1150,18 @@ def export_memory(session: Session, candidate_id: uuid.UUID) -> dict:
             ).all()
         ),
         "student_profile": dump(by_candidate(StudentProfile)),
+        # The picture itself, as data the student can save back out.
+        "profile_photo": [
+            {
+                "mime": row.mime,
+                "sha256": row.sha256,
+                "width": row.width,
+                "height": row.height,
+                "updated_at": row.updated_at.isoformat(),
+                "data_base64": base64.b64encode(row.data).decode("ascii"),
+            }
+            for row in by_candidate(ProfilePhoto)
+        ],
     }
 
 
@@ -1146,6 +1191,7 @@ def delete_memory(session: Session, candidate_id: uuid.UUID) -> dict:
         Artifact,
         ProfileSummary,
         StudentProfile,
+        ProfilePhoto,
     ):
         rows = session.exec(select(model).where(model.candidate_id == candidate_id)).all()
         for row in rows:
