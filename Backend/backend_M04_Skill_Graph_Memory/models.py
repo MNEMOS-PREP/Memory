@@ -605,3 +605,29 @@ class MasteryOut(BaseModel):
     retest_queued: bool = False
     #: How many other concepts this one blocks. Only set where it was computed.
     blocks: int | None = None
+
+
+class ProfilePhoto(SQLModel, table=True):
+    """The student's own picture (2026-11-17).
+
+    Set in Settings and shown wherever the platform shows the student: the
+    corner of every page, their tile in a mock interview when the camera is
+    off, and the resumes they tailor. Beside the profile rather than in it so
+    the profile stays a small row every screen reads, and the bytes are read
+    only by whoever draws the picture.
+
+    One per student; replacing it replaces the row. It is theirs like the rest
+    of this module's memory: the export returns it and the delete removes it.
+    """
+
+    __tablename__ = "m04_profile_photo"
+
+    candidate_id: uuid.UUID = Field(primary_key=True)
+    mime: str
+    data: bytes = Field(sa_column=Column(LargeBinary))
+    #: Content digest — what a screen keys its cached copy on, so a new
+    #: picture is fetched the moment it changes and never before.
+    sha256: str = ""
+    width: int = 0
+    height: int = 0
+    updated_at: datetime = Field(default_factory=utcnow)

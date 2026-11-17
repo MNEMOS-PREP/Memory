@@ -5,7 +5,7 @@
  */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { api } from "@ai/core";
+import { api, sessionHeaders } from "@ai/core";
 
 import type {
   BottlenecksResponse,
@@ -169,4 +169,105 @@ export function useDeleteMyData(candidate: string | null) {
     mutationFn: () => api.del<Record<string, unknown>>(`/v1/candidates/${candidate}/memory`),
     onSuccess: () => client.invalidateQueries({ queryKey: ["m04"] }),
   });
+}
+
+/* ------------------------------------------------------------------ */
+/*  The student's picture (2026-11-17)                                */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The picture as a blob URL, fetched with identity — an `<img src>` cannot
+ * send the headers every candidate route needs. Keyed on the profile's
+ * `photo` digest, so a new picture is fetched the moment it changes and the
+ * old one never is again. `null` when there is no picture: every screen then
+ * shows what it showed before.
+ */
+export function useProfilePhoto(candidate: string | null, digest: string | null | undefined) {
+  return useQuery({
+    queryKey: ["m04", "photo", candidate ?? "", digest ?? ""],
+    enabled: Boolean(candidate && digest),
+    staleTime: Infinity,
+    gcTime: Infinity,
+    retry: false,
+    queryFn: async () => {
+      const response = await fetch(`/v1/candidates/${candidate}/photo`, { headers: sessionHeaders() });
+      if (response.status === 404) return null;
+      if (!response.ok) throw new Error(`The picture could not be loaded (${response.status}).`);
+      return URL.createObjectURL(await response.blob());
+    },
+  });
+}
+
+/** Store the picture (already square and small: see `squarePhoto`). */
+export function useSetPhoto(candidate: string | null) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (photo: Blob) => {
+      const response = await fetch(`/v1/candidates/${candidate}/photo`, {
+        method: "PUT",
+        headers: { ...sessionHeaders(), "Content-Type": photo.type || "image/jpeg" },
+        body: photo,
+      });
+      if (!response.ok) {
+        let detail = `The picture could not be saved (${response.status}).`;
+        try {
+          const body = await response.json();
+          if (typeof body?.detail === "string") detail = body.detail;
+        } catch {
+          /* keep the sentence above */
+        }
+        throw new Error(detail);
+      }
+      return (await response.json()) as { sha256: string };
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: m04Keys.profile(candidate ?? "") }),
+  });
+}
+
+export function useRemovePhoto(candidate: string | null) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.del<void>(`/v1/candidates/${candidate}/photo`),
+    onSuccess: () => client.invalidateQueries({ queryKey: m04Keys.profile(candidate ?? "") }),
+  });
+}
+
+/**
+ * Any picture the browser can open, made square (centre crop) and 512 px,
+ * as a JPEG of about 50 KB. Done here rather than on the server: the server
+ * then stores exactly what every screen shows, and never decodes an upload.
+ */
+export async function squarePhoto(file: File, size = 512): Promise<Blob> {
+  if (!file.type.startsWith("image/")) throw new Error("Choose a picture file (JPEG, PNG or similar).");
+  const url = URL.createObjectURL(file);
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error("That file could not be opened as a picture."));
+      el.src = url;
+    });
+    const side = Math.min(image.naturalWidth, image.naturalHeight);
+    if (side < 64) throw new Error("That picture is too small to show clearly.");
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = Math.min(size, side);
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("This browser cannot prepare the picture.");
+    context.drawImage(
+      image,
+      (image.naturalWidth - side) / 2,
+      (image.naturalHeight - side) / 2,
+      side,
+      side,
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
+    return await new Promise<Blob>((resolve, reject) =>
+      canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("The picture could not be prepared."))), "image/jpeg", 0.88),
+    );
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
