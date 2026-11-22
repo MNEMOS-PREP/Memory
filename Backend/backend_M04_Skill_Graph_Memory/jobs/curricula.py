@@ -316,7 +316,17 @@ def _fold(words: str) -> str:
     )
 
 
-def concepts_for(units: str, graph: Ontology) -> list[dict]:
+#: The curriculum's own category for humanities courses (soft skills, life
+#: skills, the constitution). Their technical content is aptitude, and their
+#: single words are everyday ones: Soft Skills II's "graphs" (charts) and
+#: "matrix" (arrangement puzzles) became Graph Representation and Matrix
+#: Operations, vouched for by "permutations and combinations", which the
+#: ontology files under the same domain (good_and_bads #23, 2026-11-22).
+#: There a concept is taught only by a phrase.
+PHRASE_ONLY_CATEGORIES = frozenset({"HUM"})
+
+
+def concepts_for(units: str, graph: Ontology, category: str | None = None) -> list[dict]:
     text = f" {_fold(normalise_alias(units))} "
     hits: dict[str, dict[str, int]] = {}
     for alias, concept_id in graph.alias_index.items():
@@ -333,6 +343,8 @@ def concepts_for(units: str, graph: Ontology) -> list[dict]:
     # (2026-10-13): the generic words were "functions", "methods",
     # "process", "variables", "solid", "acid", "segmentation".
     phrased = {cid for cid, matched in hits.items() if any(" " in alias for alias in matched)}
+    if (category or "").strip().upper() in PHRASE_ONLY_CATEGORIES:
+        hits = {cid: m for cid, m in hits.items() if cid in phrased}
     taught = {graph.get(cid).domain for cid in phrased}
     kept: dict[str, dict[str, int]] = {}
     for concept_id, matched in hits.items():
@@ -423,7 +435,7 @@ def build(pdf: Path, graph: Ontology, institution: str) -> tuple[dict, list[str]
         heading = syllabus["heading"]
         if heading and _norm_title(heading) != _norm_title(frag.title or ""):
             warnings.append(f"{frag.code}: table says {frag.title!r}, syllabus says {heading!r}")
-        record["concepts"] = concepts_for(syllabus["units"], graph)
+        record["concepts"] = concepts_for(syllabus["units"], graph, frag.category)
         return record
 
     semesters: dict[int, dict] = {}

@@ -138,6 +138,26 @@ def test_a_generic_word_needs_its_domain_taught_by_phrase(graph):
     assert {"concept:virtual_memory", "concept:page_replacement", "concept:deadlocks"} <= ids
 
 
+
+def test_a_humanities_course_is_taught_only_by_phrase(graph):
+    # Soft Skills II (2026-11-22): its aptitude units say "graphs" and
+    # "matrix" as everyday words, and "permutations and combinations" vouched
+    # for both because the ontology files combinatorics under the same domain.
+    units = (
+        "Permutations and combinations. Data interpretation with graphs and charts. "
+        "Seating arrangement in a matrix. Group discussion and interview skills."
+    )
+    engineering = {c["id"] for c in concepts_for(units, graph, "ENGG")}
+    humanities = {c["id"] for c in concepts_for(units, graph, "HUM")}
+    assert "concept:graphs_representation" not in humanities
+    assert "concept:matrix_operations" not in humanities
+    # Phrases still count, and with the stray words gone the course is what
+    # it teaches: aptitude, not graph theory.
+    assert humanities and {graph.get(c).domain for c in humanities} == {"aptitude"}
+    # The rule is the category's: the same words in an engineering course count.
+    assert "concept:graphs_representation" in engineering
+
+
 # ── the routes ───────────────────────────────────────────────────────────────
 
 

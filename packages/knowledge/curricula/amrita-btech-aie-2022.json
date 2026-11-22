@@ -1273,20 +1273,6 @@
               "matched": [
                 "permutations and combinations"
               ]
-            },
-            {
-              "id": "concept:graphs_representation",
-              "hits": 1,
-              "matched": [
-                "graphs"
-              ]
-            },
-            {
-              "id": "concept:matrix_operations",
-              "hits": 1,
-              "matched": [
-                "matrix"
-              ]
             }
           ]
         },
